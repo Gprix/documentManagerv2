@@ -5,7 +5,6 @@ import { BackupProps } from "./Backup.types";
 import Checkbox from "@/components/shared/Checkbox/Checkbox";
 import Button from "@/components/shared/Button/Button";
 import { getDocumentsInWorkspace } from "@/services/document/document.service";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
 import { compressData, generateSHA } from "@/utils/backup.utils";
 import { getAppointments } from "@/services/appointment/appointment.service";
 import { getNotifications } from "@/services/notifications/notifications.service";
@@ -19,10 +18,11 @@ import { createSuccessNotification } from "@/utils/notifications.utils";
 import { BackupList } from "../BackupList/BackupList";
 import { Backup as BackupType } from "@/types/backup.types";
 import { formatDate, nextDay, nextMonth, nextWeek } from "@/utils/date.utils";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 export const Backup = (props: BackupProps) => {
   const { className = "" } = props;
-  const { selectedWorkspace } = useWorkspace();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid: workspaceId } = selectedWorkspace ?? {};
   const [backupContent, setBackupContent] = useState<Record<string, boolean>>(
     {}

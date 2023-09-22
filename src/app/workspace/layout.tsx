@@ -4,46 +4,46 @@ import SideBar from "@/components/SideBar/SideBar";
 import { useAuth } from "@/contexts/auth/auth.context.hooks";
 import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 import { useTemplates } from "@/contexts/templates/templates.context.hooks";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { DataBlock } from "@/services/datablocks/datablocks.service.types";
 import { getTemplatesInWorkspace } from "@/services/template/template.service";
 import { Template } from "@/services/template/template.service.types";
 import { getWorkspace } from "@/services/workspace/workspace.service";
+import { useFetchUserWorkspaces } from "@/services/workspace/workspace.service.hooks";
 import { Workspace } from "@/services/workspace/workspace.service.types";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo } from "react";
 
 const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
-  const { selectedWorkspace, setSelectedWorkspace } = useWorkspace();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
+  const setSelectedWorkspace = useWorkspaceStore((s) => s.setSelectedWorkspace);
+  const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces);
+  const { data: workspaces = [] } = useFetchUserWorkspaces();
   const { setSelectedTemplates } = useTemplates();
   const { setSelectedDatablocks } = useDatablocks();
   const { uid } = useAuth();
-  const [peekComponents, setPeekComponents] = useState<React.ReactNode[]>([]);
   const selectedWorkspaceFromLocalStorage = useMemo(() => {
     if (typeof window !== "undefined" && window.localStorage) {
       return window.localStorage.getItem("SELECTED_WORKSPACE");
     }
   }, []);
 
-  const sidebarRef = useRef<HTMLDivElement>(null);
+  const restoreLastWorkspace = async () => {
+    if (!selectedWorkspaceFromLocalStorage) return;
+    const lastWorkspace = await getWorkspace(selectedWorkspaceFromLocalStorage);
+    setSelectedWorkspace(lastWorkspace as Workspace);
+  };
 
-  useLayoutEffect(() => {
-    setPeekComponents([]);
-  }, []);
+  // Retrieve the workspaces and set them on Zustand
+  useEffect(() => {
+    setWorkspaces(workspaces);
+  }, [workspaces]);
 
   useLayoutEffect(() => {
     if (selectedWorkspace) return;
     if (pathname === "/workspace") return;
-
-    const restoreLastWorkspace = async () => {
-      if (!selectedWorkspaceFromLocalStorage) return;
-      const lastWorkspace = await getWorkspace(
-        selectedWorkspaceFromLocalStorage
-      );
-      setSelectedWorkspace(lastWorkspace as Workspace);
-    };
 
     restoreLastWorkspace();
   }, [
@@ -79,26 +79,7 @@ const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      {selectedWorkspace ? (
-        <SideBar
-          ref={sidebarRef}
-          addPeekComponent={(peekComponent: React.ReactNode) =>
-            setPeekComponents((prev) => [...prev, peekComponent])
-          }
-          closePeekComponent={() => {
-            setPeekComponents([]);
-          }}
-        />
-      ) : null}
-      <section className="WorkspaceArea">
-        {peekComponents && peekComponents.length ? (
-          <div className="w-[90%] absolute top-0 place-self-end">
-            <div className="PeekComponents relative h-screen">
-              {peekComponents.map((component) => component)}
-            </div>
-          </div>
-        ) : null}
-      </section>
+      {selectedWorkspace ? <SideBar /> : null}
       {children}
     </>
   );

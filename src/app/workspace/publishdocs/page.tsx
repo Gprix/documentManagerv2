@@ -3,20 +3,21 @@
 import React, { useState, useEffect } from "react";
 import { db } from "@/config/firebase.config";
 import { collection, getDocs } from "firebase/firestore";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
 import { DocumentPreview } from "@/components/document/DocumentPreview/DocumentPreview";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
 import Select from "react-select";
 import enviarCorreo from "@/services/email/email.service";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const PublishDocs = () => {
   const [docusComponents, setDocusComponents] = useState([]);
-  const [infoUser, setInfoUser] = useState([{
-    value: "",
-    label: "Seleccionar",
-  }]);
-  // @ts-ignore
-  const { selectedWorkspace } = useWorkspace();
+  const [infoUser, setInfoUser] = useState([
+    {
+      value: "",
+      label: "Seleccionar",
+    },
+  ]);
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
 
   useEffect(() => {
     if (!selectedWorkspace) return;

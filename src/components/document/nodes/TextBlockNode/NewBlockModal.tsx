@@ -6,15 +6,15 @@ import Button from "@/components/shared/Button/Button";
 import { ChangeEvent, useState } from "react";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { writeDatablock } from "@/services/datablocks/datablocks.service";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
 import { createErrorNotification } from "@/utils/notifications.utils";
 import { createSuccessNotification } from "@/utils/notifications.utils";
 import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 import { DataBlock } from "@/services/datablocks/datablocks.service.types";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const NewBlockModal = (props: NewBlockModalProps) => {
   const { onClose } = props;
-  const { selectedWorkspace } = useWorkspace();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { setSelectedDatablocks } = useDatablocks();
   const [blockName, setBlockName] = useState<string>();
 

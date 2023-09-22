@@ -1,7 +1,7 @@
 import { db, auth } from "@/config/firebase.config";
 import { doc, where, query, setDoc, getDoc, or } from "firebase/firestore";
 import { getDocs, collection } from "firebase/firestore";
-import { WriteWorkspacePayload } from "./workspace.service.types";
+import { Workspace, WriteWorkspacePayload } from "./workspace.service.types";
 
 export const writeWorkspace = async (payload: WriteWorkspacePayload) => {
   try {
@@ -27,7 +27,7 @@ export const getWorkspace = async (uid: string) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      return docSnap.data();
+      return docSnap.data() as Workspace;
     }
   } catch (e) {
     console.log(e);
@@ -66,7 +66,7 @@ export const getCurrentUserWorkspaces = async () => {
       ...doc.data(),
     }));
 
-    return workspacesData;
+    return workspacesData as Workspace[];
   } catch (e) {
     console.error(e);
   }
