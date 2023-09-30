@@ -1,9 +1,8 @@
-import { forwardRef, useEffect, useState } from "react";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
+"use client";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/auth/auth.context.hooks";
 import Link from "next/link";
 import Image from "next/image";
-import { SideBarProps } from "./SideBar.types";
 
 import { getMember } from "@/services/member/member.service";
 import { Member } from "@/services/member/member.service.types";
@@ -14,11 +13,14 @@ import DiscSVG from "images/icons/disc.svg";
 import DocPageSVG from "images/icons/doc-page.svg";
 import NotificationsSVG from "images/icons/notifications.svg";
 import CopyToClipboardButton from "../shared/CopyToClipboard/CopyToClipboard";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
-const Sidebar = forwardRef<HTMLDivElement, SideBarProps>((props, ref) => {
-  const { selectedWorkspace } = useWorkspace();
+const Sidebar = () => {
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid } = useAuth();
   const [photoURL, setPhotoURL] = useState("");
+  const sidebarElementClassName =
+    "Sidebar__element p-3 rounded-full hover:bg-primaryMedium transition-md";
 
   const ProfilePreview = () => {
     return (
@@ -78,28 +80,19 @@ const Sidebar = forwardRef<HTMLDivElement, SideBarProps>((props, ref) => {
           "hover:cursor-pointer",
         ].join(" ")}
       >
-        <Link
-          href="/workspace/schedule"
-          className="Sidebar__element p-3 rounded-full hover:bg-primaryMedium transition-md"
-        >
+        <Link href="/workspace/schedule" className={sidebarElementClassName}>
           <Image src={CalendarSVG} alt="schedule" />
         </Link>
-        <Link
-          href="/workspace/documents"
-          className="Sidebar__element p-3 rounded-full hover:bg-primaryMedium transition-md"
-        >
+        <Link href="/workspace/documents" className={sidebarElementClassName}>
           <Image src={DocPageSVG} alt="documents" />
         </Link>
         <Link
           href="/workspace/notifications"
-          className="Sidebar__element p-3 rounded-full hover:bg-primaryMedium transition-md"
+          className={sidebarElementClassName}
         >
           <Image src={NotificationsSVG} alt="notifications" />
         </Link>
-        <Link
-          href="/workspace/backup"
-          className="Sidebar__element p-3 rounded-full hover:bg-primaryMedium transition-md"
-        >
+        <Link href="/workspace/backup" className={sidebarElementClassName}>
           <Image src={DiscSVG} alt="backup" />
         </Link>
       </div>
@@ -114,8 +107,6 @@ const Sidebar = forwardRef<HTMLDivElement, SideBarProps>((props, ref) => {
       </div>
     </aside>
   );
-});
-
-Sidebar.displayName = "Sidebar";
+};
 
 export default Sidebar;

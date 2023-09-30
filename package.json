@@ -1,6 +1,6 @@
 {
   "name": "docunot",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@emailjs/browser": "^3.11.0",
+    "@lukemorales/query-key-factory": "^1.3.2",
+    "@tanstack/react-query": "^4.35.3",
     "@types/node": "20.2.5",
     "@types/react": "18.2.8",
     "@types/react-dom": "18.2.4",
@@ -36,7 +38,8 @@
     "react-toastify": "^9.1.3",
     "standard": "^8.6.0",
     "tailwindcss": "3.3.2",
-    "typescript": "5.1.3"
+    "typescript": "5.1.3",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.8",

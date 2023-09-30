@@ -4,14 +4,14 @@ import { useLayoutEffect } from "react";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { ArchiveProps } from "./Archive.types";
 import { getDocumentsInWorkspace } from "@/services/document/document.service";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
 import { Document } from "@/types/document.types";
 import { useDocument } from "@/contexts/document/document.context.hooks";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 export const Archive = (props: ArchiveProps) => {
   const { className = "" } = props;
-  const { selectedWorkspace } = useWorkspace();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { archiveDocuments, setArchiveDocuments } = useDocument();
 
   useLayoutEffect(() => {

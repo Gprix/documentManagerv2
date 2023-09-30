@@ -2,18 +2,18 @@ import { writeDocument } from "@/services/document/document.service";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { DocumentActionsProps } from "./DocumentActions.types";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
 import { useRouter } from "next/navigation";
 import { Template } from "@/services/template/template.service.types";
 import { writeTemplate } from "@/services/template/template.service";
 import { createErrorNotification } from "@/utils/notifications.utils";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 export const DocumentActions = (props: DocumentActionsProps) => {
   const { className = "" } = props;
   const { withNewAction = false, newActionLabel } = props;
   const { templateList, isTemplate = false } = props;
   const { push } = useRouter();
-  const { selectedWorkspace } = useWorkspace();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const newTitle = `Nueva ${
     isTemplate ? "plantilla" : "acta"
   }-${Date.now().toString()}`;

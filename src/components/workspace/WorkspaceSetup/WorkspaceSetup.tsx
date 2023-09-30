@@ -6,17 +6,15 @@ import Image from "next/image";
 import Button from "@/components/shared/Button/Button";
 import GAccountDropdown from "@/components/GAccountDropdown/GAccountDropdown";
 import { useRouter } from "next/navigation";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/auth/auth.context.hooks";
+import { useState } from "react";
 import { Workspace } from "@/services/workspace/workspace.service.types";
 import NewWorkspaceModal from "./NewWorkspaceModal";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const WorkspaceSetup = (props: WorkspaceSetupProps) => {
   const { push } = useRouter();
-  const { uid } = useAuth();
-  const { workspaces, getWorkspaces } = useWorkspace();
-  const { setSelectedWorkspace } = useWorkspace();
+  const setSelectedWorkspace = useWorkspaceStore((s) => s.setSelectedWorkspace);
+  const workspaces = useWorkspaceStore((s) => s.workspaces);
   const [showNewWorkspaceModal, setShowNewWorkspaceModal] = useState(false);
 
   const handleSelectWorkspace = (workspace: Workspace) => {
@@ -25,11 +23,6 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
     localStorage.setItem("SELECTED_WORKSPACE", uid);
     push("/workspace/documents/");
   };
-
-  useEffect(() => {
-    if (!uid) return;
-    getWorkspaces();
-  }, [workspaces, uid]);
 
   const renderWorkspaceList = () => {
     return (

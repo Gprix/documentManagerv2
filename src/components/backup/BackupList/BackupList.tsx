@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import BackupCard from "../BackupCard/BackupCard";
 import { BackupListProps } from "./BackupList.types";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
 import { getBackupsInWorkspace } from "@/services/backup/backup.service";
 import { Backup } from "@/types/backup.types";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 export const BackupList = (props: BackupListProps) => {
   const { className = "" } = props;
-  const { selectedWorkspace } = useWorkspace();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid: workspaceId } = selectedWorkspace ?? {};
   const [backups, setBackups] = useState<Backup[]>([]);
 
