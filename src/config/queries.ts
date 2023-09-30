@@ -1,7 +1,5 @@
-import {
-  createQueryKeys,
-  mergeQueryKeys,
-} from "@lukemorales/query-key-factory";
+import { createQueryKeys } from "@lukemorales/query-key-factory";
+import { mergeQueryKeys } from "@lukemorales/query-key-factory";
 
 import { getWorkspace } from "@/services/workspace/workspace.service";
 import { getCurrentUserWorkspaces } from "@/services/workspace/workspace.service";

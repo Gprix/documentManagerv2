@@ -58,7 +58,7 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
         <Button
           type="outline"
           textStyle="text-white text-lg font-semibold"
-          rightIcon={DropdownArrowSVG}
+          rightIcon={<DropdownArrowSVG />}
           onClick={handleSwitchAccounts}
         >
           {name.toUpperCase()}

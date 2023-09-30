@@ -4,7 +4,6 @@ import { useNotification } from "@/hooks/useNotification";
 import { CopyToClipboardProps } from "./CopyToClipboard.types";
 
 import ShareSVG from "images/icons/share.svg";
-import Image from "next/image";
 
 const CopyToClipboardButton = (props: CopyToClipboardProps) => {
   const { className = "" } = props;
@@ -30,7 +29,7 @@ const CopyToClipboardButton = (props: CopyToClipboardProps) => {
       title="Copiar UID"
       onClick={handleCopyClick}
     >
-      <Image src={ShareSVG} alt="Copiar uid" />
+      <ShareSVG />
     </button>
   );
 };

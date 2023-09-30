@@ -240,7 +240,7 @@ export const DocumentView = (props: DocumentViewProps) => {
             <Button
               onClick={handleButtonClick}
               className="DocumentView__button"
-              rightIcon={RightArrowWhiteSVG}
+              rightIcon={<RightArrowWhiteSVG />}
             >
               {isEditing ? "Guardar" : "Editar"}
             </Button>

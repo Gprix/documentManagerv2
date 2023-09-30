@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
 import BackupCardBadge from "./BackupCardBadge";
 import { useState } from "react";
@@ -63,9 +61,7 @@ const BackupCard = (props: BackupCardProps) => {
           </div>
         </div>
         <button onClick={() => handleShowInfo()}>
-          <Image
-            src={DropdownArrowSVG}
-            alt=""
+          <DropdownArrowSVG
             className={["transition-md", showInfo ? "rotate-180" : ""].join(
               " "
             )}

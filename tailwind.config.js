@@ -8,12 +8,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#ff4d85",
+        text: "#2f0f0f",
+        background: "#fbfbfe",
+        primary: "#fc6499",
+        secondary: "#d69f1f",
+        accent: "#2f0e0f",
+        // primary: "#ff4d85",
         primaryMedium: "#ff99b3",
         primaryLight: "#ffdbe6",
         primaryExtraLight: "#fff4f7",
         primaryDark: "#e60052",
-        secondary: "#8ba0fd",
+        // secondary: "#8ba0fd",
         secondaryLight: "#f0f3ff",
         error: "#e06767",
         dimmed: "hsla(0, 0%, 0%, 0.3)",
