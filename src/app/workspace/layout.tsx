@@ -1,7 +1,6 @@
 "use client";
 
-import SideBar from "@/components/SideBar/SideBar";
-import { useAuth } from "@/contexts/auth/auth.context.hooks";
+import SideBar from "@/components/global/SideBar/SideBar";
 import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
@@ -11,19 +10,20 @@ import { Template } from "@/services/template/template.service.types";
 import { getWorkspace } from "@/services/workspace/workspace.service";
 import { useFetchUserWorkspaces } from "@/services/workspace/workspace.service.hooks";
 import { Workspace } from "@/services/workspace/workspace.service.types";
+import { useAuthStore } from "@/stores/auth.store";
 import { useWorkspaceStore } from "@/stores/workspace.store";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useMemo } from "react";
 
 const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
+  const uid = useAuthStore((s) => s.uid);
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const setSelectedWorkspace = useWorkspaceStore((s) => s.setSelectedWorkspace);
   const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces);
   const { data: workspaces = [] } = useFetchUserWorkspaces();
   const { setSelectedTemplates } = useTemplates();
   const { setSelectedDatablocks } = useDatablocks();
-  const { uid } = useAuth();
   const selectedWorkspaceFromLocalStorage = useMemo(() => {
     if (typeof window !== "undefined" && window.localStorage) {
       return window.localStorage.getItem("SELECTED_WORKSPACE");
@@ -41,7 +41,7 @@ const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
     setWorkspaces(workspaces);
   }, [workspaces]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (selectedWorkspace) return;
     if (pathname === "/workspace") return;
 

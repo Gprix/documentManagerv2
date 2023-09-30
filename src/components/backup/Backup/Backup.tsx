@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { BackupProps } from "./Backup.types";
-import Checkbox from "@/components/shared/Checkbox/Checkbox";
-import Button from "@/components/shared/Button/Button";
+import Checkbox from "@/components/ui/Checkbox/Checkbox";
+import Button from "@/components/ui/Button/Button";
 import { getDocumentsInWorkspace } from "@/services/document/document.service";
 import { compressData, generateSHA } from "@/utils/backup.utils";
 import { getAppointments } from "@/services/appointment/appointment.service";
@@ -12,16 +12,15 @@ import { getTemplatesInWorkspace } from "@/services/template/template.service";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { WriteBackupPayload } from "@/services/backup/backup.service.types";
 import { getLastBackup, writeBackup } from "@/services/backup/backup.service";
-import { createErrorNotification } from "@/utils/notifications.utils";
-import { createInfoNotification } from "@/utils/notifications.utils";
-import { createSuccessNotification } from "@/utils/notifications.utils";
 import { BackupList } from "../BackupList/BackupList";
 import { Backup as BackupType } from "@/types/backup.types";
 import { formatDate, nextDay, nextMonth, nextWeek } from "@/utils/date.utils";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import { useNotification } from "@/hooks/useNotification";
 
 export const Backup = (props: BackupProps) => {
   const { className = "" } = props;
+  const { info, error, success } = useNotification();
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid: workspaceId } = selectedWorkspace ?? {};
   const [backupContent, setBackupContent] = useState<Record<string, boolean>>(
@@ -50,9 +49,7 @@ export const Backup = (props: BackupProps) => {
 
     const autoBackup = async () => {
       if (Date.now() >= parseInt(savedBackupFrequency, 10)) {
-        createInfoNotification(
-          "Se está realizando una copia de seguridad automáticamente"
-        );
+        info("Se está realizando una copia de seguridad automáticamente");
         await handleBackup();
         handleSelectFrequency("none");
       }
@@ -126,10 +123,10 @@ export const Backup = (props: BackupProps) => {
 
     const newBackup = await writeBackup(backup);
     if (!newBackup) {
-      createErrorNotification("No se pudo crear la copia de seguridad");
+      error("No se pudo crear la copia de seguridad");
       return;
     }
-    createSuccessNotification("Copia de seguridad creada correctamente");
+    success("Copia de seguridad creada correctamente");
   };
 
   const handleSelectFrequency = (frequency: string) => {

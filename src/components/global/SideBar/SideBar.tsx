@@ -1,6 +1,6 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/auth/auth.context.hooks";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,12 +12,13 @@ import CalendarSVG from "images/icons/calendar.svg";
 import DiscSVG from "images/icons/disc.svg";
 import DocPageSVG from "images/icons/doc-page.svg";
 import NotificationsSVG from "images/icons/notifications.svg";
-import CopyToClipboardButton from "../shared/CopyToClipboard/CopyToClipboard";
+import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboard";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import { useAuthStore } from "@/stores/auth.store";
 
 const Sidebar = () => {
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
-  const { uid } = useAuth();
+  const uid = useAuthStore((s) => s.uid);
   const [photoURL, setPhotoURL] = useState("");
   const sidebarElementClassName =
     "Sidebar__element p-3 rounded-full hover:bg-primaryMedium transition-md";

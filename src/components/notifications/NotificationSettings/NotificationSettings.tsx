@@ -1,4 +1,4 @@
-import Switch from "@/components/shared/Switch/Switch";
+import Switch from "@/components/ui/Switch/Switch";
 import { NotificationSettingsProps } from "./NotificationSettings.types";
 
 export const NotificationSettings = (props: NotificationSettingsProps) => {

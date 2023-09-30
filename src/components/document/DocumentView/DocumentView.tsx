@@ -1,8 +1,8 @@
 "use client";
 
-import GoBack from "@/components/GoBack/GoBack";
+import GoBack from "@/components/global/GoBack/GoBack";
 import { DocumentViewProps } from "./DocumentView.types";
-import Button from "@/components/shared/Button/Button";
+import Button from "@/components/ui/Button/Button";
 import RightArrowWhiteSVG from "images/icons/right-arrow-white.svg";
 import { Paper } from "../Paper/Paper";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -16,17 +16,17 @@ import { DataCaptureModal } from "../DataCaptureModal/DataCaptureModal";
 import { getTemplate } from "@/services/template/template.service";
 import { updateTemplate } from "@/services/template/template.service";
 import { WriteTemplatePayload } from "@/services/template/template.service.types";
-import EditableText from "@/components/shared/EditableText/EditableText";
-import { EditableTextRef } from "@/components/shared/EditableText/EditableText.types";
-import { createErrorNotification } from "@/utils/notifications.utils";
+import EditableText from "@/components/global/EditableText/EditableText";
+import { EditableTextRef } from "@/components/global/EditableText/EditableText.types";
 import { exportDocument, importDocument } from "@/utils/document.utils";
-import { Modal } from "@/components/shared/Modal/Modal";
-import { createSuccessNotification } from "@/utils/notifications.utils";
+import { Modal } from "@/components/ui/Modal/Modal";
 import Link from "next/link";
+import { useNotification } from "@/hooks/useNotification";
 
 export const DocumentView = (props: DocumentViewProps) => {
   const { className = "" } = props;
   const { documentId, isTemplate } = props;
+  const { success, error } = useNotification();
   const { selectedDocument, setSelectedDocument } = useDocument();
   const { title, uid, documentType } = selectedDocument ?? {};
   const [showDataCaptureModal, setShowDataCaptureModal] = useState(false);
@@ -59,7 +59,7 @@ export const DocumentView = (props: DocumentViewProps) => {
       };
 
       await updateTemplate(currentTemplateId, currentTemplate);
-      createSuccessNotification("Plantilla actualizada correctamente");
+      success("Plantilla actualizada correctamente");
     }
 
     if (isEditing && !isTemplate) {
@@ -67,7 +67,7 @@ export const DocumentView = (props: DocumentViewProps) => {
         ...selectedDocument,
         title: titleRef?.current?.getTitle() ?? title ?? "",
       });
-      createSuccessNotification("Acta actualizada correctamente");
+      success("Acta actualizada correctamente");
     }
 
     setIsEditing((prev) => !prev);
@@ -75,7 +75,7 @@ export const DocumentView = (props: DocumentViewProps) => {
 
   const handleImport = async (file: File | undefined) => {
     if (!file) {
-      createErrorNotification("No se pudo importar el documento");
+      error("No se pudo importar el documento");
       return;
     }
     const isCompressed = file.name.endsWith(".dcn");
@@ -83,7 +83,7 @@ export const DocumentView = (props: DocumentViewProps) => {
     try {
       const imported = await importDocument(file, isCompressed);
       if (!imported) {
-        createErrorNotification("No se pudo importar el documento");
+        error("No se pudo importar el documento");
         return;
       }
       const documentPayload: Document = {
@@ -94,7 +94,7 @@ export const DocumentView = (props: DocumentViewProps) => {
       };
 
       setSelectedDocument(documentPayload);
-      createSuccessNotification("Documento importado correctamente!");
+      success("Documento importado correctamente!");
       await handleButtonClick();
     } catch (e) {
       console.error(e);

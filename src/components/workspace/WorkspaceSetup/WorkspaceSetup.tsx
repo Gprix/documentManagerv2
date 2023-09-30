@@ -3,8 +3,8 @@
 import { WorkspaceSetupProps } from "./WorkspaceSetup.types";
 import PatternIMG from "images/auth/pattern.png";
 import Image from "next/image";
-import Button from "@/components/shared/Button/Button";
-import GAccountDropdown from "@/components/GAccountDropdown/GAccountDropdown";
+import Button from "@/components/ui/Button/Button";
+import GAccountDropdown from "@/components/global/GAccountDropdown/GAccountDropdown";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Workspace } from "@/services/workspace/workspace.service.types";

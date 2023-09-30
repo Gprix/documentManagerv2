@@ -13,7 +13,6 @@ import {
 import { format, parse, startOfToday, add } from "date-fns";
 import CalendarWeek from "@/components/calendar/calendarWeek";
 import CalendarMonth from "@/components/calendar/calendarMonth";
-import Link from "next/link";
 
 const schedulePage = () => {
   const [modalFlag, setModal] = useState<boolean>(false);
@@ -92,8 +91,11 @@ const schedulePage = () => {
     e.preventDefault();
 
     try {
-      const clientRef = collection(db, "appointments")
-      const q = query(clientRef, where("clientName", "==", eventData.clientName));
+      const clientRef = collection(db, "appointments");
+      const q = query(
+        clientRef,
+        where("clientName", "==", eventData.clientName)
+      );
       const querySnapshot = await getDocs(q);
       // const clientRef = doc(db, "appointments", {'clientName' : eventData.clientName});
       await deleteDoc(querySnapshot.docs[0].ref);
@@ -118,7 +120,6 @@ const schedulePage = () => {
         console.error("Error al enviar el objeto JSON a Firestore: ", error);
       }
     }
-    
 
     setEventData({ clientName: "", date: "", time: null, description: "" });
     setModal(false);

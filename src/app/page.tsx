@@ -6,19 +6,21 @@ import DocsSVG from "images/docs.svg";
 import LogoSVG from "images/logo.svg";
 import GoogleSVG from "images/auth/google.svg";
 import { Poppins } from "next/font/google";
-import Button from "@/components/shared/Button/Button";
+import Button from "@/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
-import { googleAuthUtility } from "@/utils/auth.utils";
-import { useAuth } from "@/contexts/auth/auth.context.hooks";
+import useAuth from "@/hooks/useAuth";
 
 const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 const HomePage = () => {
   const { push } = useRouter();
-  const auth = useAuth();
+  const { signInWithGoogle } = useAuth();
 
   const handleSignIn = async () => {
-    await googleAuthUtility(auth);
+    const credentials = await signInWithGoogle();
+    const { user } = credentials ?? {};
+    if (!user) throw new Error("No user found with Google");
+
     push("/workspace");
   };
 
@@ -48,18 +50,14 @@ const HomePage = () => {
             </li>
           </ul>
           <div className="flex flex-row-reverse">
-            {/* // TODO: Cambiar push a /signin */}
             <div className="flex flex-col justify-center gap-y-3">
               <Button
                 leftIcon={GoogleSVG}
                 iconStyle="mr-2"
-                onClick={() => handleSignIn()}
+                onClick={handleSignIn}
               >
                 Continuar con Google
               </Button>
-              {/* <Button type="outline" textStyle="text-white">
-                Continuar con correo electrónico
-              </Button> */}
             </div>
           </div>
         </div>
