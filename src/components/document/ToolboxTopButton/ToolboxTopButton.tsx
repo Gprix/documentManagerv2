@@ -2,7 +2,7 @@
 
 import { MouseEvent, useState } from "react";
 import { ToolboxTopButtonProps } from "./ToolboxTopButton.types";
-import { SecondaryMenu } from "@/components/shared/SecondaryMenu/SecondaryMenu";
+import { SecondaryMenu } from "@/components/ui/SecondaryMenu/SecondaryMenu";
 
 export const ToolboxTopButton = (props: ToolboxTopButtonProps) => {
   const { children, contextMenuConfiguration } = props;

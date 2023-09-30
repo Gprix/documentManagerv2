@@ -7,10 +7,10 @@ import { useState } from "react";
 import { TemplatesModal } from "@/components/document/TemplatesModal/TemplatesModal";
 import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import { publishDocument } from "@/services/api/elperuano/elperuano.service";
-import { createErrorNotification } from "@/utils/notifications.utils";
-import { createSuccessNotification } from "@/utils/notifications.utils";
+import { useNotification } from "@/hooks/useNotification";
 
 const DocumentsPage = () => {
+  const { error, success } = useNotification();
   const { selectedTemplates } = useTemplates();
   const [modalFlag, setModal] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -43,10 +43,10 @@ const DocumentsPage = () => {
 
     const pub = await publishDocument({ file });
     if (!pub) {
-      createErrorNotification("Error al publicar el documento.");
+      error("Error al publicar el documento.");
       return;
     }
-    createSuccessNotification("Documento publicado correctamente.");
+    success("Documento publicado correctamente.");
   };
 
   const renderUploadDoc = () => {

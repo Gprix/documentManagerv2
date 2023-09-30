@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ButtonProps } from "./Button.types";
 import { getContainerStyle, getTextStyle } from "./Button.helpers";
 
@@ -19,13 +18,13 @@ const Button = (props: ButtonProps) => {
     >
       <div className="flex flex-nowrap items-center justify-center">
         {leftIcon ? (
-          <Image src={leftIcon} alt="" className={`mr-4 ${iconStyle}`} />
+          <div className={`mr-4 ${iconStyle}`}>{leftIcon}</div>
         ) : null}
         <div className={`${getTextStyle(type)} text-center ${textStyle}`}>
           {children}
         </div>
         {rightIcon ? (
-          <Image src={rightIcon} alt="" className={`ml-4 ${iconStyle}`} />
+          <div className={`ml-4 ${iconStyle}`}>{rightIcon}</div>
         ) : null}
       </div>
     </button>

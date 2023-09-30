@@ -3,7 +3,7 @@
 import { MouseEvent, useLayoutEffect, useState } from "react";
 import { BaseNode } from "../BaseNode/BaseNode";
 import { TextNodeProps } from "./TextNode.types";
-import { SecondaryMenu } from "@/components/shared/SecondaryMenu/SecondaryMenu";
+import { SecondaryMenu } from "@/components/ui/SecondaryMenu/SecondaryMenu";
 import { TextType } from "./TextNode.types";
 import { useDocument } from "@/contexts/document/document.context.hooks";
 

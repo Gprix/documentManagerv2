@@ -1,8 +1,8 @@
 "use client";
 
 import { DataCaptureModalProps } from "./DataCaptureModal.types";
-import { Modal } from "../../shared/Modal/Modal";
-import Button from "@/components/shared/Button/Button";
+import { Modal } from "../../ui/Modal/Modal";
+import Button from "@/components/ui/Button/Button";
 import { useDocument } from "@/contexts/document/document.context.hooks";
 import { useMemo } from "react";
 import { InputNodeRawData } from "@/types/document.types";

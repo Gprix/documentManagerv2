@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/components/shared/Button/Button";
+import Button from "@/components/ui/Button/Button";
 import { InputProps } from "./Input.types";
 import RightArrowSVG from "images/icons/right-arrow.svg";
 import { useState } from "react";
@@ -37,7 +37,7 @@ const Input = (props: InputProps) => {
           {withSubmit ? (
             <Button
               type="transparent"
-              rightIcon={RightArrowSVG}
+              rightIcon={<RightArrowSVG />}
               onClick={onSubmit}
             />
           ) : null}

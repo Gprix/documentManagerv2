@@ -1,24 +1,31 @@
 "use client";
 
 import Image from "next/image";
-import Button from "@/components/shared/Button/Button";
+import Button from "@/components/ui/Button/Button";
 import { GAccountDropdownProps } from "./GAccountDropdown.types";
 import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
-import { useAuth } from "@/contexts/auth/auth.context.hooks";
 import { getMember } from "@/services/member/member.service";
 import { useEffect, useState } from "react";
 import { Member } from "@/services/member/member.service.types";
-import { googleAuthUtility } from "@/utils/auth.utils";
+import { useAuthStore } from "@/stores/auth.store";
+import useAuth from "@/hooks/useAuth";
+import { useNotification } from "@/hooks/useNotification";
 
 const GAccountDropdown = (props: GAccountDropdownProps) => {
   const { className = "" } = props;
+  const { error } = useNotification();
   const [name, setName] = useState("");
   const [photoURL, setPhotoURL] = useState("");
-  const auth = useAuth();
-  const { uid } = auth;
+  const { signInWithGoogle } = useAuth();
+  const uid = useAuthStore((s) => s.uid);
 
   const handleSwitchAccounts = async () => {
-    await googleAuthUtility(auth);
+    const credentials = await signInWithGoogle();
+    const { user } = credentials ?? {};
+    if (!user) {
+      error("No se pudo iniciar sesión con Google");
+      return;
+    }
   };
 
   useEffect(() => {
@@ -51,8 +58,8 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
         <Button
           type="outline"
           textStyle="text-white text-lg font-semibold"
-          rightIcon={DropdownArrowSVG}
-          onClick={() => handleSwitchAccounts()}
+          rightIcon={<DropdownArrowSVG />}
+          onClick={handleSwitchAccounts}
         >
           {name.toUpperCase()}
         </Button>

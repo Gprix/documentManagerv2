@@ -5,14 +5,15 @@ import { getPreviewNodesUtility } from "@/utils/document.utils";
 import { useRouter } from "next/navigation";
 import { Template } from "@/services/template/template.service.types";
 import { writeTemplate } from "@/services/template/template.service";
-import { createErrorNotification } from "@/utils/notifications.utils";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import { useNotification } from "@/hooks/useNotification";
 
 export const DocumentActions = (props: DocumentActionsProps) => {
   const { className = "" } = props;
   const { withNewAction = false, newActionLabel } = props;
   const { templateList, isTemplate = false } = props;
   const { push } = useRouter();
+  const { error } = useNotification();
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const newTitle = `Nueva ${
     isTemplate ? "plantilla" : "acta"
@@ -31,7 +32,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
       });
 
       if (!template) {
-        createErrorNotification("No se pudo crear la plantilla");
+        error("No se pudo crear la plantilla");
         return;
       }
       push(`/workspace/workshop/${template}?isTemplate=true`);
@@ -44,7 +45,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
       });
 
       if (!document) {
-        createErrorNotification("No se pudo crear el acta");
+        error("No se pudo crear el acta");
         return;
       }
       push(`/workspace/workshop/${document}`);

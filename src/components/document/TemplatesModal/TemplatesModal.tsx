@@ -1,13 +1,13 @@
 "use client";
 
-import { Modal } from "@/components/shared/Modal/Modal";
+import { Modal } from "@/components/ui/Modal/Modal";
 import { TemplatesModalProps } from "./TemplatesModal.types";
 import { DocumentActions } from "../DocumentActions/DocumentActions";
-import Button from "@/components/shared/Button/Button";
+import Button from "@/components/ui/Button/Button";
 import { useState } from "react";
 import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
-import { SearchBar } from "@/components/SearchBar/SearchBar";
+import { SearchBar } from "@/components/global/SearchBar/SearchBar";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
 
 export const TemplatesModal = (props: TemplatesModalProps) => {

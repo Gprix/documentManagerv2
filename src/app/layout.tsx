@@ -2,11 +2,17 @@
 
 import "@/styles/globals.css";
 import { Pathway_Extreme } from "next/font/google";
-import AppProviders from "./providers";
+import AppProviders from "../components/AppProviders";
 import { ToastContainer } from "react-toastify";
+import { getFonts } from "@/utils/common.utils";
 import "react-toastify/dist/ReactToastify.css";
 
-const pathwayExtreme = Pathway_Extreme({ subsets: ["latin"] });
+const pathway_extreme = Pathway_Extreme({
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const fonts = getFonts([pathway_extreme]);
 
 export default function RootLayout({
   children,
@@ -15,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${pathwayExtreme.className} mx-auto`}>
+      <body className={`${fonts} mx-auto`}>
         <AppProviders>
           <ToastContainer
             position="top-center"

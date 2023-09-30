@@ -1,15 +1,15 @@
 "use client";
 
-import Button from "@/components/shared/Button/Button";
-import { Modal } from "@/components/shared/Modal/Modal";
+import Button from "@/components/ui/Button/Button";
+import { Modal } from "@/components/ui/Modal/Modal";
 import { ChangeEvent, useState } from "react";
 import { NewWorkspaceModalProps } from "./WorkspaceSetup.types";
 import { writeWorkspace } from "@/services/workspace/workspace.service";
-import { createErrorNotification } from "@/utils/notifications.utils";
-import { createSuccessNotification } from "@/utils/notifications.utils";
+import { useNotification } from "@/hooks/useNotification";
 
 const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
   const { onClose } = props;
+  const { error, success } = useNotification();
   const [workspaceName, setWorkspaceName] = useState<string>();
   const [workspaceMembers, setWorkspaceMembers] = useState<string>();
 
@@ -22,11 +22,11 @@ const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
     });
 
     if (!newWorkspace) {
-      createErrorNotification("No se pudo crear el espacio de trabajo");
+      error("No se pudo crear el espacio de trabajo");
       return;
     }
 
-    createSuccessNotification("Espacio de trabajo creado exitosamente");
+    success("Espacio de trabajo creado exitosamente");
     onClose();
   };
 

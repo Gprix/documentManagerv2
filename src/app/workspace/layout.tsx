@@ -1,81 +1,40 @@
 "use client";
 
-import SideBar from "@/components/SideBar/SideBar";
-import { useAuth } from "@/contexts/auth/auth.context.hooks";
+import SideBar from "@/components/global/SideBar/SideBar";
 import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 import { useTemplates } from "@/contexts/templates/templates.context.hooks";
+import usePersist from "@/hooks/usePersist";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { DataBlock } from "@/services/datablocks/datablocks.service.types";
 import { getTemplatesInWorkspace } from "@/services/template/template.service";
 import { Template } from "@/services/template/template.service.types";
-import { getWorkspace } from "@/services/workspace/workspace.service";
-import { useFetchUserWorkspaces } from "@/services/workspace/workspace.service.hooks";
-import { Workspace } from "@/services/workspace/workspace.service.types";
 import { useWorkspaceStore } from "@/stores/workspace.store";
-import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();
-  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
-  const setSelectedWorkspace = useWorkspaceStore((s) => s.setSelectedWorkspace);
-  const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces);
-  const { data: workspaces = [] } = useFetchUserWorkspaces();
+  const selectedWorkspace = usePersist(
+    useWorkspaceStore,
+    (s) => s.selectedWorkspace
+  );
   const { setSelectedTemplates } = useTemplates();
   const { setSelectedDatablocks } = useDatablocks();
-  const { uid } = useAuth();
-  const selectedWorkspaceFromLocalStorage = useMemo(() => {
-    if (typeof window !== "undefined" && window.localStorage) {
-      return window.localStorage.getItem("SELECTED_WORKSPACE");
-    }
-  }, []);
 
-  const restoreLastWorkspace = async () => {
-    if (!selectedWorkspaceFromLocalStorage) return;
-    const lastWorkspace = await getWorkspace(selectedWorkspaceFromLocalStorage);
-    setSelectedWorkspace(lastWorkspace as Workspace);
+  const getTemplates = async () => {
+    if (!selectedWorkspace) return;
+    const templates = await getTemplatesInWorkspace(selectedWorkspace.uid);
+    setSelectedTemplates(templates as Template[]);
   };
 
-  // Retrieve the workspaces and set them on Zustand
+  const getDatablocks = async () => {
+    if (!selectedWorkspace) return;
+    const datablocks = await getDatablocksInWorkspace(selectedWorkspace.uid);
+    setSelectedDatablocks(datablocks as DataBlock[]);
+  };
+
   useEffect(() => {
-    setWorkspaces(workspaces);
-  }, [workspaces]);
-
-  useLayoutEffect(() => {
-    if (selectedWorkspace) return;
-    if (pathname === "/workspace") return;
-
-    restoreLastWorkspace();
-  }, [
-    pathname,
-    selectedWorkspace,
-    selectedWorkspaceFromLocalStorage,
-    setSelectedWorkspace,
-  ]);
-
-  useLayoutEffect(() => {
-    if (!uid) return;
-    if (!selectedWorkspace) return;
-
-    const getDatablocks = async () => {
-      const datablocks = await getDatablocksInWorkspace(selectedWorkspace.uid);
-      setSelectedDatablocks(datablocks as DataBlock[]);
-    };
-
-    getDatablocks();
-  }, [selectedWorkspace, setSelectedDatablocks, uid]);
-
-  useLayoutEffect(() => {
-    if (!uid) return;
-    if (!selectedWorkspace) return;
-
-    const getTemplates = async () => {
-      const templates = await getTemplatesInWorkspace(selectedWorkspace.uid);
-      setSelectedTemplates(templates as Template[]);
-    };
-
     getTemplates();
-  }, [selectedWorkspace, setSelectedTemplates, uid]);
+    getDatablocks();
+  }, []);
 
   return (
     <>

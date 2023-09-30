@@ -8,7 +8,7 @@ import {
 } from "react";
 import { AddNodeProps, InteractiveLineProps } from "./InteractiveLine.types";
 import { TextBlockNode } from "../nodes/TextBlockNode/TextBlockNode";
-import { SecondaryMenu } from "@/components/shared/SecondaryMenu/SecondaryMenu";
+import { SecondaryMenu } from "@/components/ui/SecondaryMenu/SecondaryMenu";
 import { TextInputNode } from "../nodes/TextInputNode/TextInputNode";
 import { NumberInputNode } from "../nodes/NumberInputNode/NumberInputNode";
 import { TextNode } from "../nodes/TextNode/TextNode";
