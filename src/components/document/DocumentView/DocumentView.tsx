@@ -144,7 +144,10 @@ export const DocumentView = (props: DocumentViewProps) => {
           authorId: retrievedDocument.authorId,
           workspaceId: retrievedDocument.workspaceId,
           documentType: retrievedDocument.documentType,
+          // TODO: revisar
+          //@ts-ignore
           title: retrievedDocument.name,
+          //@ts-ignore
           documentData: retrievedDocument.templateData,
         };
         setSelectedDocument(rawDoc as Document);

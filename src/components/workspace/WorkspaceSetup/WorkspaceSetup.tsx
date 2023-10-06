@@ -17,7 +17,7 @@ import WorkspaceListPlaceholder from "@/components/placeholders/WorkspaceListPla
 const WorkspaceSetup = (props: WorkspaceSetupProps) => {
   const { push } = useRouter();
   const uid = useAuthStore((s) => s.uid);
-  const { data: userWorkspaces, status = [] } = useFetchUserWorkspaces({
+  const { data: userWorkspaces = [], status } = useFetchUserWorkspaces({
     enabled: !!uid,
   });
   const setSelectedWorkspace = useWorkspaceStore((s) => s.setSelectedWorkspace);

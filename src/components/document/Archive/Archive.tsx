@@ -1,29 +1,27 @@
 "use client";
 
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { ArchiveProps } from "./Archive.types";
-import { getDocumentsInWorkspace } from "@/services/document/document.service";
-import { Document } from "@/types/document.types";
 import { useDocument } from "@/contexts/document/document.context.hooks";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import { useFetchDocumentsInWorkspace } from "@/services/document/document.service.hooks";
+import { useAuthStore } from "@/stores/auth.store";
 
 export const Archive = (props: ArchiveProps) => {
   const { className = "" } = props;
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
+  const { uid: workspaceId = "" } = selectedWorkspace ?? {};
+  const uid = useAuthStore((s) => s.uid);
+  const { data: documents } = useFetchDocumentsInWorkspace(workspaceId, {
+    enabled: !!uid && workspaceId.length > 0,
+  });
   const { archiveDocuments, setArchiveDocuments } = useDocument();
 
-  useLayoutEffect(() => {
-    if (!selectedWorkspace) return;
-    const { uid: workspaceId } = selectedWorkspace;
-
-    const getDocuments = async () => {
-      const documents = await getDocumentsInWorkspace(workspaceId);
-      setArchiveDocuments(documents as Document[]);
-    };
-
-    getDocuments();
+  useEffect(() => {
+    if (!documents) return;
+    setArchiveDocuments(documents);
   }, [selectedWorkspace, setArchiveDocuments]);
 
   return (

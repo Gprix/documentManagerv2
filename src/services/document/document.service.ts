@@ -2,6 +2,7 @@ import { auth, db } from "@/config/firebase.config";
 import { doc, where, query } from "firebase/firestore";
 import { setDoc, getDoc, getDocs, collection } from "firebase/firestore";
 import { WriteDocumentPayload } from "./document.services.types";
+import { Document } from "@/types/document.types";
 
 export const updateDocument = async (
   uid: string,
@@ -45,7 +46,7 @@ export const getDocument = async (uid: string) => {
   try {
     const docRef = doc(db, "documents", uid);
     const docSnap = await getDoc(docRef);
-    return docSnap.data();
+    return docSnap.data() as Document;
   } catch (e) {
     console.log(e);
   }
@@ -64,7 +65,7 @@ export const getDocumentsInWorkspace = async (workspaceId: string) => {
       ...doc.data(),
     }));
 
-    return docsData;
+    return docsData as Document[];
   } catch (e) {
     console.log(e);
   }
