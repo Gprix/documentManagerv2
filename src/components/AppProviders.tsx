@@ -12,7 +12,7 @@ import { TemplatesProvider } from "@/contexts/templates/templates.context";
 import useAuth from "@/hooks/useAuth";
 
 const DevelopmentStatusProvider = () => {
-  const { STATUS } = CONSTANTS.PROJECT;
+  const { STATUS, VERSION } = CONSTANTS.PROJECT;
   const stripesStyle = {
     background: [
       "repeating-linear-gradient(",
@@ -27,8 +27,8 @@ const DevelopmentStatusProvider = () => {
         style={stripesStyle}
         className="flex items-center justify-center py-2"
       >
-        <p className="text-white font-mono font-bold underline">
-          Development Build
+        <p className="text-white font-mono font-bold underline bg-black/40 px-4 py-1 rounded-lg">
+          Development Build v{VERSION}
         </p>
       </div>
     );

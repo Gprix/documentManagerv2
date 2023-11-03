@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { forwardRef, ChangeEvent, useImperativeHandle, useRef } from "react";
 
 import { SwitchProps as Props } from "./Switch.types";
+import { jn } from "@/utils/common.utils";
 
 const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const { className = "" } = props;
@@ -35,9 +36,9 @@ const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
   return (
     <div
       title={title}
-      className={[
-        label ? "flex gap-x-8 py-1 justify-between items-center" : "",
-      ].join(" ")}
+      className={jn(
+        label ? "flex gap-x-8 py-1 justify-between items-center" : ""
+      )}
     >
       {label ? (
         <label

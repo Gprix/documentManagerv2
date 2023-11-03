@@ -23,4 +23,5 @@ export interface ButtonProps {
   textStyle?: string;
   iconStyle?: string;
   disabled?: boolean;
+  isLoading?: boolean;
 }

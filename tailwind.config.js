@@ -9,7 +9,7 @@ module.exports = {
     extend: {
       colors: {
         background: "#fbfbfe",
-        primary: "#fc6499",
+        // primary: "#fc6499",
         secondary: "#d69f1f",
         accent: "#2f0e0f",
         // primary: "#ff4d85",
@@ -29,11 +29,17 @@ module.exports = {
         focus: "hsla(0, 0%, 0%, 0.35)",
 
         // TEST ELEVATIONS (DARK)
+        accent: "hsla(339, 90%, 38%, 1)",
         bck: "hsla(0,0%,4%,1)",
+        "bck-negative": "hsla(0, 0%, 96%, 1)",
         surf: "hsla(0,0%,10%,1)",
         "surf-alt": "hsla(240,2%,17%,1)",
+        "surf-contrast": "hsla(0,0%,36%,1)",
+        "surf-semi-contrast": "hsla(0,0%,20%,1)",
         highlight: "hsla(0,0%,42%,1)",
         txt: "hsla(0, 24%, 88%, 1)",
+        "txt-accent": "hsla(339, 100%, 57%, 1)",
+        "txt-negative": "hsla(0, 52%, 12%, 1)",
 
         // TEST ELEVATIONS (LIGHT)
         // bck: "hsla(0, 0%, 96%, 1)",
@@ -46,6 +52,27 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      animation: {
+        "fade-in": "fade-in 0.5s ease-in-out",
+        "slide-to-left": "slide-to-left 0.5s ease-in-out",
+        page: "fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1), slide-to-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        modal:
+          "fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1), scale-up 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+      },
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "slide-to-left": {
+          "0%": { transform: "translateX(-4rem)" },
+          "100%": { transform: "translateX(0rem)" },
+        },
+        "scale-up": {
+          "0%": { transform: "scale(0.9)" },
+          "100%": { transform: "scale(1)" },
+        },
       },
     },
   },
