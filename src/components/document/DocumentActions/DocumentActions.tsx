@@ -85,7 +85,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
 
   return (
     <>
-      <div className={`DocumentActions bg-primaryLight pt-2 pb-4 ${className}`}>
+      <div className={`DocumentActions bg-surf-alt pt-2 pb-4 ${className}`}>
         <div
           className={[
             "flex gap-x-8 px-6 overflow-x-auto",

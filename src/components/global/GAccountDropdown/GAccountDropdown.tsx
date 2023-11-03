@@ -10,6 +10,7 @@ import { Member } from "@/services/member/member.service.types";
 import { useAuthStore } from "@/stores/auth.store";
 import useAuth from "@/hooks/useAuth";
 import { useNotification } from "@/hooks/useNotification";
+import { jn } from "@/utils/common.utils";
 
 const GAccountDropdown = (props: GAccountDropdownProps) => {
   const { className = "" } = props;
@@ -44,7 +45,11 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
 
   return (
     <div
-      className={`GAccountDropdown flex items-center justify-center gap-x-6 ${className}`}
+      className={jn(
+        "GAccountDropdown",
+        "flex items-center justify-center gap-x-6 bg-surf-alt rounded-md px-6 py-4",
+        className
+      )}
     >
       <Image
         src={photoURL}
@@ -54,10 +59,11 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
         className="rounded-full"
       />
       <div>
-        <p className="text-white mb-2">Bienvenido/a</p>
+        <p className="text-white text-sm">Bienvenido/a</p>
         <Button
           type="outline"
-          textStyle="text-white text-lg font-semibold"
+          textStyle="text-txt font-semibold"
+          iconStyle="[&_path]:fill-txt"
           rightIcon={<DropdownArrowSVG />}
           onClick={handleSwitchAccounts}
         >

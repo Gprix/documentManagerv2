@@ -8,7 +8,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        text: "#2f0f0f",
         background: "#fbfbfe",
         primary: "#fc6499",
         secondary: "#d69f1f",
@@ -28,6 +27,20 @@ module.exports = {
         // backdrop variants
         glass: "hsla(0, 0%, 100%, 0.1)",
         focus: "hsla(0, 0%, 0%, 0.35)",
+
+        // TEST ELEVATIONS (DARK)
+        bck: "hsla(0,0%,4%,1)",
+        surf: "hsla(0,0%,10%,1)",
+        "surf-alt": "hsla(240,2%,17%,1)",
+        highlight: "hsla(0,0%,42%,1)",
+        txt: "hsla(0, 24%, 88%, 1)",
+
+        // TEST ELEVATIONS (LIGHT)
+        // bck: "hsla(0, 0%, 96%, 1)",
+        // surf: "hsla(0, 0%, 90%, 1)",
+        // "surf-alt": "hsla(240, 2%, 83%, 1)",
+        // highlight: "hsla(0, 0%, 58%, 1)",
+        // txt: "hsla(0, 52%, 12%, 1)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

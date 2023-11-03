@@ -1,24 +1,22 @@
 "use client";
 
-import { MouseEvent, useLayoutEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { BaseNode } from "../BaseNode/BaseNode";
 import { TextNodeProps } from "./TextNode.types";
 import { SecondaryMenu } from "@/components/ui/SecondaryMenu/SecondaryMenu";
 import { TextType } from "./TextNode.types";
-import { useDocument } from "@/contexts/document/document.context.hooks";
+import { useDocumentStore } from "@/stores/document.store";
+import { jn } from "@/utils/common.utils";
 
 export const TextNode = (props: TextNodeProps) => {
-  const { className = "", editable = true } = props;
-  const { data, rowIndex, inlineIndex, onNodeUpdate } = props;
-  const [origin, setOrigin] = useState({ x: 0, y: 0 });
-  const [showSecondaryMenu, setShowSecondaryMenu] = useState(false);
+  const { className, isEditable = true } = props;
+  const { data, lineNumber, nodeNumber, onNodeUpdate } = props;
   const [nodeStyle, setNodeStyle] = useState<TextType>("span");
   const [value, setValue] = useState("");
-  const { selectedDocument } = useDocument();
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
 
-  useLayoutEffect(() => {
-    if (!selectedDocument) return;
-  }, [selectedDocument]);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
+  const [showSecondaryMenu, setShowSecondaryMenu] = useState(false);
 
   const secondaryMenuOptions = [
     {
@@ -52,22 +50,13 @@ export const TextNode = (props: TextNodeProps) => {
     setShowSecondaryMenu(true);
   };
 
-  // Retrieve and set data
-  useLayoutEffect(() => {
-    if (!data) return;
-
-    const { style, value } = data;
-    setNodeStyle(style);
-    setValue(value);
-  }, [data]);
-
   const handleUpdate = (updatedValue: string) => {
     if (!onNodeUpdate) return;
     if (!selectedDocument) return;
 
     onNodeUpdate({
-      inlineIndex,
-      rowIndex,
+      nodeNumber,
+      lineNumber,
       isFullLine: false,
       type: "text",
       style: nodeStyle,
@@ -75,20 +64,32 @@ export const TextNode = (props: TextNodeProps) => {
     });
   };
 
+  // load data from props
+  useEffect(() => {
+    if (!data) return;
+
+    const { style, value } = data;
+    setNodeStyle(style);
+    setValue(value);
+  }, [data]);
+
   return (
     <>
       <BaseNode
         className="TextNode"
-        contentClassName={["pl-2 pr-3 pt-1 flex", className].join(" ")}
+        contentClassName={jn("pl-2 pr-3 pt-1 flex", className)}
+        nodeNumber={nodeNumber}
+        lineNumber={lineNumber}
+        isEditable={isEditable}
       >
         <button
           onClick={(e) => changeStyleHandler(e)}
-          className={[
+          className={jn(
             "block text-sm mr-2 bg-transparent transition-opacity rounded-lg",
             "w-0 opacity-0 px-2 pt-1 mb-1 text-gray-500",
             "hover:bg-gray-100 hover:cursor-pointer",
-            "group-hover:opacity-100 group-hover:w-auto",
-          ].join(" ")}
+            "group-hover:opacity-100 group-hover:w-auto"
+          )}
         >
           {nodeStyle}
         </button>

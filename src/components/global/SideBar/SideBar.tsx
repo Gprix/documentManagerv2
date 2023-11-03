@@ -6,20 +6,22 @@ import Image from "next/image";
 
 import { getMember } from "@/services/member/member.service";
 import { Member } from "@/services/member/member.service.types";
+import { useAuthStore } from "@/stores/auth.store";
+import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboard";
 
 import CalendarSVG from "images/icons/calendar.svg";
 import DiscSVG from "images/icons/disc.svg";
-import DocPageSVG from "images/icons/doc-page.svg";
-import NotificationsSVG from "images/icons/notifications.svg";
-import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboard";
-import { useAuthStore } from "@/stores/auth.store";
-import LeftArrowSVG from "images/icons/left-arrow.svg";
+import ArchiveSVG from "images/icons/archive.svg";
+import BellSVG from "images/icons/bell.svg";
+import WorkspaceSVG from "images/icons/columns.svg";
+import { jn } from "@/utils/common.utils";
 
 const Sidebar = () => {
   const uid = useAuthStore((s) => s.uid);
   const [photoURL, setPhotoURL] = useState("");
   const sidebarElementClassName =
-    "text-center text-black p-3 rounded-full hover:bg-primaryMedium transition-md";
+    "text-center text-black p-3 rounded-full bg-surface-alt hover:bg-highlight transition-md flex items-center justify-center";
+  const iconClassName = "[&_path]:stroke-txt";
 
   const ProfilePreview = () => {
     return (
@@ -27,8 +29,8 @@ const Sidebar = () => {
         <div
           className={[
             "flex flex-col items-center rounded-lg mt-4 py-3 mx-2 transition-md",
-            "hover:bg-primaryMedium hover:cursor-pointer hover:shadow",
-            "active:bg-primaryDark active:shadow-none",
+            "hover:bg-highlight hover:cursor-pointer hover:shadow",
+            "active:bg-surf active:shadow-none",
           ].join(" ")}
         >
           <Image
@@ -61,33 +63,36 @@ const Sidebar = () => {
     <aside
       className={[
         "Sidebar",
-        "bg-primaryDark w-[96px] py-6 overflow-hidden",
+        "bg-surf w-[96px] py-6 overflow-hidden",
         "flex flex-col justify-between items-center",
       ].join(" ")}
     >
       <Link href="/workspace">
-        <LeftArrowSVG />
+        <WorkspaceSVG className={iconClassName} />
       </Link>
       <div
-        className={[
-          "flex flex-col gap-y-4 shadow-md bg-primary px-2 py-8 rounded-full",
-          "hover:cursor-pointer",
-        ].join(" ")}
+        className={jn(
+          "flex flex-col gap-y-4 shadow-md bg-surf-alt px-2 py-8 rounded-lg",
+          "hover:cursor-pointer"
+        )}
       >
         <Link href="/workspace/schedule" className={sidebarElementClassName}>
-          <CalendarSVG alt="schedule" />
+          <CalendarSVG
+            className={jn(iconClassName, "[&_rect]:stroke-txt")}
+            alt="schedule"
+          />
         </Link>
         <Link href="/workspace/documents" className={sidebarElementClassName}>
-          <DocPageSVG alt="documents" />
+          <ArchiveSVG className={iconClassName} alt="documents" />
         </Link>
         <Link
           href="/workspace/notifications"
           className={sidebarElementClassName}
         >
-          <NotificationsSVG alt="notifications" />
+          <BellSVG className={iconClassName} alt="notifications" />
         </Link>
         <Link href="/workspace/backup" className={sidebarElementClassName}>
-          <DiscSVG alt="backup" />
+          <DiscSVG className="[&_path]:fill-txt" alt="backup" />
         </Link>
       </div>
       <ProfilePreview />

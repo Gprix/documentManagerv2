@@ -8,12 +8,12 @@ import { useDocument } from "@/contexts/document/document.context.hooks";
 import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 
 import Select, { SingleValue } from "react-select";
-import { getLastFromPathname } from "@/utils/common.utils";
+import { getLastFromPathname, jn } from "@/utils/common.utils";
 import NewBlockModal from "./NewBlockModal";
 
 export const TextBlockNode = (props: TextBlockNodeProps) => {
-  const { className = "", editable = true } = props;
-  const { data, rowIndex, inlineIndex, onNodeUpdate } = props;
+  const { className, isEditable = true } = props;
+  const { data, lineNumber, nodeNumber, onNodeUpdate } = props;
   const { selectedDocument } = useDocument();
   const { selectedDatablocks } = useDatablocks();
   const [blockEntryId, setBlockEntryId] = useState<string | null>(null);
@@ -40,8 +40,8 @@ export const TextBlockNode = (props: TextBlockNodeProps) => {
     setBlockEntryId(value);
 
     onNodeUpdate({
-      rowIndex,
-      inlineIndex,
+      lineNumber: lineNumber,
+      nodeNumber: nodeNumber,
       isFullLine: false,
       type: "textBlock",
       blockEntryId: value,
@@ -75,12 +75,15 @@ export const TextBlockNode = (props: TextBlockNodeProps) => {
   return (
     <>
       <BaseNode
-        className={["TextBlockNode", "overflow-visible !rounded-lg"].join(" ")}
-        contentClassName={[
+        className={jn("TextBlockNode", "overflow-visible !rounded-lg")}
+        contentClassName={jn(
           "hover:bg-gray-200",
           "pl-3 pr-1 pt-2 pb-1 !rounded-lg",
-          className,
-        ].join(" ")}
+          className
+        )}
+        nodeNumber={nodeNumber}
+        lineNumber={lineNumber}
+        isEditable={isEditable}
       >
         <Select
           value={blocksAsOptions?.find(

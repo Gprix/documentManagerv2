@@ -6,7 +6,7 @@ const WorkspaceListPlaceholder = () => {
   return (
     <div className="px-12 mt-8">
       <Placeholder className="w-64 h-6" />
-      <div className="flex w-full justify-between items-start mt-6">
+      <div className="flex w-full justify-between items-start gap-2 mt-6">
         <div className="flex flex-col gap-2 justify-start">
           <Placeholder className={placeholderClassName} />
           <Placeholder className={placeholderClassName} />

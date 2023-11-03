@@ -3,7 +3,7 @@
 import Button from "@/components/ui/Button/Button";
 import { Modal } from "@/components/ui/Modal/Modal";
 import { ChangeEvent, useState } from "react";
-import { NewWorkspaceModalProps } from "./WorkspaceSetup.types";
+import { NewWorkspaceModalProps } from "./WorkspaceSetup/WorkspaceSetup.types";
 import { writeWorkspace } from "@/services/workspace/workspace.service";
 import { useNotification } from "@/hooks/useNotification";
 

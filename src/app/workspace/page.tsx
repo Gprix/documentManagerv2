@@ -4,7 +4,7 @@ import WorkspaceSetup from "@/components/workspace/WorkspaceSetup/WorkspaceSetup
 
 const WorkspacePage = () => {
   return (
-    <section className="bg-gradient-to-bl from-[#7F96FF] to-[#000000] relative flex w-full">
+    <section className="bg-bck relative flex w-full">
       {/* <Image
         src={WavesSVG}
         alt=""

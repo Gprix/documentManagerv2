@@ -3,11 +3,11 @@
 import { useEffect } from "react";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { ArchiveProps } from "./Archive.types";
-import { useDocument } from "@/contexts/document/document.context.hooks";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
 import { useWorkspaceStore } from "@/stores/workspace.store";
 import { useFetchDocumentsInWorkspace } from "@/services/document/document.service.hooks";
 import { useAuthStore } from "@/stores/auth.store";
+import { useDocumentStore } from "@/stores/document.store";
 
 export const Archive = (props: ArchiveProps) => {
   const { className = "" } = props;
@@ -17,7 +17,8 @@ export const Archive = (props: ArchiveProps) => {
   const { data: documents } = useFetchDocumentsInWorkspace(workspaceId, {
     enabled: !!uid && workspaceId.length > 0,
   });
-  const { archiveDocuments, setArchiveDocuments } = useDocument();
+  const setArchiveDocuments = useDocumentStore((s) => s.setArchiveDocuments);
+  const archiveDocuments = useDocumentStore((s) => s.archiveDocuments);
 
   useEffect(() => {
     if (!documents) return;

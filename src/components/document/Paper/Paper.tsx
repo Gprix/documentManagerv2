@@ -1,129 +1,127 @@
 "use client";
 
 import { PaperProps } from "./Paper.types";
-import InteractiveLine from "../InteractiveLine/InteractiveLine";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { DocumentLineRawData } from "@/types/document.types";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDocumentStore } from "@/stores/document.store";
 import { Document, DocumentNodeRawData } from "@/types/document.types";
-import { useDocument } from "@/contexts/document/document.context.hooks";
+import { NodeRawData } from "@/types/document.types";
+import Line from "../Line/Line";
+import { jn } from "@/utils/common.utils";
 
 export const Paper = (props: PaperProps) => {
-  const { className = "" } = props;
-  const { document, isEditing = true } = props;
-  const { setSelectedDocument } = useDocument();
+  const { className, document, isEditing: isEditable = true } = props;
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
+  const setSelectedDocument = useDocumentStore((s) => s.setSelectedDocument);
   const { documentData: documentDataProps } = document ?? {};
+  // TODO: switch to object (hash map like) instead of array
   const [lines, setLines] = useState<React.ReactNode[]>([]);
+
+  // TODO: check if this is the appropriate way to check it.
   const isMounted = useRef(false);
 
-  const onNodeUpdate = useCallback(
-    (updatedNodeData: DocumentNodeRawData) => {
-      setSelectedDocument((prevDocument) => {
-        if (!prevDocument) return prevDocument;
-        const { documentData: oldDocumentData } = prevDocument;
-        if (oldDocumentData === undefined) return prevDocument;
-
-        const isFirstUpdate =
-          prevDocument.documentData.length === 0 &&
-          oldDocumentData.length === 0;
-
-        if (isFirstUpdate) {
-          const newDocument: Document = {
-            ...prevDocument,
-            documentData: [updatedNodeData],
-          };
-          return newDocument;
-        }
-
-        const newDocumentData = [updatedNodeData];
-
-        const resultDocumentData = oldDocumentData
-          ? oldDocumentData
-              .map((node) => {
-                const { rowIndex, inlineIndex } = node;
-                const matchNode = newDocumentData.find(
-                  (item) =>
-                    item.rowIndex === rowIndex &&
-                    item.inlineIndex === inlineIndex
-                );
-                return matchNode || node;
-              })
-              .concat(
-                newDocumentData.filter(
-                  (item) =>
-                    !oldDocumentData.find(
-                      (node) =>
-                        item.rowIndex === node.rowIndex &&
-                        item.inlineIndex === node.inlineIndex
-                    )
-                )
-              )
-          : newDocumentData;
-
-        const newDocument: Document = {
-          ...prevDocument,
-          documentData: resultDocumentData,
-        };
-
-        return newDocument;
-      });
-    },
-    [setSelectedDocument]
-  );
-
-  /**
-   * Callback to instance a new interactive line
-   */
-  const bindLine = useCallback(
-    (lineData: DocumentLineRawData | undefined) => {
-      setLines((prevLines) => [
-        ...prevLines,
-        <InteractiveLine
-          isEditable={isEditing}
-          orderIndex={prevLines.length}
-          data={lineData}
-          key={`line-${prevLines.length}`}
-          onNodeUpdate={onNodeUpdate}
-        />,
-      ]);
-    },
-    [onNodeUpdate]
-  );
-
-  const AddLine = () => {
+  const renderAddLineButton = () => {
     return (
       <button
         onClick={() => bindLine(undefined)}
-        className="bg-gray-200 hover:bg-gray-300 text-black rounded-lg hover:cursor-pointer px-4 min-h-[32px] transition-color duration-150"
+        className={jn(
+          "bg-gray-200 text-black rounded-lg px-4 min-h-[32px]",
+          "hover:bg-gray-300 hover:cursor-pointer",
+          "transition-color duration-150"
+        )}
       >
         +
       </button>
     );
   };
 
-  // Map document data lines to node lines (initial render)
-  useLayoutEffect(() => {
+  /**
+   * Callback to update node data
+   */
+  const onNodeUpdate = useCallback(
+    (newNodeData: DocumentNodeRawData) => {
+      if (!selectedDocument) return;
+
+      const { documentData } = selectedDocument;
+      const oldDocumentData = structuredClone(documentData);
+
+      // updating old or existing nodes
+      const updatedDocumentData = oldDocumentData.map((oldNodeData) => {
+        const { nodeNumber, lineNumber } = oldNodeData;
+        const { nodeNumber: newNodeNumber } = newNodeData;
+        const { lineNumber: newLineNumber } = newNodeData;
+
+        const isMatchingNode =
+          nodeNumber === newNodeNumber && lineNumber === newLineNumber;
+
+        if (!isMatchingNode) return oldNodeData;
+        return newNodeData;
+      });
+
+      // adding new nodes (only if it doesn't exist)
+      const isExistingNode = oldDocumentData.find(
+        (oldNodeData) =>
+          oldNodeData.nodeNumber === newNodeData.nodeNumber &&
+          oldNodeData.lineNumber === newNodeData.lineNumber
+      );
+      if (!isExistingNode) {
+        updatedDocumentData.push(newNodeData);
+      }
+
+      const newDocument: Document = {
+        ...selectedDocument,
+        documentData: updatedDocumentData,
+      };
+
+      setSelectedDocument(newDocument);
+    },
+    [selectedDocument, setSelectedDocument]
+  );
+
+  /**
+   * Callback to instance a new interactive line
+   */
+  const bindLine = useCallback(
+    (lineData: NodeRawData[] | undefined) => {
+      setLines((prevLines) => [
+        ...prevLines,
+        <Line
+          key={`line-${prevLines.length}`}
+          data={lineData}
+          lineNumber={prevLines.length}
+          onNodeUpdate={onNodeUpdate}
+          isEditable={isEditable}
+        />,
+      ]);
+    },
+    [onNodeUpdate]
+  );
+
+  // Sort and map document data to node lines (initial render)
+  useEffect(() => {
     if (isMounted.current) return;
     if (!documentDataProps) return;
 
     const sortedNodes = [...documentDataProps].sort(
-      (a, b) => a.inlineIndex - b.inlineIndex
+      (a, b) => a.nodeNumber - b.nodeNumber
     );
 
-    const groupedLines: { rowIndex: number; nodes: DocumentNodeRawData[] }[] =
-      [];
+    const groupedLines: {
+      rowIndex: number;
+      nodes: NodeRawData[];
+    }[] = [];
 
     sortedNodes.forEach((nodeData) => {
-      const { rowIndex } = nodeData;
+      const { lineNumber } = nodeData;
 
       // Find the line with the matching rowIndex
       const lineIndex = groupedLines.findIndex(
-        (lineData) => lineData.rowIndex === rowIndex
+        (lineData) => lineData.rowIndex === lineNumber
       );
 
       if (lineIndex === -1) {
         // Line doesn't exist, create a new line data
         groupedLines.push({
-          rowIndex,
+          rowIndex: lineNumber,
           nodes: [nodeData],
         });
       } else {
@@ -134,7 +132,7 @@ export const Paper = (props: PaperProps) => {
 
     // Bind lines and nodes based on the data
     groupedLines.forEach((lineData) => {
-      lineData.nodes.sort((a, b) => a.inlineIndex - b.inlineIndex);
+      lineData.nodes.sort((a, b) => a.nodeNumber - b.nodeNumber);
       bindLine(lineData.nodes);
     });
 
@@ -146,7 +144,7 @@ export const Paper = (props: PaperProps) => {
       className={`Paper flex flex-col gap-y-2 bg p-6 rounded-lg ${className}`}
     >
       {lines.map((line) => line)}
-      {isEditing ? <AddLine /> : null}
+      {renderAddLineButton()}
     </article>
   );
 };

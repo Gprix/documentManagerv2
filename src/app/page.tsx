@@ -8,11 +8,14 @@ import Button from "@/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { Poppins } from "next/font/google";
+import { useAuthStore } from "@/stores/auth.store";
+import { useEffect } from "react";
 const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 const HomePage = () => {
   const { push } = useRouter();
   const { signInWithGoogle } = useAuth();
+  const uid = useAuthStore((s) => s.uid);
 
   const handleSignIn = async () => {
     const credentials = await signInWithGoogle();
@@ -21,6 +24,11 @@ const HomePage = () => {
 
     push("/workspace");
   };
+
+  useEffect(() => {
+    if (!uid) return;
+    push("/workspace");
+  }, [uid]);
 
   return (
     <section

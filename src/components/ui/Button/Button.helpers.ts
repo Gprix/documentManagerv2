@@ -10,6 +10,6 @@ export const getContainerStyle = (type: ButtonType) =>
 export const getTextStyle = (type: ButtonType) =>
   ({
     solid: "text-white font-semibold",
-    outline: "text-black underline font-medium",
-    transparent: "text-black",
+    outline: "text-txt underline font-medium",
+    transparent: "text-txt",
   }[type]);

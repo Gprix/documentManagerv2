@@ -92,7 +92,7 @@ const DocumentsPage = () => {
 
   return (
     <>
-      <section className="Documents flex-grow bg-blue-50 text-black overflow-y-auto pt-6 pb-32">
+      <section className="Documents flex-grow bg-bck text-txt overflow-y-auto pt-6 pb-32">
         <h1 className="Documents__title text-2xl font-bold mb-3 ml-6">
           Archivo notarial
         </h1>
@@ -105,12 +105,12 @@ const DocumentsPage = () => {
             newActionLabel="Nueva acta"
           />
           <div className="absolute top-0 right-0">
-            <p className="text-dimmed text-sm text-right pr-4 pt-3">
+            <p className="text-txt opacity-80 text-sm text-right pr-4 pt-3">
               Plantillas recientes
             </p>
             <p
               onClick={() => setShowTemplatesModal(!showTemplatesModal)}
-              className="text-dimmed text-xs text-right pr-4 underline hover:cursor-pointer"
+              className="text-txt opacity-80 text-xs text-right pr-4 underline hover:cursor-pointer"
             >
               Ver plantillas
             </p>

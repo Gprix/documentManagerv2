@@ -15,15 +15,8 @@ export interface BaseNodeProps {
   contentClassName?: string;
   /** Node data. */
   data?: NodeRawData;
+  nodeNumber: number;
+  lineNumber: number;
   /** Is node editable. */
-  editable?: boolean;
-}
-
-export interface NodeSharedProps {
-  /** Node row index. */
-  rowIndex: number;
-  /** Node inline index. */
-  inlineIndex: number;
-  /** Is node editable. */
-  editable?: boolean;
+  isEditable?: boolean;
 }
