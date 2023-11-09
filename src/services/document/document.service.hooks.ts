@@ -1,17 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { queries } from "@/config/queries";
 import { QueryOptions } from "@/types/query.types";
+import { getDocument, getDocumentsInWorkspace } from "./document.service";
 
 export const useFetchDocument = (
-  documentId: string,
+  uid: string,
   queryOptions: QueryOptions = {}
-) => useQuery({ ...queries.documents.document(documentId), ...queryOptions });
+) =>
+  useQuery({
+    queryKey: ["document", uid],
+    queryFn: () => getDocument(uid),
+    ...queryOptions,
+  });
 
-export const useFetchDocumentsInWorkspace = (
+export const useFetchWorkspaceDocuments = (
   workspaceId: string,
   queryOptions: QueryOptions = {}
 ) =>
   useQuery({
-    ...queries.documents.documentsInWorkspace(workspaceId),
+    queryKey: ["workspaceDocuments", workspaceId],
+    queryFn: () => getDocumentsInWorkspace(workspaceId),
     ...queryOptions,
   });

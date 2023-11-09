@@ -5,7 +5,7 @@ import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { ArchiveProps } from "./Archive.types";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
 import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useFetchDocumentsInWorkspace } from "@/services/document/document.service.hooks";
+import { useFetchWorkspaceDocuments } from "@/services/document/document.service.hooks";
 import { useAuthStore } from "@/stores/auth.store";
 import { useDocumentStore } from "@/stores/document.store";
 
@@ -14,16 +14,18 @@ export const Archive = (props: ArchiveProps) => {
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid: workspaceId = "" } = selectedWorkspace ?? {};
   const uid = useAuthStore((s) => s.uid);
-  const { data: documents } = useFetchDocumentsInWorkspace(workspaceId, {
+  const { data: documents } = useFetchWorkspaceDocuments(workspaceId, {
     enabled: !!uid && workspaceId.length > 0,
   });
+  console.log({ documents });
   const setArchiveDocuments = useDocumentStore((s) => s.setArchiveDocuments);
   const archiveDocuments = useDocumentStore((s) => s.archiveDocuments);
+  console.log({ archiveDocuments });
 
   useEffect(() => {
     if (!documents) return;
     setArchiveDocuments(documents);
-  }, [selectedWorkspace, setArchiveDocuments]);
+  }, [documents]);
 
   return (
     <section className={`Archive ${className}`}>

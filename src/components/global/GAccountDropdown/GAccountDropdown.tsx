@@ -2,23 +2,21 @@
 
 import Image from "next/image";
 import Button from "@/components/ui/Button/Button";
-import { GAccountDropdownProps } from "./GAccountDropdown.types";
-import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
-import { getMember } from "@/services/member/member.service";
-import { useEffect, useState } from "react";
-import { Member } from "@/services/member/member.service.types";
-import { useAuthStore } from "@/stores/auth.store";
 import useAuth from "@/hooks/useAuth";
 import { useNotification } from "@/hooks/useNotification";
+import { useFetchMember } from "@/services/member/member.service.hooks";
+import { useAuthStore } from "@/stores/auth.store";
 import { jn } from "@/utils/common.utils";
+import { GAccountDropdownProps } from "./GAccountDropdown.types";
+import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
 
 const GAccountDropdown = (props: GAccountDropdownProps) => {
-  const { className = "" } = props;
-  const { error } = useNotification();
-  const [name, setName] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
+  const { className } = props;
   const { signInWithGoogle } = useAuth();
+  const { error, success } = useNotification();
   const uid = useAuthStore((s) => s.uid);
+  const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
+  const { name = "", photoURL = "" } = member ?? {};
 
   const handleSwitchAccounts = async () => {
     const credentials = await signInWithGoogle();
@@ -27,21 +25,8 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
       error("No se pudo iniciar sesión con Google");
       return;
     }
+    success("Ha cambiado de cuenta exitosamente");
   };
-
-  useEffect(() => {
-    if (!uid) return;
-
-    const retrieveUserInfo = async () => {
-      const member = await getMember(uid ?? "");
-      const { name, photoURL } = (member as Member) ?? {};
-
-      setName(name);
-      setPhotoURL(photoURL);
-    };
-
-    retrieveUserInfo();
-  }, [uid]);
 
   return (
     <div

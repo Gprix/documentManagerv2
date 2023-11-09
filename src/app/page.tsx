@@ -10,18 +10,23 @@ import useAuth from "@/hooks/useAuth";
 import { Poppins } from "next/font/google";
 import { useAuthStore } from "@/stores/auth.store";
 import { useEffect } from "react";
+import { useNotification } from "@/hooks/useNotification";
 const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 const HomePage = () => {
   const { push } = useRouter();
   const { signInWithGoogle } = useAuth();
   const uid = useAuthStore((s) => s.uid);
+  const { error, success } = useNotification();
 
   const handleSignIn = async () => {
     const credentials = await signInWithGoogle();
     const { user } = credentials ?? {};
-    if (!user) throw new Error("No user found with Google");
-
+    if (!user) {
+      error("No se pudo iniciar sesión con Google");
+      return;
+    }
+    success("Sesión iniciada exitosamente");
     push("/workspace");
   };
 
@@ -29,6 +34,8 @@ const HomePage = () => {
     if (!uid) return;
     push("/workspace");
   }, [uid]);
+
+  if (uid) return null;
 
   return (
     <section

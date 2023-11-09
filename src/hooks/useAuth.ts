@@ -1,8 +1,8 @@
-import { auth } from "@/config/firebase.config";
-import { useAuthStore } from "@/stores/auth.store";
+import { useCallback, useMemo } from "react";
 import { GoogleAuthProvider, User } from "firebase/auth";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { useCallback, useMemo } from "react";
+import { auth } from "@/config/firebase.config";
+import { useAuthStore } from "@/stores/auth.store";
 
 const useAuth = () => {
   const setUid = useAuthStore((s) => s.setUid);

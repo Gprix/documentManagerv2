@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
-import { getMember } from "@/services/member/member.service";
-import { Member } from "@/services/member/member.service.types";
 import { useAuthStore } from "@/stores/auth.store";
+import { jn } from "@/utils/common.utils";
+import { useFetchMember } from "@/services/member/member.service.hooks";
 import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboard";
 
 import CalendarSVG from "images/icons/calendar.svg";
@@ -14,11 +12,14 @@ import DiscSVG from "images/icons/disc.svg";
 import ArchiveSVG from "images/icons/archive.svg";
 import BellSVG from "images/icons/bell.svg";
 import WorkspaceSVG from "images/icons/columns.svg";
-import { jn } from "@/utils/common.utils";
+import Button from "@/components/ui/Button/Button";
+import useAuth from "@/hooks/useAuth";
 
 const Sidebar = () => {
   const uid = useAuthStore((s) => s.uid);
-  const [photoURL, setPhotoURL] = useState("");
+  const { signOut } = useAuth();
+  const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
+  const { photoURL = "" } = member ?? {};
   const sidebarElementClassName =
     "text-center text-black p-3 rounded-full bg-surface-alt hover:bg-highlight transition-md flex items-center justify-center";
   const iconClassName = "[&_path]:stroke-txt";
@@ -46,26 +47,14 @@ const Sidebar = () => {
     );
   };
 
-  useEffect(() => {
-    if (!uid) return;
-
-    const retrieveUserInfo = async () => {
-      const member = await getMember(uid ?? "");
-      const { photoURL } = (member as Member) ?? {};
-
-      setPhotoURL(photoURL);
-    };
-
-    // retrieveUserInfo();
-  }, [uid]);
-
   return (
     <aside
-      className={[
+      className={jn(
         "Sidebar",
         "bg-surf w-[96px] py-6 overflow-hidden",
         "flex flex-col justify-between items-center",
-      ].join(" ")}
+        "animate-page"
+      )}
     >
       <Link href="/workspace">
         <WorkspaceSVG className={iconClassName} />
@@ -95,7 +84,8 @@ const Sidebar = () => {
           <DiscSVG className="[&_path]:fill-txt" alt="backup" />
         </Link>
       </div>
-      <ProfilePreview />
+      <Button onClick={signOut}>Sign out</Button>
+      {/* <ProfilePreview /> */}
     </aside>
   );
 };
