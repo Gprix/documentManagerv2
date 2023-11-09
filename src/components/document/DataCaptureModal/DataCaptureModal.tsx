@@ -59,7 +59,7 @@ export const DataCaptureModal = (props: DataCaptureModalProps) => {
       {/* <p>mensajes de error</p> */}
 
       <div className="flex justify-between my-6">
-        <Button className="" type="outline">
+        <Button className="" appearance="outline">
           Seleccionar origen...
         </Button>
         <Button disabled className="w-5/12">

@@ -4,19 +4,20 @@ import { getContainerStyle, getTextStyle } from "./Button.helpers";
 import LoaderSVG from "images/icons/loader.svg";
 
 const Button = (props: ButtonProps) => {
-  const { children, className } = props;
-  const { onClick, leftIcon, rightIcon, type = "solid" } = props;
+  const { children, className, htmlType } = props;
+  const { onClick, leftIcon, rightIcon, appearance = "solid" } = props;
   const { disabled = false, isLoading = false } = props;
   const { iconStyle, textStyle } = props;
 
   return (
     <button
       className={`Button ${getContainerStyle(
-        type
+        appearance
       )} block transition-all duration-500 ease-in-out ${className} ${
         disabled ? "opacity-30 hover:cursor-default" : ""
       } `}
       onClick={!disabled ? onClick : () => {}}
+      type={htmlType}
     >
       <div className="flex flex-nowrap items-center justify-center">
         {isLoading ? (
@@ -27,7 +28,7 @@ const Button = (props: ButtonProps) => {
         ) : null}
         <div
           className={`${getTextStyle(
-            type
+            appearance
           )} text-center whitespace-nowrap ${textStyle}`}
         >
           {children}

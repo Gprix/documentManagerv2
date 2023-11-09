@@ -36,7 +36,7 @@ const Input = (props: InputProps) => {
           />
           {withSubmit ? (
             <Button
-              type="transparent"
+              appearance="transparent"
               rightIcon={<RightArrowSVG />}
               onClick={onSubmit}
             />

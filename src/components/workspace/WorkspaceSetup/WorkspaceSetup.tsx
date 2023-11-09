@@ -37,6 +37,17 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
           Error al cargar los espacios de trabajo
         </p>
       );
+    if (status === "success" && workspaces.length === 0)
+      return (
+        <div>
+          <p className="text-center text-txt font-medium mb-2">
+            Aún no tienes espacios de trabajo
+          </p>
+          <p className="text-center text-txt text-sm opacity-80">
+            Crea o únete a un espacio de trabajo para empezar a usar DocuNot.
+          </p>
+        </div>
+      );
 
     return (
       <section>
@@ -85,7 +96,7 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
         >
           Nuevo espacio de trabajo
         </Button>
-        <Button className="text-sm" type="outline" disabled>
+        <Button className="text-sm" appearance="outline" disabled>
           Unirse a un espacio de trabajo
         </Button>
       </div>

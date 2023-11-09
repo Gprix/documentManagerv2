@@ -253,11 +253,14 @@ export const DocumentView = (props: DocumentViewProps) => {
         {/* {isEditing ? <DocumentToolbox /> : null} */}
         {isEditing ? (
           <div className="flex gap-x-4 bg-primaryLight">
-            <Button type="transparent" onClick={() => setShowImportModal(true)}>
+            <Button
+              appearance="transparent"
+              onClick={() => setShowImportModal(true)}
+            >
               Importar
             </Button>
             <Button
-              type="transparent"
+              appearance="transparent"
               onClick={() => {
                 if (!selectedDocument) return;
                 exportDocument(selectedDocument);

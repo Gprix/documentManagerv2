@@ -6,7 +6,7 @@ import { Member } from "@/types/common.types";
 export const writeMember = async (payload: WriteMemberPayload) => {
   try {
     const { uid } = payload;
-
+    if (!uid) throw new Error("Member uid not provided");
     await setDoc(doc(db, "members", uid), payload);
   } catch (e) {
     console.error(e);

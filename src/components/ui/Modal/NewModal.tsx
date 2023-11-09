@@ -34,6 +34,7 @@ const NewModal = (props: NewModalProps) => {
         // TODO: esto es un fix para safari aparentemente
         // "max-h-[100dvh]"
         "max-h-screen max-w-full overflow-hidden self-center",
+        "focus:outline-none",
         className
       )}
     >

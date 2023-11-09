@@ -15,7 +15,8 @@ export interface Member {
   uid: string;
   name: string;
   email: string;
-  documentType: DocumentType;
+  // documentType: DocumentType;
+  documentType: string;
   documentNumber: string;
   role: Role;
   photoURL: string;

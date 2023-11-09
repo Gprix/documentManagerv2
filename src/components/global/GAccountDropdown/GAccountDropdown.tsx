@@ -46,7 +46,7 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
       <div>
         <p className="text-white text-sm">Bienvenido/a</p>
         <Button
-          type="outline"
+          appearance="outline"
           textStyle="text-txt font-semibold"
           iconStyle="[&_path]:fill-txt"
           rightIcon={<DropdownArrowSVG />}
