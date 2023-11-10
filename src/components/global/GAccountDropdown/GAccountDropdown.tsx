@@ -9,11 +9,13 @@ import { useAuthStore } from "@/stores/auth.store";
 import { jn } from "@/utils/common.utils";
 import { GAccountDropdownProps } from "./GAccountDropdown.types";
 import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
+import { useRouter } from "next/navigation";
 
 const GAccountDropdown = (props: GAccountDropdownProps) => {
   const { className } = props;
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signOut } = useAuth();
   const { error, success } = useNotification();
+  const { push } = useRouter();
   const uid = useAuthStore((s) => s.uid);
   const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
   const { name = "", photoURL = "" } = member ?? {};
@@ -28,34 +30,48 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
     success("Ha cambiado de cuenta exitosamente");
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    push("/");
+  };
+
   return (
-    <div
-      className={jn(
-        "GAccountDropdown",
-        "flex items-center justify-center gap-x-6 bg-surf-alt rounded-md px-6 py-4",
-        className
-      )}
-    >
-      <Image
-        src={photoURL}
-        alt={name}
-        width="64"
-        height="64"
-        className="rounded-full"
-      />
-      <div>
-        <p className="text-white text-sm">Bienvenido/a</p>
-        <Button
-          appearance="outline"
-          textStyle="text-txt font-semibold"
-          iconStyle="[&_path]:fill-txt"
-          rightIcon={<DropdownArrowSVG />}
-          onClick={handleSwitchAccounts}
-        >
-          {name.toUpperCase()}
-        </Button>
+    <>
+      <div
+        className={jn(
+          "GAccountDropdown",
+          "flex items-center justify-center gap-x-6 bg-surf-alt rounded-md px-6 py-4 animate-slide-to-bottom",
+          className
+        )}
+      >
+        <Image
+          src={photoURL}
+          alt={name}
+          width="64"
+          height="64"
+          className="rounded-full"
+        />
+        <div>
+          <p className="text-white text-sm">Bienvenido/a</p>
+          <Button
+            appearance="outline"
+            textStyle="text-txt font-semibold"
+            iconStyle="[&_path]:fill-txt"
+            rightIcon={<DropdownArrowSVG />}
+            onClick={handleSwitchAccounts}
+          >
+            {name.toUpperCase()}
+          </Button>
+        </div>
       </div>
-    </div>
+      <Button
+        onClick={handleSignOut}
+        className="mt-2 text-sm opacity-80"
+        appearance="outline"
+      >
+        Cerrar sesión
+      </Button>
+    </>
   );
 };
 

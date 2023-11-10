@@ -8,6 +8,7 @@ export const useFetchUserWorkspaces = (queryOptions: QueryOptions = {}) =>
   useQuery({
     queryKey: ["workspaces"],
     queryFn: () => getCurrentUserWorkspaces(),
+    ...queryOptions,
   });
 
 export const useFetchWorkspace = (

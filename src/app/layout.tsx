@@ -1,18 +1,11 @@
-"use client";
-
-import "@/styles/globals.css";
-import { Pathway_Extreme } from "next/font/google";
+import { Metadata } from "next";
+import CONSTANTS from "@/config/constants";
+import { initFonts } from "@/config/fonts.config";
 import AppProviders from "../components/AppProviders";
-import { ToastContainer } from "react-toastify";
-import { getFonts } from "@/utils/common.utils";
-import "react-toastify/dist/ReactToastify.css";
+import "@/styles/globals.css";
 
-const pathway_extreme = Pathway_Extreme({
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const fonts = getFonts([pathway_extreme]);
+const { NAME } = CONSTANTS.PROJECT;
+const fonts = initFonts();
 
 export default function RootLayout({
   children,
@@ -23,12 +16,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${fonts} mx-auto`}>
         <AppProviders>
-          <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            draggable={false}
-            theme="colored"
-          />
           <main className="h-screen max-h-screen overflow-hidden flex relative">
             {children}
           </main>
@@ -37,3 +24,11 @@ export default function RootLayout({
     </html>
   );
 }
+
+export const metadata: Metadata = {
+  title: {
+    template: `%s | ${NAME}`,
+    default: `${NAME}`,
+  },
+  description: "...",
+};

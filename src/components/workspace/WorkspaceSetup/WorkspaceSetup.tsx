@@ -21,23 +21,19 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
   const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces);
   const uid = useAuthStore((s) => s.uid);
   const {
-    data: _workspaces = [],
+    data: _workspaces,
     status,
     refetch,
   } = useFetchUserWorkspaces({
-    enabled: !!uid,
+    enabled: uid !== undefined,
   });
   const [showNewWorkspaceModal, setShowNewWorkspaceModal] = useState(false);
 
+  console.log({ showNewWorkspaceModal });
+
   const renderWorkspaceList = () => {
     if (status === "loading") return <WorkspaceListPlaceholder />;
-    if (status === "error")
-      return (
-        <p className="text-center text-error">
-          Error al cargar los espacios de trabajo
-        </p>
-      );
-    if (status === "success" && workspaces.length === 0)
+    if (status === "success" && workspaces?.length === 0)
       return (
         <div>
           <p className="text-center text-txt font-medium mb-2">
@@ -48,10 +44,17 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
           </p>
         </div>
       );
+    // TODO: esto esta provocando error, por que?
+    // if (status === "error")
+    //   return (
+    //     <p className="text-center text-error">
+    //       Error al cargar los espacios de trabajo
+    //     </p>
+    //   );
 
     return (
       <section>
-        {workspaces.length ? (
+        {status === "success" && workspaces?.length ? (
           <div className="flex justify-between items-start">
             <div className="mb-8">
               <p className="font-medium text-xl text-txt">
@@ -109,10 +112,11 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
   };
 
   useEffect(() => {
-    if (_workspaces.length) {
+    if (!uid) return;
+    if (_workspaces?.length) {
       setWorkspaces(_workspaces);
     }
-  }, [_workspaces]);
+  }, [_workspaces, uid]);
 
   return (
     <>
@@ -126,14 +130,13 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
           </div>
         </div>
       </div>
-      {showNewWorkspaceModal ? (
-        <NewWorkspaceModal
-          onClose={() => {
-            setShowNewWorkspaceModal(false);
-            refetch();
-          }}
-        />
-      ) : null}
+      <NewWorkspaceModal
+        isOpened={showNewWorkspaceModal}
+        onClose={() => {
+          setShowNewWorkspaceModal(false);
+          refetch();
+        }}
+      />
     </>
   );
 };

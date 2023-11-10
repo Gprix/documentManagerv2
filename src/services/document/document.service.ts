@@ -67,6 +67,7 @@ export const getDocumentsInWorkspace = async (workspaceId: string) => {
 
     return docsData as Document[];
   } catch (e) {
+    return [];
     console.log(e);
   }
 };

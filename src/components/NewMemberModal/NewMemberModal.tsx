@@ -3,10 +3,8 @@
 import { useAuthStore } from "@/stores/auth.store";
 import Button from "../ui/Button/Button";
 import NewModal from "../ui/Modal/NewModal";
-import {
-  useFetchMember,
-  useWriteMember,
-} from "@/services/member/member.service.hooks";
+import { useFetchMember } from "@/services/member/member.service.hooks";
+import { useWriteMember } from "@/services/member/member.service.hooks";
 import { useForm } from "react-hook-form";
 import { NewMemberSchema, schema } from "./NewMemberModal.helpers";
 import { zodResolver } from "@hookform/resolvers/zod";

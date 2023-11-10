@@ -48,6 +48,12 @@ module.exports = {
         // highlight: "hsla(0, 0%, 58%, 1)",
         // txt: "hsla(0, 52%, 12%, 1)",
       },
+      fontFamily: {
+        document: ["var(--font-document)"],
+        regular: ["var(--font-regular)"],
+        medium: ["var(--font-medium)"],
+        bold: ["var(--font-bold)"],
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -59,6 +65,7 @@ module.exports = {
         page: "fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1), slide-to-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
         modal:
           "fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1), scale-up 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+        "slide-to-bottom": "slide-to-bottom 0.5s ease-in-out",
       },
       keyframes: {
         "fade-in": {
@@ -68,6 +75,10 @@ module.exports = {
         "slide-to-left": {
           "0%": { transform: "translateX(-4rem)" },
           "100%": { transform: "translateX(0rem)" },
+        },
+        "slide-to-bottom": {
+          "0%": { transform: "translateY(-4rem)" },
+          "100%": { transform: "translateY(0rem)" },
         },
         "scale-up": {
           "0%": { transform: "scale(0.9)" },

@@ -12,19 +12,20 @@ import DiscSVG from "images/icons/disc.svg";
 import ArchiveSVG from "images/icons/archive.svg";
 import BellSVG from "images/icons/bell.svg";
 import WorkspaceSVG from "images/icons/columns.svg";
-import Button from "@/components/ui/Button/Button";
-import useAuth from "@/hooks/useAuth";
+import { usePathname } from "next/navigation";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const Sidebar = () => {
   const uid = useAuthStore((s) => s.uid);
-  const { signOut } = useAuth();
+  const pathname = usePathname();
   const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
   const { photoURL = "" } = member ?? {};
   const sidebarElementClassName =
     "text-center text-black p-3 rounded-full bg-surface-alt hover:bg-highlight transition-md flex items-center justify-center";
   const iconClassName = "[&_path]:stroke-txt";
+  const { selectedWorkspace } = useWorkspaceStore();
 
-  const ProfilePreview = () => {
+  const renderProfilePreview = () => {
     return (
       <div className="text-center w-full">
         <div
@@ -47,6 +48,8 @@ const Sidebar = () => {
     );
   };
 
+  if (!selectedWorkspace) return null;
+
   return (
     <aside
       className={jn(
@@ -56,9 +59,13 @@ const Sidebar = () => {
         "animate-page"
       )}
     >
-      <Link href="/workspace">
-        <WorkspaceSVG className={iconClassName} />
-      </Link>
+      {pathname !== "/workspace" ? (
+        <Link href="/workspace">
+          <WorkspaceSVG className={iconClassName} />
+        </Link>
+      ) : (
+        <div className="h-8 w-8" />
+      )}
       <div
         className={jn(
           "flex flex-col gap-y-4 shadow-md bg-surf-alt px-2 py-8 rounded-lg",
@@ -84,8 +91,7 @@ const Sidebar = () => {
           <DiscSVG className="[&_path]:fill-txt" alt="backup" />
         </Link>
       </div>
-      <Button onClick={signOut}>Sign out</Button>
-      {/* <ProfilePreview /> */}
+      {renderProfilePreview()}
     </aside>
   );
 };

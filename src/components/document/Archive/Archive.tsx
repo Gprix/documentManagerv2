@@ -14,7 +14,7 @@ export const Archive = (props: ArchiveProps) => {
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid: workspaceId = "" } = selectedWorkspace ?? {};
   const uid = useAuthStore((s) => s.uid);
-  const { data: documents } = useFetchWorkspaceDocuments(workspaceId, {
+  const { data: documents, status } = useFetchWorkspaceDocuments(workspaceId, {
     enabled: !!uid && workspaceId.length > 0,
   });
   console.log({ documents });
@@ -22,14 +22,8 @@ export const Archive = (props: ArchiveProps) => {
   const archiveDocuments = useDocumentStore((s) => s.archiveDocuments);
   console.log({ archiveDocuments });
 
-  useEffect(() => {
-    if (!documents) return;
-    setArchiveDocuments(documents);
-  }, [documents]);
-
-  return (
-    <section className={`Archive ${className}`}>
-      <h2 className="Documents__subtitle">Directorio principal</h2>
+  const renderDocuments = () => {
+    return (
       <ul className="w-full flex-wrap flex gap-8 px-6">
         {archiveDocuments?.map((document) => {
           const { uid, documentType, title, documentData } = document;
@@ -47,6 +41,18 @@ export const Archive = (props: ArchiveProps) => {
           );
         })}
       </ul>
+    );
+  };
+
+  useEffect(() => {
+    if (!documents) return;
+    setArchiveDocuments(documents);
+  }, [documents]);
+
+  return (
+    <section className={`Archive ${className}`}>
+      <h2 className="Documents__subtitle">Directorio principal</h2>
+      {renderDocuments()}
     </section>
   );
 };

@@ -7,10 +7,8 @@ import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import usePersist from "@/hooks/usePersist";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { DataBlock } from "@/services/datablocks/datablocks.service.types";
-import { useFetchMember } from "@/services/member/member.service.hooks";
 import { getTemplatesInWorkspace } from "@/services/template/template.service";
 import { Template } from "@/services/template/template.service.types";
-import { useAuthStore } from "@/stores/auth.store";
 import { useWorkspaceStore } from "@/stores/workspace.store";
 import { useEffect } from "react";
 
@@ -19,10 +17,8 @@ const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
     useWorkspaceStore,
     (s) => s.selectedWorkspace
   );
-  const uid = useAuthStore((s) => s.uid);
   const { setSelectedTemplates } = useTemplates();
   const { setSelectedDatablocks } = useDatablocks();
-  const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
 
   const getTemplates = async () => {
     if (!selectedWorkspace) return;
@@ -43,7 +39,7 @@ const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      {selectedWorkspace ? <SideBar /> : null}
+      <SideBar />
       {children}
       <NewMemberModal />
     </>

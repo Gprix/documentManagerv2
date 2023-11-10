@@ -1,4 +1,4 @@
-export const CONSTANTS = {
+const CONSTANTS = {
   PROJECT: {
     NAME: "DocuNot",
     VERSION: "1.0.1",
@@ -8,3 +8,5 @@ export const CONSTANTS = {
     LOG_NOTIFICATIONS: false,
   },
 };
+
+export default CONSTANTS;

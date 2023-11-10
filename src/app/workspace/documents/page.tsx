@@ -8,9 +8,12 @@ import { TemplatesModal } from "@/components/document/TemplatesModal/TemplatesMo
 import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import { publishDocument } from "@/services/api/elperuano/elperuano.service";
 import { useNotification } from "@/hooks/useNotification";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const DocumentsPage = () => {
   const { error, success } = useNotification();
+  const { selectedWorkspace } = useWorkspaceStore();
+  const { name: workspaceName = "" } = selectedWorkspace ?? {};
   const { selectedTemplates } = useTemplates();
   const [modalFlag, setModal] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -94,7 +97,10 @@ const DocumentsPage = () => {
     <>
       <section className="Documents flex-grow bg-bck text-txt overflow-y-auto pt-6 pb-32">
         <h1 className="Documents__title text-2xl font-bold mb-3 ml-6">
-          Archivo notarial
+          Archivo notarial{" "}
+          <span className="text-surf-contrast font-medium">
+            · {workspaceName}
+          </span>
         </h1>
         {/* <input type="text" className="Documents__search" /> */}
         <div className="relative">

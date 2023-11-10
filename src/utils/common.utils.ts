@@ -25,3 +25,5 @@ export type NullableString = string | null | undefined;
 export const jn = (...args: NullableString[]) => {
   return args.join(" ").trim();
 };
+
+export const filterFalsy = <T>(array: T[]) => array.filter(Boolean);

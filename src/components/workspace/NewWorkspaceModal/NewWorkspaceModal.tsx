@@ -1,16 +1,16 @@
 "use client";
 
 import Button from "@/components/ui/Button/Button";
-import { Modal } from "@/components/ui/Modal/Modal";
 import { ChangeEvent, useState } from "react";
 import { NewWorkspaceModalProps } from "../WorkspaceSetup/WorkspaceSetup.types";
 import { useNotification } from "@/hooks/useNotification";
 import { jn } from "@/utils/common.utils";
 import { countUIDs } from "./NewWorkspaceModal.helpers";
 import { useWriteWorkspace } from "@/services/workspace/workspace.service.hooks";
+import NewModal from "@/components/ui/Modal/NewModal";
 
 const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
-  const { onClose } = props;
+  const { isOpened, onClose } = props;
   const { error, success } = useNotification();
   const { mutateAsync: createWorkspace, status } = useWriteWorkspace();
   const isLoading = status === "loading";
@@ -35,13 +35,11 @@ const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
   };
 
   return (
-    <Modal
-      className="centered-relative w-[60%] p-6 shadow max-w-[600px]"
-      onClose={() => onClose()}
+    <NewModal
+      isOpened={isOpened}
+      onClose={onClose}
+      title="Nuevo espacio de trabajo"
     >
-      <p className="mb-8 text-txt font-medium text-xl">
-        Nuevo espacio de trabajo
-      </p>
       <input
         autoFocus
         type="text"
@@ -82,7 +80,7 @@ const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
       >
         Crear nuevo espacio de trabajo
       </Button>
-    </Modal>
+    </NewModal>
   );
 };
 
