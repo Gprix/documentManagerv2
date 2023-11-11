@@ -99,7 +99,7 @@ const Line = (props: LineProps) => {
           break;
       }
     },
-    [onNodeUpdate, lineNumberFromProps]
+    [lineNumberFromProps, onNodeUpdate, isEditable]
   );
 
   /**

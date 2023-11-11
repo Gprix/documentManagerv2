@@ -21,7 +21,7 @@ const CalendarWeek = (props: CalendarWeekProps) => {
     days.push(currentDate);
   }
 
-  const ordenarPorHora = (citaA: Object, citaB: Object) => {
+  const ordenarPorHora = (citaA: object, citaB: object) => {
     // @ts-ignore
     const horaA = citaA.hour.split(":")[0];
     // @ts-ignore
@@ -52,7 +52,7 @@ const CalendarWeek = (props: CalendarWeekProps) => {
             hour: selectedHour[indice],
           }))
           // @ts-ignore
-          .filter((fecha) => fecha.fecha == date.toDateString());
+          .filter((fecha) => fecha.fecha === date.toDateString());
 
         const citasOrdenadas = citas.sort(ordenarPorHora);
 
@@ -74,15 +74,15 @@ const CalendarWeek = (props: CalendarWeekProps) => {
               <div className="flex justify-center text-2xl font-semibold center mt-5">
                 {date.toLocaleDateString() ===
                 new Date().toLocaleDateString() ? (
-                  <div
-                    key={date.toLocaleDateString()}
-                    className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-[#FAFAFA] text-l"
-                  >
-                    {date.getDate()}
-                  </div>
-                ) : (
-                  date.getDate()
-                )}
+                    <div
+                      key={date.toLocaleDateString()}
+                      className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-[#FAFAFA] text-l"
+                    >
+                      {date.getDate()}
+                    </div>
+                  ) : (
+                    date.getDate()
+                  )}
               </div>
               <div>
                 {citasOrdenadas.map((cita) =>

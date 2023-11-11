@@ -117,14 +117,14 @@ export const DocumentView = (props: DocumentViewProps) => {
   useEffect(() => {
     if (!localType) return;
     setSelectedDocumentType(localType);
-  }, [localType]);
+  }, [localType, setSelectedDocumentType]);
 
   // Add open document to recent documents list
   useEffect(() => {
     if (isTemplate) return;
     if (!uid) return;
     addRecentDocument(uid);
-  }, [isTemplate, uid]);
+  }, [addRecentDocument, isTemplate, uid]);
 
   // Retrieve document
   useEffect(() => {
@@ -196,8 +196,8 @@ export const DocumentView = (props: DocumentViewProps) => {
                     onClick={() =>
                       isEditing
                         ? setLocalType((prev) =>
-                            prev === "protocol" ? "extra" : "protocol"
-                          )
+                          prev === "protocol" ? "extra" : "protocol"
+                        )
                         : undefined
                     }
                   >

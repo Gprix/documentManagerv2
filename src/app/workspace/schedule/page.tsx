@@ -13,10 +13,11 @@ import {
 import { format, parse, startOfToday, add } from "date-fns";
 import CalendarWeek from "@/components/calendar/calendarWeek";
 import CalendarMonth from "@/components/calendar/calendarMonth";
+import Image from "next/image";
 
-const schedulePage = () => {
+const SchedulePage = () => {
   const [modalFlag, setModal] = useState<boolean>(false);
-  const [eventData, setEventData] = useState<Object>({
+  const [eventData, setEventData] = useState<object>({
     clientName: "",
     clientEmail: "",
     date: "",
@@ -53,7 +54,7 @@ const schedulePage = () => {
     querySnapshot.forEach((doc) => {
       //@ts-ignore
       setClientNames((prev) => [...prev, doc.data().clientName]);
-      let dias = new Date(doc.data().date);
+      const dias = new Date(doc.data().date);
       dias.setDate(dias.getDate() + 1);
       //@ts-ignore
       setAppointments((prev) => [...prev, dias.toDateString()]);
@@ -81,12 +82,12 @@ const schedulePage = () => {
     setStartDate(new Date());
   };
 
-  const handleChangeForm = (e: Object) => {
+  const handleChangeForm = (e: object) => {
     // @ts-ignore
     setEventData({ ...eventData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: Object) => {
+  const handleSubmit = async (e: object) => {
     // @ts-ignore
     e.preventDefault();
 
@@ -143,7 +144,7 @@ const schedulePage = () => {
     "Diciembre",
   ];
 
-  let firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
+  const firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
   const getPrevWeek = () => {
     const prevWeek = new Date(startDate);
@@ -216,7 +217,7 @@ const schedulePage = () => {
               <div className="text-m">Asignar a</div>
               <div className="flex items-center gap-4 w-full px-2 pt-2">
                 {/* imagen en un circulo y el nombre al lado de este */}
-                <img
+                <Image
                   className="w-8 h-8 rounded-full border-solid border-2 border-[#2A2A2A]"
                   src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"
                   alt="profile"
@@ -427,4 +428,4 @@ const schedulePage = () => {
   );
 };
 
-export default schedulePage;
+export default SchedulePage;

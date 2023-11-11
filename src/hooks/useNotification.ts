@@ -6,7 +6,7 @@ import { ToastOptions, toast } from "react-toastify";
 // const { LOG_NOTIFICATIONS } = CONSTANTS.LOGGERS;
 
 export const useNotification = () => {
-  const options: ToastOptions = {
+  const options: ToastOptions = useMemo(()=>({
     position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,
@@ -15,27 +15,27 @@ export const useNotification = () => {
     draggable: false,
     progress: undefined,
     theme: "colored",
-  };
+  }), []);
 
   const success = useCallback(
     async (message: string, destination?: string[]) =>
       toast.success(message, options),
-    []
+    [options]
   );
   const info = useCallback(
     async (message: string, destination?: string[]) =>
       toast.info(message, options),
-    []
+    [options]
   );
   const warning = useCallback(
     async (message: string, destination?: string[]) =>
       toast.warning(message, options),
-    []
+    [options]
   );
   const error = useCallback(
     async (message: string, destination?: string[]) =>
       toast.error(message, options),
-    []
+    [options]
   );
   const clear = useCallback(() => toast.dismiss(), []);
 
@@ -67,5 +67,5 @@ export const useNotification = () => {
   //   //   writeNotification({ type: "error", description: message, destination });
   // };
 
-  return useMemo(() => ({ success, info, warning, error, clear }), []);
+  return useMemo(() => ({ success, info, warning, error, clear }), [clear, error, info, success, warning]);
 };

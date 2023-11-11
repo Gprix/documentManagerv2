@@ -113,7 +113,7 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
     if (_workspaces?.length) {
       setWorkspaces(_workspaces);
     }
-  }, [_workspaces, uid]);
+  }, [_workspaces, setWorkspaces, uid]);
 
   return (
     <>

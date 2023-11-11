@@ -33,7 +33,7 @@ const HomePage = () => {
   useEffect(() => {
     if (!uid) return;
     push("/workspace");
-  }, [uid]);
+  }, [push, uid]);
 
   if (uid) return null;
 

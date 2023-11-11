@@ -77,7 +77,7 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => {
     if (uid) return;
     if (pathname === "/") return;
     push("/");
-  }, [uid]);
+  }, [pathname, push, uid]);
 
   return (
     <>

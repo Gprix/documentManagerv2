@@ -23,7 +23,7 @@ const CalendarMonth = ({ currMonth, today }) => {
     "Sabado",
   ];
 
-  let firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
+  const firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
   const colStartClasses = [
     "",

@@ -12,7 +12,7 @@ const useAuth = () => {
     // actions to do with current auth firebase user
     const { uid } = user;
     setUid(uid);
-  }, []);
+  }, [setUid]);
 
   return useMemo(
     () => ({
@@ -32,7 +32,7 @@ const useAuth = () => {
       },
       listenAuthState: () => auth.onAuthStateChanged(subscriber),
     }),
-    []
+    [subscriber]
   );
 };
 

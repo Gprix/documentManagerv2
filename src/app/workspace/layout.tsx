@@ -10,7 +10,7 @@ import { DataBlock } from "@/services/datablocks/datablocks.service.types";
 import { getTemplatesInWorkspace } from "@/services/template/template.service";
 import { Template } from "@/services/template/template.service.types";
 import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
   const selectedWorkspace = usePersist(
@@ -20,22 +20,22 @@ const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
   const { setSelectedTemplates } = useTemplates();
   const { setSelectedDatablocks } = useDatablocks();
 
-  const getTemplates = async () => {
+  const getTemplates = useCallback(async () => {
     if (!selectedWorkspace) return;
     const templates = await getTemplatesInWorkspace(selectedWorkspace.uid);
     setSelectedTemplates(templates as Template[]);
-  };
+  }, [selectedWorkspace, setSelectedTemplates]);
 
-  const getDatablocks = async () => {
+  const getDatablocks = useCallback(async () => {
     if (!selectedWorkspace) return;
     const datablocks = await getDatablocksInWorkspace(selectedWorkspace.uid);
     setSelectedDatablocks(datablocks as DataBlock[]);
-  };
+  }, [selectedWorkspace, setSelectedDatablocks]);
 
   useEffect(() => {
     getTemplates();
     getDatablocks();
-  }, []);
+  }, [getDatablocks, getTemplates]);
 
   return (
     <>

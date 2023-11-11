@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "clean": "rm -rf .next node_modules",
     "clean:branches": "git fetch -p ; git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -d",
     "prettier": "prettier --ignore-path .gitignore \"**/*.+(js|jsx|ts|tsx|json|css|scss|html)\"",
     "format": "yarn prettier --write",
@@ -28,8 +29,6 @@
     "dotenv": "^16.3.1",
     "emailjs-com": "^3.2.0",
     "encoding": "^0.1.13",
-    "eslint": "8.41.0",
-    "eslint-config-next": "13.4.4",
     "firebase": "^9.22.2",
     "next": "13.4.4",
     "nodemailer": "^6.9.3",
@@ -47,8 +46,15 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "@stylistic/eslint-plugin": "^1.0.1",
     "@types/nodemailer": "^6.4.8",
     "@types/pako": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.53.0",
+    "eslint-config-next": "^14.0.2",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
     "prettier": "^2.8.8"
   }
 }

@@ -16,8 +16,8 @@ export type ButtonAppearance = "solid" | "outline" | "transparent";
 export interface ButtonProps {
   children?: React.ReactNode;
   className?: string;
-  leftIcon?: any;
-  rightIcon?: any;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   onClick?: () => void;
   appearance?: ButtonAppearance;
   textStyle?: string;

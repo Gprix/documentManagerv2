@@ -47,7 +47,7 @@ export const Archive = (props: ArchiveProps) => {
   useEffect(() => {
     if (!documents) return;
     setArchiveDocuments(documents);
-  }, [documents]);
+  }, [documents, setArchiveDocuments]);
 
   return (
     <section className={`Archive ${className}`}>

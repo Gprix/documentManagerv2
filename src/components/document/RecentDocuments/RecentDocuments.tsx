@@ -18,6 +18,7 @@ export const RecentDocuments = (props: RecentDocumentsProps) => {
   }, [archiveDocuments, recentDocumentsUids]);
 
   return (
+    // TODO: check if using <summary> and <details> is a good idea
     <section className={jn("RecentDocuments", className)}>
       <h2 className="Documents__subtitle">Documentos recientes</h2>
       <ul className="flex gap-x-8 px-6">

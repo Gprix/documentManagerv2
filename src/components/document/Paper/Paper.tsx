@@ -93,7 +93,7 @@ export const Paper = (props: PaperProps) => {
         />,
       ]);
     },
-    [onNodeUpdate]
+    [isEditable, onNodeUpdate]
   );
 
   // Sort and map document data to node lines (initial render)

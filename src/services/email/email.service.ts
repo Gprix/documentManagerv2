@@ -5,24 +5,24 @@ import emailjs from "@emailjs/browser";
 const enviarCorreo: EnviarCorreoFunction = async (opciones : EmailOptions) => {
 
 
-    console.log(opciones)
+  console.log(opciones);
 
-    emailjs
-      .send(
-        //@ts-ignore
-        process.env.NEXT_PUBLIC_EMAIL_JS_SERVICE,
-        process.env.NEXT_PUBLIC_EMAIL_JS_TEMPLATE,
-        opciones,
-        process.env.NEXT_PUBLIC_EMAIL_JS_API
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
+  emailjs
+    .send(
+      //@ts-ignore
+      process.env.NEXT_PUBLIC_EMAIL_JS_SERVICE,
+      process.env.NEXT_PUBLIC_EMAIL_JS_TEMPLATE,
+      opciones,
+      process.env.NEXT_PUBLIC_EMAIL_JS_API
+    )
+    .then(
+      (result) => {
+        console.log(result.text);
+      },
+      (error) => {
+        console.log(error.text);
+      }
+    );
 };
 
 export default enviarCorreo;
