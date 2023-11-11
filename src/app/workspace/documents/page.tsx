@@ -5,16 +5,17 @@ import { RecentDocuments } from "@/components/document/RecentDocuments/RecentDoc
 import { DocumentActions } from "@/components/document/DocumentActions/DocumentActions";
 import { useState } from "react";
 import { TemplatesModal } from "@/components/document/TemplatesModal/TemplatesModal";
-import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import { publishDocument } from "@/services/api/elperuano/elperuano.service";
 import { useNotification } from "@/hooks/useNotification";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import usePersist from "@/hooks/usePersist";
+import { useTemplateStore } from "@/stores/template.store";
 
 const DocumentsPage = () => {
   const { error, success } = useNotification();
   const { selectedWorkspace } = useWorkspaceStore();
   const { name: workspaceName = "" } = selectedWorkspace ?? {};
-  const { selectedTemplates } = useTemplates();
+  const templates = usePersist(useTemplateStore, (s) => s.templates);
   const [modalFlag, setModal] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
@@ -105,7 +106,7 @@ const DocumentsPage = () => {
         {/* <input type="text" className="Documents__search" /> */}
         <div className="relative">
           <DocumentActions
-            templateList={selectedTemplates ?? []}
+            templateList={templates ?? []}
             className="pt-16"
             withNewAction
             newActionLabel="Nueva acta"

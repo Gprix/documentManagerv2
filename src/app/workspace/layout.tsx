@@ -2,13 +2,13 @@
 
 import NewMemberModal from "@/components/NewMemberModal/NewMemberModal";
 import SideBar from "@/components/global/SideBar/SideBar";
-import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
-import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import usePersist from "@/hooks/usePersist";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { DataBlock } from "@/services/datablocks/datablocks.service.types";
 import { getTemplatesInWorkspace } from "@/services/template/template.service";
 import { Template } from "@/services/template/template.service.types";
+import { useDataBlocksStore } from "@/stores/datablocks.store";
+import { useTemplateStore } from "@/stores/template.store";
 import { useWorkspaceStore } from "@/stores/workspace.store";
 import { useCallback, useEffect } from "react";
 
@@ -17,20 +17,20 @@ const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
     useWorkspaceStore,
     (s) => s.selectedWorkspace
   );
-  const { setSelectedTemplates } = useTemplates();
-  const { setSelectedDatablocks } = useDatablocks();
+  const setTemplates = useTemplateStore((s) => s.setTemplates);
+  const setDataBlocks = useDataBlocksStore((s) => s.setDataBlocks);
 
   const getTemplates = useCallback(async () => {
     if (!selectedWorkspace) return;
     const templates = await getTemplatesInWorkspace(selectedWorkspace.uid);
-    setSelectedTemplates(templates as Template[]);
-  }, [selectedWorkspace, setSelectedTemplates]);
+    setTemplates(templates as Template[]);
+  }, [selectedWorkspace, setTemplates]);
 
   const getDatablocks = useCallback(async () => {
     if (!selectedWorkspace) return;
     const datablocks = await getDatablocksInWorkspace(selectedWorkspace.uid);
-    setSelectedDatablocks(datablocks as DataBlock[]);
-  }, [selectedWorkspace, setSelectedDatablocks]);
+    setDataBlocks(datablocks as DataBlock[]);
+  }, [selectedWorkspace, setDataBlocks]);
 
   useEffect(() => {
     getTemplates();

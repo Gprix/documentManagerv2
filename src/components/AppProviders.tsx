@@ -6,8 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import CONSTANTS from "@/config/constants";
-import { DatablocksProvider } from "@/contexts/datablocks/datablocks.context";
-import { TemplatesProvider } from "@/contexts/templates/templates.context";
 import useAuth from "@/hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 
@@ -84,9 +82,7 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         {renderAppStatus()}
         {renderAppContainers()}
-        <TemplatesProvider>
-          <DatablocksProvider>{children}</DatablocksProvider>
-        </TemplatesProvider>
+        {children}
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>

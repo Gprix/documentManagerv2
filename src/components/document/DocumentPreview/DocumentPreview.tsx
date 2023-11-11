@@ -2,8 +2,9 @@
 
 import { DocumentPreviewProps } from "./DocumentPreview.types";
 import { nodesDataToTextHelper } from "./DocumentPreview.helpers";
-import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 import { useRouter } from "next/navigation";
+import usePersist from "@/hooks/usePersist";
+import { useDataBlocksStore } from "@/stores/datablocks.store";
 
 export const DocumentPreview = (props: DocumentPreviewProps) => {
   const { className = "" } = props;
@@ -11,7 +12,7 @@ export const DocumentPreview = (props: DocumentPreviewProps) => {
   const { previewNodes, action, isTemplate } = props;
   const isProtocol = documentType === "protocol";
   const { push } = useRouter();
-  const { selectedDatablocks } = useDatablocks();
+  const dataBlocks = usePersist(useDataBlocksStore, (s) => s.dataBlocks);
   const to = `/workspace/workshop/${documentId}${
     isTemplate ? "?isTemplate=true" : ""
   }`;
@@ -27,7 +28,7 @@ export const DocumentPreview = (props: DocumentPreviewProps) => {
         } transition-md rounded-t-xl ${className}`}
       >
         <p className="max-h-[10rem] py-2 pl-2 text-dimmed text-sm pr-6 pb-10 overflow-y-scroll">
-          {nodesDataToTextHelper(previewNodes, selectedDatablocks ?? [])}
+          {nodesDataToTextHelper(previewNodes, dataBlocks ?? [])}
         </p>
         <p
           className={`group-hover:w-full group-hover:rounded-none w-8 rounded-l-xl overflow-clip absolute bottom-0 right-0 px-3 pt-2 pb-1 ${

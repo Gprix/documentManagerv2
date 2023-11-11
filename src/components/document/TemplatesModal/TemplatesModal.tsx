@@ -2,17 +2,18 @@
 
 import { Modal } from "@/components/ui/Modal/Modal";
 import { TemplatesModalProps } from "./TemplatesModal.types";
-import { DocumentActions } from "../DocumentActions/DocumentActions";
 import Button from "@/components/ui/Button/Button";
+import { DocumentActions } from "../DocumentActions/DocumentActions";
 import { useState } from "react";
-import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { SearchBar } from "@/components/global/SearchBar/SearchBar";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
+import usePersist from "@/hooks/usePersist";
+import { useTemplateStore } from "@/stores/template.store";
 
 export const TemplatesModal = (props: TemplatesModalProps) => {
   const { className = "", onClose } = props;
-  const { selectedTemplates } = useTemplates();
+  const templates = usePersist(useTemplateStore, (s) => s.templates);
   const [filters, setFilters] = useState({
     protocol: true,
     extra: true,
@@ -28,7 +29,7 @@ export const TemplatesModal = (props: TemplatesModalProps) => {
     >
       <h2 className="ml-6 font-medium text-xl mt-8 mb-6">Plantillas</h2>
       <DocumentActions
-        templateList={selectedTemplates ?? []}
+        templateList={templates ?? []}
         withNewAction
         newActionLabel="Nueva plantilla"
         isTemplate
@@ -77,7 +78,7 @@ export const TemplatesModal = (props: TemplatesModalProps) => {
       </div>
 
       <ul className="w-full flex-wrap flex gap-8 px-6">
-        {selectedTemplates?.map((template) => {
+        {templates?.map((template) => {
           const { uid, documentType, name, templateData } = template;
 
           const previewNodes = getPreviewNodesUtility(templateData);
