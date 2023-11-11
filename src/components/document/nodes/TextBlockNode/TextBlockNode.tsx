@@ -4,17 +4,17 @@ import { TextBlockNodeProps } from "./TextBlockNode.types";
 import { BaseNode } from "../BaseNode/BaseNode";
 import { useEffect, useState, useMemo } from "react";
 import { useLayoutEffect } from "react";
-import { useDocument } from "@/contexts/document/document.context.hooks";
 import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 
 import Select, { SingleValue } from "react-select";
 import { getLastFromPathname, jn } from "@/utils/common.utils";
 import NewBlockModal from "./NewBlockModal";
+import { useDocumentStore } from "@/stores/document.store";
 
 export const TextBlockNode = (props: TextBlockNodeProps) => {
   const { className, isEditable = true } = props;
   const { data, lineNumber, nodeNumber, onNodeUpdate } = props;
-  const { selectedDocument } = useDocument();
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
   const { selectedDatablocks } = useDatablocks();
   const [blockEntryId, setBlockEntryId] = useState<string | null>(null);
   const [, setTextValue] = useState("");

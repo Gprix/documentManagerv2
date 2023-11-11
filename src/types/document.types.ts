@@ -20,6 +20,8 @@ export type DocumentNodeRawData =
   | TextNodeRawData
   | NodeRawData;
 
+export type InputNodeRawData = TextInputNodeRawData | NumberInputNodeRawData;
+
 export interface NodeRawData {
   lineNumber: number;
   nodeNumber: number;
@@ -45,3 +47,6 @@ export interface TextNodeRawData extends NodeRawData {
   style: TextType;
   value: string;
 }
+
+export interface DocumentExportData
+  extends Omit<Document, "uid" | "authorId" | "workspaceId"> {}

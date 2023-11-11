@@ -3,14 +3,15 @@
 import { DataCaptureModalProps } from "./DataCaptureModal.types";
 import { Modal } from "../../ui/Modal/Modal";
 import Button from "@/components/ui/Button/Button";
-import { useDocument } from "@/contexts/document/document.context.hooks";
 import { useMemo } from "react";
 import { InputNodeRawData } from "@/types/document.types";
 import { LinkedNodePreview } from "../LinkedNodePreview/LinkedNodePreview";
+import { useDocumentStore } from "@/stores/document.store";
 
+// TODO: finish implementing this component
 export const DataCaptureModal = (props: DataCaptureModalProps) => {
   const { className = "", onClose } = props;
-  const { selectedDocument } = useDocument();
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
   const { documentData } = selectedDocument ?? {};
 
   const linkedNodes = useMemo(() => {

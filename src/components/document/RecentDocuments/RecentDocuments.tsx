@@ -1,23 +1,30 @@
-import { useDocument } from "@/contexts/document/document.context.hooks";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { RecentDocumentsProps } from "./RecentDocuments.types";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
+import { useDocumentStore } from "@/stores/document.store";
+import { jn } from "@/utils/common.utils";
+import { useMemo } from "react";
+import EmptyState from "@/components/global/EmptyState/EmptyState";
 
 export const RecentDocuments = (props: RecentDocumentsProps) => {
-  const { className = "" } = props;
-  const { archiveDocuments, recentDocuments } = useDocument();
+  const { className } = props;
+  const recentDocumentsUids = useDocumentStore((s) => s.recentDocuments);
+  const archiveDocuments = useDocumentStore((s) => s.archiveDocuments);
 
-  const recent = archiveDocuments?.filter((document) =>
-    recentDocuments?.includes(document.uid)
-  );
+  const recentDocuments = useMemo(() => {
+    return archiveDocuments.filter((document) =>
+      recentDocumentsUids.includes(document.uid)
+    );
+  }, [archiveDocuments, recentDocumentsUids]);
 
   return (
-    <section className={`RecentDocuments ${className}`}>
-      {recent && recent.length ? (
-        <h2 className="Documents__subtitle">Documentos recientes</h2>
-      ) : null}
+    <section className={jn("RecentDocuments", className)}>
+      <h2 className="Documents__subtitle">Documentos recientes</h2>
       <ul className="flex gap-x-8 px-6">
-        {recent?.map((document) => {
+        {recentDocuments.length === 0 ? (
+          <EmptyState description="Los documentos que abras aparecerán aquí" />
+        ) : null}
+        {recentDocuments.map((document) => {
           const { uid, documentType, title, documentData } = document;
 
           const previewNodes = getPreviewNodesUtility(documentData);

@@ -94,6 +94,7 @@ const schedulePage = () => {
       const clientRef = collection(db, "appointments");
       const q = query(
         clientRef,
+        // @ts-ignore
         where("clientName", "==", eventData.clientName)
       );
       const querySnapshot = await getDocs(q);
@@ -370,12 +371,14 @@ const schedulePage = () => {
           <div className="flex items-center gap-4">
             <button
               className="cursor-pointer font-bold"
+              // @ts-ignore
               onClick={handlePrevEvent}
             >
               &lt;
             </button>
             <button
               className="cursor-pointer font-bold"
+              // @ts-ignore
               onClick={handleNextEvent}
             >
               &gt;

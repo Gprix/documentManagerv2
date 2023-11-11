@@ -14,7 +14,7 @@ export const Archive = (props: ArchiveProps) => {
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid: workspaceId = "" } = selectedWorkspace ?? {};
   const uid = useAuthStore((s) => s.uid);
-  const { data: documents, status } = useFetchWorkspaceDocuments(workspaceId, {
+  const { data: documents } = useFetchWorkspaceDocuments(workspaceId, {
     enabled: !!uid && workspaceId.length > 0,
   });
   console.log({ documents });

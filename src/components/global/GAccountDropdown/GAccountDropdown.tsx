@@ -10,15 +10,26 @@ import { jn } from "@/utils/common.utils";
 import { GAccountDropdownProps } from "./GAccountDropdown.types";
 import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
 import { useRouter } from "next/navigation";
+import { useDocumentStore } from "@/stores/document.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const GAccountDropdown = (props: GAccountDropdownProps) => {
   const { className } = props;
   const { signInWithGoogle, signOut } = useAuth();
   const { error, success } = useNotification();
-  const { push } = useRouter();
+  const { push, refresh } = useRouter();
   const uid = useAuthStore((s) => s.uid);
+  const resetAuth = useAuthStore((s) => s.reset);
+  const resetDocuments = useDocumentStore((s) => s.reset);
+  const resetWorkspace = useWorkspaceStore((s) => s.reset);
   const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
   const { name = "", photoURL = "" } = member ?? {};
+
+  const reset = () => {
+    resetAuth();
+    resetDocuments();
+    resetWorkspace();
+  };
 
   const handleSwitchAccounts = async () => {
     const credentials = await signInWithGoogle();
@@ -32,7 +43,9 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
 
   const handleSignOut = async () => {
     await signOut();
+    reset();
     push("/");
+    refresh();
   };
 
   return (

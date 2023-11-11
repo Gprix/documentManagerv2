@@ -10,6 +10,7 @@ interface WorkspaceState {
 interface WorkspaceActions {
   setSelectedWorkspace: (workspace: Workspace) => void;
   setWorkspaces: (workspaces: Workspace[]) => void;
+  reset: () => void;
 }
 
 export const useWorkspaceStore = create(
@@ -22,6 +23,12 @@ export const useWorkspaceStore = create(
       },
       setWorkspaces: (workspaces: Workspace[]) => {
         set({ workspaces });
+      },
+      reset: () => {
+        set({
+          selectedWorkspace: undefined,
+          workspaces: [],
+        });
       },
     }),
     {

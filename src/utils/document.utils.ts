@@ -1,8 +1,5 @@
-import {
-  Document,
-  DocumentExportData,
-  DocumentNodeRawData,
-} from "@/types/document.types";
+import { Document, DocumentExportData } from "@/types/document.types";
+import { DocumentNodeRawData } from "@/types/document.types";
 import { compressData, decompressData } from "./backup.utils";
 
 /**
@@ -18,10 +15,10 @@ export const getPreviewNodesUtility = (
 ) =>
   documentData
     .sort((a, b) => {
-      if (a.rowIndex === b.rowIndex) {
-        return a.inlineIndex - b.inlineIndex; // Sort by inlineIndex if rowIndex is the same
+      if (a.lineNumber === b.lineNumber) {
+        return a.nodeNumber - b.nodeNumber; // Sort by nodeNumber if lineNumber is the same
       }
-      return a.rowIndex - b.rowIndex; // Sort by rowIndex
+      return a.lineNumber - b.lineNumber; // Sort by lineNumber
     })
     .slice(0, limit);
 

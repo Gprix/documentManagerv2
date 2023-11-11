@@ -6,6 +6,7 @@ interface AuthState {
 }
 interface AuthActions {
   setUid: (uid: string) => void;
+  reset: () => void;
 }
 
 export const useAuthStore = create<AuthState & AuthActions>()(
@@ -14,6 +15,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       uid: undefined,
       setUid: (uid: string) => {
         set({ uid });
+      },
+      reset: () => {
+        set({ uid: undefined });
       },
     }),
     {

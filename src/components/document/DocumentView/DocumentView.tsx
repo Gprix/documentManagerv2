@@ -5,11 +5,10 @@ import { DocumentViewProps } from "./DocumentView.types";
 import Button from "@/components/ui/Button/Button";
 import RightArrowWhiteSVG from "images/icons/right-arrow-white.svg";
 import { Paper } from "../Paper/Paper";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getDocument } from "@/services/document/document.service";
 import { updateDocument } from "@/services/document/document.service";
 import { Document, DocumentType } from "@/types/document.types";
-import { useDocument } from "@/contexts/document/document.context.hooks";
 
 import { DataCaptureModal } from "../DataCaptureModal/DataCaptureModal";
 // import { DocumentToolbox } from "../DocumentToolbox/DocumentToolbox";
@@ -22,16 +21,21 @@ import { exportDocument, importDocument } from "@/utils/document.utils";
 import { Modal } from "@/components/ui/Modal/Modal";
 import Link from "next/link";
 import { useNotification } from "@/hooks/useNotification";
+import { useDocumentStore } from "@/stores/document.store";
 
 export const DocumentView = (props: DocumentViewProps) => {
   const { className = "" } = props;
   const { documentId, isTemplate } = props;
   const { success, error } = useNotification();
-  const { selectedDocument, setSelectedDocument } = useDocument();
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
+  const setSelectedDocument = useDocumentStore((s) => s.setSelectedDocument);
+  const setSelectedDocumentType = useDocumentStore(
+    (s) => s.setSelectedDocumentType
+  );
+  const addRecentDocument = useDocumentStore((s) => s.addRecentDocument);
   const { title, uid, documentType } = selectedDocument ?? {};
   const [showDataCaptureModal, setShowDataCaptureModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
-  const { setRecentDocuments } = useDocument();
   const [isEditing, setIsEditing] = useState(false);
   const [localType, setLocalType] = useState<DocumentType>();
 
@@ -109,25 +113,18 @@ export const DocumentView = (props: DocumentViewProps) => {
     setLocalType(documentType);
   }, [documentType]);
 
+  // update document type
   useEffect(() => {
     if (!localType) return;
-    setSelectedDocument((prev) => {
-      if (!prev) return prev;
-
-      return {
-        ...prev,
-        documentType: localType,
-      };
-    });
+    setSelectedDocumentType(localType);
   }, [localType]);
 
-  // Set recent documents
-  useLayoutEffect(() => {
+  // Add open document to recent documents list
+  useEffect(() => {
     if (isTemplate) return;
     if (!uid) return;
-
-    setRecentDocuments((prev) => [...prev, uid].slice(-5));
-  }, [isTemplate, setRecentDocuments, uid]);
+    addRecentDocument(uid);
+  }, [isTemplate, uid]);
 
   // Retrieve document
   useEffect(() => {

@@ -13,6 +13,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import WorkspaceListPlaceholder from "@/components/placeholders/WorkspaceListPlaceholder";
 import Divider from "@/components/global/Divider/Divider";
 import Badge from "@/components/ui/Badge/Badge";
+import EmptyState from "@/components/global/EmptyState/EmptyState";
 
 const WorkspaceSetup = (props: WorkspaceSetupProps) => {
   const { push } = useRouter();
@@ -35,16 +36,12 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
     if (status === "loading") return <WorkspaceListPlaceholder />;
     if (status === "success" && workspaces?.length === 0)
       return (
-        <div>
-          <p className="text-center text-txt font-medium mb-2">
-            Aún no tienes espacios de trabajo
-          </p>
-          <p className="text-center text-txt text-sm opacity-80">
-            Crea o únete a un espacio de trabajo para empezar a usar DocuNot.
-          </p>
-        </div>
+        <EmptyState
+          title="Aún no tienes espacios de trabajo"
+          description="Crea o únete a un espacio de trabajo para empezar a usar DocuNot."
+        />
       );
-    // TODO: esto esta provocando error, por que?
+    // TODO: revisar pq siempre cae en este estado (Error)
     // if (status === "error")
     //   return (
     //     <p className="text-center text-error">
