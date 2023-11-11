@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import CONSTANTS from "@/config/constants";
 import { initFonts } from "@/config/fonts.config";
-import AppProviders from "../components/AppProviders";
+import AppLayout from "../components/AppLayout";
 import "@/styles/globals.css";
 
 const { NAME } = CONSTANTS.PROJECT;
@@ -15,11 +15,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${fonts} mx-auto`}>
-        <AppProviders>
+        <AppLayout>
           <main className="h-screen max-h-screen overflow-hidden flex relative">
             {children}
           </main>
-        </AppProviders>
+        </AppLayout>
       </body>
     </html>
   );

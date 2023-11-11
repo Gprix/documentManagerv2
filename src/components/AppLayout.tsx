@@ -12,10 +12,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuthStore } from "@/stores/auth.store";
 import { useRouter, usePathname } from "next/navigation";
+import OutOfService from "./global/OutOfService/OutOfService";
 
 const { STATUS, VERSION } = CONSTANTS.PROJECT;
 
-const AppProviders = ({ children }: { children: React.ReactNode }) => {
+const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const { listenAuthState } = useAuth();
   const { push } = useRouter();
   const pathname = usePathname();
@@ -78,15 +79,14 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => {
   }, [pathname, push, uid]);
 
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        {renderAppStatus()}
-        {renderAppContainers()}
-        {children}
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      {renderAppStatus()}
+      {renderAppContainers()}
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+      <OutOfService />
+    </QueryClientProvider>
   );
 };
 
-export default AppProviders;
+export default AppLayout;
