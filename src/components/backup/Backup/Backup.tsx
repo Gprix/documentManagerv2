@@ -1,23 +1,24 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+
+import { getLastBackupInfoText } from "./Backup.helpers";
 import { BackupProps } from "./Backup.types";
-import Checkbox from "@/components/ui/Checkbox/Checkbox";
+import { BackupList } from "../BackupList/BackupList";
 import Button from "@/components/ui/Button/Button";
-import { getDocumentsInWorkspace } from "@/services/document/document.service";
-import { compressData, generateSHA } from "@/utils/backup.utils";
+import Checkbox from "@/components/ui/Checkbox/Checkbox";
+import { useNotification } from "@/hooks/useNotification";
 import { getAppointments } from "@/services/appointment/appointment.service";
+import { getLastBackup, writeBackup } from "@/services/backup/backup.service";
+import { WriteBackupPayload } from "@/services/backup/backup.service.types";
+import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
+import { getDocumentsInWorkspace } from "@/services/document/document.service";
 import { getNotifications } from "@/services/notifications/notifications.service";
 import { getTemplatesInWorkspace } from "@/services/template/template.service";
-import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
-import { WriteBackupPayload } from "@/services/backup/backup.service.types";
-import { getLastBackup, writeBackup } from "@/services/backup/backup.service";
-import { BackupList } from "../BackupList/BackupList";
-import { Backup as BackupType } from "@/types/backup.types";
-import { formatDate, nextDay, nextMonth, nextWeek } from "@/utils/date.utils";
 import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useNotification } from "@/hooks/useNotification";
-import { getLastBackupInfoText } from "./Backup.helpers";
+import { Backup as BackupType } from "@/types/backup.types";
+import { compressData, generateSHA } from "@/utils/backup.utils";
+import { formatDate, nextDay, nextMonth, nextWeek } from "@/utils/date.utils";
 
 export const Backup = (props: BackupProps) => {
   const { className = "" } = props;
@@ -166,7 +167,7 @@ export const Backup = (props: BackupProps) => {
           <select
             name="backup-frequency"
             id="backup-frequency"
-            className="rounded-lg pl-2 pr-6 py-2 hover:cursor-pointer"
+            className="rounded-lg pl-2 pr-6 py-2 hover:cursor-pointer bg-surf-semi-contrast"
             onChange={(e) => handleSelectFrequency(e.target.value)}
           >
             <option value="none">Ninguna</option>
@@ -176,7 +177,7 @@ export const Backup = (props: BackupProps) => {
           </select>
         </div>
 
-        <div className="bg-white rounded-lg p-4">
+        <div className="bg-surf-semi-contrast rounded-lg p-4">
           <Checkbox
             customOnChange={handleCheckboxChange}
             identifier="backup-documents"

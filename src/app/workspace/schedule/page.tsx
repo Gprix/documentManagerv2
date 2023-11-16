@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { db } from "@/config/firebase.config";
+import { format, parse, startOfToday, add } from "date-fns";
 import {
   collection,
   addDoc,
@@ -10,10 +9,12 @@ import {
   deleteDoc,
   where,
 } from "firebase/firestore";
-import { format, parse, startOfToday, add } from "date-fns";
-import CalendarWeek from "@/components/calendar/calendarWeek";
-import CalendarMonth from "@/components/calendar/calendarMonth";
 import Image from "next/image";
+import React, { useState, useEffect } from "react";
+
+import CalendarMonth from "@/components/calendar/calendarMonth";
+import CalendarWeek from "@/components/calendar/calendarWeek";
+import { db } from "@/config/firebase.config";
 
 const SchedulePage = () => {
   const [modalFlag, setModal] = useState<boolean>(false);
@@ -221,6 +222,8 @@ const SchedulePage = () => {
                   className="w-8 h-8 rounded-full border-solid border-2 border-[#2A2A2A]"
                   src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"
                   alt="profile"
+                  width={32}
+                  height={32}
                 />
                 <div>Dr. Sebastian Hidalgo</div>
               </div>

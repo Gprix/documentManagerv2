@@ -1,11 +1,12 @@
 "use client";
 
-import { PaperProps } from "./Paper.types";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+import { PaperProps } from "./Paper.types";
+import Line from "../Line/Line";
 import { useDocumentStore } from "@/stores/document.store";
 import { Document, DocumentNodeRawData } from "@/types/document.types";
 import { NodeRawData } from "@/types/document.types";
-import Line from "../Line/Line";
 import { jn } from "@/utils/common.utils";
 
 export const Paper = (props: PaperProps) => {
@@ -24,12 +25,12 @@ export const Paper = (props: PaperProps) => {
       <button
         onClick={() => bindLine(undefined)}
         className={jn(
-          "bg-gray-200 text-black rounded-lg px-4 min-h-[32px]",
-          "hover:bg-gray-300 hover:cursor-pointer",
+          "bg-surf rounded-lg px-4 min-h-[32px]",
+          "hover:bg-surf-semi-contrast hover:cursor-pointer",
           "transition-color duration-150"
         )}
       >
-        +
+        <span className="text-txt select-none">+</span>
       </button>
     );
   };

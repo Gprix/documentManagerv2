@@ -1,27 +1,27 @@
 "use client";
 
-import GoBack from "@/components/global/GoBack/GoBack";
-import { DocumentViewProps } from "./DocumentView.types";
-import Button from "@/components/ui/Button/Button";
-import RightArrowWhiteSVG from "images/icons/right-arrow-white.svg";
-import { Paper } from "../Paper/Paper";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getDocument } from "@/services/document/document.service";
-import { updateDocument } from "@/services/document/document.service";
-import { Document, DocumentProtocol } from "@/types/document.types";
 
+import { DocumentViewProps } from "./DocumentView.types";
 import { DataCaptureModal } from "../DataCaptureModal/DataCaptureModal";
+import { Paper } from "../Paper/Paper";
 // import { DocumentToolbox } from "../DocumentToolbox/DocumentToolbox";
-import { getTemplate } from "@/services/template/template.service";
-import { updateTemplate } from "@/services/template/template.service";
-import { WriteTemplatePayload } from "@/services/template/template.service.types";
 import EditableText from "@/components/global/EditableText/EditableText";
 import { EditableTextRef } from "@/components/global/EditableText/EditableText.types";
-import { exportDocument, importDocument } from "@/utils/document.utils";
+import GoBack from "@/components/global/GoBack/GoBack";
+import Button from "@/components/ui/Button/Button";
 import { Modal } from "@/components/ui/Modal/Modal";
-import Link from "next/link";
 import { useNotification } from "@/hooks/useNotification";
+import { updateDocument } from "@/services/document/document.service";
+import { getDocument } from "@/services/document/document.service";
+import { updateTemplate } from "@/services/template/template.service";
+import { getTemplate } from "@/services/template/template.service";
+import { WriteTemplatePayload } from "@/services/template/template.service.types";
 import { useDocumentStore } from "@/stores/document.store";
+import { Document, DocumentProtocol } from "@/types/document.types";
+import { exportDocument, importDocument } from "@/utils/document.utils";
+import RightArrowWhiteSVG from "images/icons/right-arrow-white.svg";
 
 export const DocumentView = (props: DocumentViewProps) => {
   const { className = "" } = props;
@@ -168,7 +168,7 @@ export const DocumentView = (props: DocumentViewProps) => {
     <>
       <section className={`DocumentView relative ${className}`}>
         {/* Top toolbar */}
-        <div className="bg-white border-b-gray-100 border-b">
+        <div className="bg-surf-semi-contrast border-surf-contrast border-b">
           <div className="DocumentView__controls flex justify-between px-4 pt-6 pb-4 shadow-md">
             <div className="DocumentView__controls--left flex w-full">
               <GoBack />
@@ -195,9 +195,9 @@ export const DocumentView = (props: DocumentViewProps) => {
                     ].join(" ")}
                     onClick={() =>
                       isEditing
-                        ? setLocalType((prev) =>
-                            prev === "protocol" ? "extra" : "protocol"
-                          )
+                        ? setLocalType((prev) => {
+                            return prev === "protocol" ? "extra" : "protocol";
+                          })
                         : undefined
                     }
                   >

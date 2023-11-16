@@ -1,10 +1,11 @@
 "use client";
 
 import { MouseEvent, useEffect, useState } from "react";
-import { BaseNode } from "../BaseNode/BaseNode";
+
 import { TextNodeProps } from "./TextNode.types";
-import { SecondaryMenu } from "@/components/ui/SecondaryMenu/SecondaryMenu";
 import { TextType } from "./TextNode.types";
+import { BaseNode } from "../BaseNode/BaseNode";
+import { SecondaryMenu } from "@/components/ui/SecondaryMenu/SecondaryMenu";
 import { useDocumentStore } from "@/stores/document.store";
 import { jn } from "@/utils/common.utils";
 
@@ -85,9 +86,9 @@ export const TextNode = (props: TextNodeProps) => {
         <button
           onClick={(e) => changeStyleHandler(e)}
           className={jn(
-            "block text-sm mr-2 bg-transparent transition-opacity rounded-lg",
+            "block text-sm mr-2 bg-transparent transition-all rounded-lg",
             "w-0 opacity-0 px-2 pt-1 mb-1 text-gray-500",
-            "hover:bg-gray-100 hover:cursor-pointer",
+            "hover:bg-surf-contrast hover:cursor-pointer hover:text-txt-accent",
             "group-hover:opacity-100 group-hover:w-auto"
           )}
         >
@@ -101,7 +102,7 @@ export const TextNode = (props: TextNodeProps) => {
           }}
           type="text"
           placeholder="Lorem ipsum..."
-          className="block font-light text-black text-sm no-focus-outline w-full bg-transparent border-b border-black mb-1"
+          className="block font-light text-txt text-sm no-focus-outline w-full bg-transparent border-b border-surf-semi-contrast mb-1"
         />
       </BaseNode>
       {showSecondaryMenu ? (

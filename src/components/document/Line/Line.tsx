@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
+
 import { LineProps } from "./Line.types";
+import { NumberInputNode } from "../nodes/NumberInputNode/NumberInputNode";
 import { TextBlockNode } from "../nodes/TextBlockNode/TextBlockNode";
 import { TextInputNode } from "../nodes/TextInputNode/TextInputNode";
-import { NumberInputNode } from "../nodes/NumberInputNode/NumberInputNode";
 import { TextNode } from "../nodes/TextNode/TextNode";
 import { NodeType, DocumentNodeRawData } from "@/types/document.types";
 import { NumberInputNodeRawData } from "@/types/document.types";
@@ -23,15 +24,15 @@ const Line = (props: LineProps) => {
     return (
       <button
         className={jn(
-          "bg-gray-200 rounded-lg px-4 min-h-[32px]",
+          "bg-surf rounded-lg px-4 min-h-[32px]",
           "transition-all duration-150",
-          "hover:cursor-pointer hover:bg-gray-300",
+          "hover:cursor-pointer hover:bg-surf-semi-contrast",
           "opacity-100 group-hover:opacity-100",
           "disabled:opacity-30"
         )}
         onClick={() => bindNode(undefined, selectedNodeType)}
       >
-        +
+        <span className="select-none text-txt">+</span>
       </button>
     );
   };
