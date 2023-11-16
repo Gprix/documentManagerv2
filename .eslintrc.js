@@ -42,5 +42,20 @@ module.exports = {
     ],
     "@stylistic/indent": ["error", 2],
     "@typescript-eslint/no-explicit-any": "warn",
+    "import/order": [
+      "error",
+      {
+        groups: [
+          ["builtin", "external"],
+          ["internal", "parent", "sibling", "index"],
+          ["object"],
+        ],
+        "newlines-between": "always",
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: false,
+        },
+      },
+    ],
   },
 };

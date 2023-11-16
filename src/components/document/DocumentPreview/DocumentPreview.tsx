@@ -1,14 +1,14 @@
 "use client";
-
-import { DocumentPreviewProps } from "./DocumentPreview.types";
-import { nodesDataToTextHelper } from "./DocumentPreview.helpers";
 import { useRouter } from "next/navigation";
+
+import { nodesDataToTextHelper } from "./DocumentPreview.helpers";
+import { DocumentPreviewProps } from "./DocumentPreview.types";
 import usePersist from "@/hooks/usePersist";
 import { useDataBlocksStore } from "@/stores/datablocks.store";
 
 export const DocumentPreview = (props: DocumentPreviewProps) => {
   const { className = "" } = props;
-  const { documentType, documentName, documentId } = props;
+  const { documentProtocol: documentType, documentName, documentId } = props;
   const { previewNodes, action, isTemplate } = props;
   const isProtocol = documentType === "protocol";
   const { push } = useRouter();

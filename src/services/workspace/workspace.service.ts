@@ -1,7 +1,8 @@
-import { db, auth } from "@/config/firebase.config";
 import { doc, where, query, setDoc, getDoc, or } from "firebase/firestore";
 import { getDocs, collection } from "firebase/firestore";
+
 import { Workspace, WriteWorkspacePayload } from "./workspace.service.types";
+import { db, auth } from "@/config/firebase.config";
 import { filterFalsy } from "@/utils/common.utils";
 
 /**

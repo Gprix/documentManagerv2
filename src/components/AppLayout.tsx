@@ -1,26 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-import CONSTANTS from "@/config/constants";
-import useAuth from "@/hooks/useAuth";
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 
-import "react-toastify/dist/ReactToastify.css";
-import { useAuthStore } from "@/stores/auth.store";
-import { useRouter, usePathname } from "next/navigation";
 import OutOfService from "./global/OutOfService/OutOfService";
+import CONSTANTS from "@/config/constants";
+import useAuth from "@/hooks/useAuth";
+import "react-toastify/dist/ReactToastify.css";
 
 const { STATUS, VERSION } = CONSTANTS.PROJECT;
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const { listenAuthState } = useAuth();
-  const { push } = useRouter();
-  const pathname = usePathname();
-  const uid = useAuthStore((s) => s.uid);
+
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -72,11 +66,14 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   }, [listenAuthState]);
 
   // prevent access to any page if user is not logged in
-  useEffect(() => {
-    if (uid) return;
-    if (pathname === "/") return;
-    push("/");
-  }, [pathname, push, uid]);
+  // useEffect(() => {
+  //   if (uid) return;
+  //   if (pathname === "/") return;
+  //   // assign current pathname to a "from" params
+  //   const params = new URLSearchParams();
+  //   params.set("from", pathname);
+  //   push(`/${params}`);
+  // }, [pathname, push, uid]);
 
   return (
     <QueryClientProvider client={queryClient}>

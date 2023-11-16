@@ -26,7 +26,12 @@ export const RecentDocuments = (props: RecentDocumentsProps) => {
           <EmptyState description="Los documentos que abras aparecerán aquí" />
         ) : null}
         {recentDocuments.map((document) => {
-          const { uid, documentType, title, documentData } = document;
+          const {
+            uid,
+            documentProtocol: documentType,
+            title,
+            documentData,
+          } = document;
 
           const previewNodes = getPreviewNodesUtility(documentData);
 
@@ -34,7 +39,7 @@ export const RecentDocuments = (props: RecentDocumentsProps) => {
             <DocumentPreview
               key={uid}
               documentId={uid}
-              documentType={documentType}
+              documentProtocol={documentType}
               documentName={title}
               previewNodes={previewNodes}
             />

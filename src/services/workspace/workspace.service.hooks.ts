@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { QueryOptions } from "@/types/query.types";
-import { WriteWorkspacePayload } from "./workspace.service.types";
+
 import { getCurrentUserWorkspaces } from "./workspace.service";
 import { getWorkspace, writeWorkspace } from "./workspace.service";
+import { WriteWorkspacePayload } from "./workspace.service.types";
+import { QueryOptions } from "@/types/query.types";
 
 export const useFetchUserWorkspaces = (queryOptions: QueryOptions = {}) =>
   useQuery({
@@ -24,12 +25,10 @@ export const useFetchWorkspace = (
 export const useWriteWorkspace = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (payload: WriteWorkspacePayload) => writeWorkspace(payload),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      },
-    }
-  );
+  return useMutation({
+    mutationFn: (payload: WriteWorkspacePayload) => writeWorkspace(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+    },
+  });
 };

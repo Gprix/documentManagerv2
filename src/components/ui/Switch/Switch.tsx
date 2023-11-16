@@ -58,7 +58,7 @@ const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
         <div
           className={[
             "Switch__wrapper",
-            "relative overflow-hidden rounded-full w-full",
+            "relative overflow-hidden rounded-full w-full bg-accent",
             "!border-none hover:!border-none hover:opacity-80",
             disabled ? "opacity-50 hover:opacity-50" : "opacity-100",
           ].join(" ")}
@@ -66,7 +66,7 @@ const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
           <input
             className={[
               "Switch__input",
-              "[&:checked+.Switch__slider]:bg-primary",
+              "[&:checked+.Switch__slider]:bg-transparent opacity-0",
               "[&:checked+.Switch__slider:before]:-translate-y-1/2",
               "[&:checked+.Switch__slider:before]:translate-x-6",
               "[&:checked+.Switch__slider:before]:bg-white",

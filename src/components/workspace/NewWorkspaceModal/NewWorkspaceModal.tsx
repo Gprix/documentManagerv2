@@ -1,13 +1,14 @@
 "use client";
 
-import Button from "@/components/ui/Button/Button";
 import { ChangeEvent, useState } from "react";
-import { NewWorkspaceModalProps } from "../WorkspaceSetup/WorkspaceSetup.types";
-import { useNotification } from "@/hooks/useNotification";
-import { jn } from "@/utils/common.utils";
+
 import { countUIDs } from "./NewWorkspaceModal.helpers";
-import { useWriteWorkspace } from "@/services/workspace/workspace.service.hooks";
+import { NewWorkspaceModalProps } from "../WorkspaceSetup/WorkspaceSetup.types";
+import Button from "@/components/ui/Button/Button";
 import NewModal from "@/components/ui/Modal/NewModal";
+import { useNotification } from "@/hooks/useNotification";
+import { useWriteWorkspace } from "@/services/workspace/workspace.service.hooks";
+import { jn } from "@/utils/common.utils";
 
 const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
   const { isOpened, onClose } = props;

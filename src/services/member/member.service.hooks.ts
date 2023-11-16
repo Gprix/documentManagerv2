@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { WriteMemberPayload } from "./member.service.types";
+
 import { getMember, writeMember } from "./member.service";
+import { WriteMemberPayload } from "./member.service.types";
 import { QueryOptions } from "@/types/query.types";
 
 export const useFetchMember = (uid: string, queryOptions: QueryOptions = {}) =>
@@ -11,4 +12,6 @@ export const useFetchMember = (uid: string, queryOptions: QueryOptions = {}) =>
   });
 
 export const useWriteMember = () =>
-  useMutation((payload: WriteMemberPayload) => writeMember(payload));
+  useMutation({
+    mutationFn: (payload: WriteMemberPayload) => writeMember(payload),
+  });

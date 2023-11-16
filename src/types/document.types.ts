@@ -6,10 +6,10 @@ export interface Document {
   authorId: string;
   workspaceId: string;
   documentData: DocumentNodeRawData[];
-  documentType: DocumentType;
+  documentProtocol: DocumentProtocol;
 }
 
-export type DocumentType = "protocol" | "extra";
+export type DocumentProtocol = "protocol" | "extra";
 
 export type NodeType = "text" | "textInput" | "numberInput" | "textBlock";
 

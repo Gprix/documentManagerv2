@@ -1,6 +1,7 @@
-import { jn } from "@/utils/common.utils";
 import { useEffect, useRef } from "react";
+
 import { NewModalProps } from "./Modal.types";
+import { jn } from "@/utils/common.utils";
 
 const NewModal = (props: NewModalProps) => {
   const { className, children } = props;
@@ -15,12 +16,15 @@ const NewModal = (props: NewModalProps) => {
   };
 
   useEffect(() => {
-    if (!internalRef.current) return;
-    if (isOpened) {
-      internalRef.current?.showModal();
-    } else {
-      internalRef.current?.close();
-    }
+    const dialog = internalRef.current;
+    if (!dialog) return;
+
+    if (isOpened) dialog.showModal();
+    else dialog.close();
+
+    return () => {
+      dialog.close();
+    };
   }, [isOpened]);
 
   return (

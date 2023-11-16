@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { db } from "@/config/firebase.config";
 import { collection, getDocs } from "firebase/firestore";
-import { DocumentPreview } from "@/components/document/DocumentPreview/DocumentPreview";
-import { getPreviewNodesUtility } from "@/utils/document.utils";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
+
+import { DocumentPreview } from "@/components/document/DocumentPreview/DocumentPreview";
+import { db } from "@/config/firebase.config";
 import enviarCorreo from "@/services/email/email.service";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import { getPreviewNodesUtility } from "@/utils/document.utils";
 
 const PublishDocs = () => {
   const [docusComponents, setDocusComponents] = useState([]);
@@ -26,7 +27,7 @@ const PublishDocs = () => {
     getDocusComponents(workspaceId);
   }, [selectedWorkspace]);
 
-  //@ts-ignore
+  // @ts-ignore
   const getDocusComponents = async (wuid) => {
     const querySnapshot = await getDocs(collection(db, "documents"));
 
@@ -113,7 +114,7 @@ const PublishDocs = () => {
             key={tempDoc.uid}
             documentId={tempDoc.uid}
             previewNodes={previewNodes}
-            documentType={tempDoc.type}
+            documentProtocol={tempDoc.type}
             documentName=""
           />
 

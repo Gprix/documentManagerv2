@@ -1,15 +1,16 @@
 "use client";
 
-import { useAuthStore } from "@/stores/auth.store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+
+import { NewMemberSchema, schema } from "./NewMemberModal.helpers";
 import Button from "../ui/Button/Button";
 import NewModal from "../ui/Modal/NewModal";
+import TextInput from "../ui/TextInput";
 import { useFetchMember } from "@/services/member/member.service.hooks";
 import { useWriteMember } from "@/services/member/member.service.hooks";
-import { useForm } from "react-hook-form";
-import { NewMemberSchema, schema } from "./NewMemberModal.helpers";
-import { zodResolver } from "@hookform/resolvers/zod";
-import TextInput from "../ui/TextInput";
-import { useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/auth.store";
 
 const NewMemberModal = () => {
   const { register, handleSubmit, formState } = useForm<NewMemberSchema>({

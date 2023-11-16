@@ -1,15 +1,16 @@
 "use client";
 
-import { Archive } from "@/components/document/Archive/Archive";
-import { RecentDocuments } from "@/components/document/RecentDocuments/RecentDocuments";
-import { DocumentActions } from "@/components/document/DocumentActions/DocumentActions";
 import { useState } from "react";
+
+import { Archive } from "@/components/document/Archive/Archive";
+import { DocumentActions } from "@/components/document/DocumentActions/DocumentActions";
+import { RecentDocuments } from "@/components/document/RecentDocuments/RecentDocuments";
 import { TemplatesModal } from "@/components/document/TemplatesModal/TemplatesModal";
-import { publishDocument } from "@/services/api/elperuano/elperuano.service";
 import { useNotification } from "@/hooks/useNotification";
-import { useWorkspaceStore } from "@/stores/workspace.store";
 import usePersist from "@/hooks/usePersist";
+import { publishDocument } from "@/services/api/elperuano/elperuano.service";
 import { useTemplateStore } from "@/stores/template.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const DocumentsPage = () => {
   const { error, success } = useNotification();

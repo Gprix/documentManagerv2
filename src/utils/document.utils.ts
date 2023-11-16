@@ -1,6 +1,6 @@
+import { compressData, decompressData } from "./backup.utils";
 import { Document, DocumentExportData } from "@/types/document.types";
 import { DocumentNodeRawData } from "@/types/document.types";
-import { compressData, decompressData } from "./backup.utils";
 
 /**
  * Get preview nodes utility
@@ -28,7 +28,7 @@ export const getPreviewNodesUtility = (
  * @param _document document to export
  */
 export const exportDocument = (_document: Document, compress?: boolean) => {
-  const { title, documentData, documentType } = _document;
+  const { title, documentData, documentProtocol: documentType } = _document;
 
   let documentToExport = JSON.stringify({
     title,

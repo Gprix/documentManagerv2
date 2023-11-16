@@ -1,106 +1,51 @@
-import { writeDocument } from "@/services/document/document.service";
-import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
+import { useState } from "react";
+
 import { DocumentActionsProps } from "./DocumentActions.types";
-import { getPreviewNodesUtility } from "@/utils/document.utils";
-import { useRouter } from "next/navigation";
+import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
+import NewDocumentModal from "../NewDocumentModal/NewDocumentModal";
 import { Template } from "@/services/template/template.service.types";
-import { writeTemplate } from "@/services/template/template.service";
-import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useNotification } from "@/hooks/useNotification";
+import { jn } from "@/utils/common.utils";
+import { getPreviewNodesUtility } from "@/utils/document.utils";
 
 export const DocumentActions = (props: DocumentActionsProps) => {
-  const { className = "" } = props;
+  const { className } = props;
   const { withNewAction = false, newActionLabel } = props;
   const { templateList, isTemplate = false } = props;
-  const { push } = useRouter();
-  const { error } = useNotification();
-  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
-  const newTitle = `Nueva ${
-    isTemplate ? "plantilla" : "acta"
-  }-${Date.now().toString()}`;
+  const [isOpened, setIsOpened] = useState(false);
+  const [template, setTemplate] = useState<Template>();
 
-  const newAction = async () => {
-    if (!selectedWorkspace) return;
-
-    if (isTemplate) {
-      const template = await writeTemplate({
-        name: newTitle,
-        workspaceId: selectedWorkspace.uid,
-        templateData: [],
-        documentType: "protocol",
-        enabled: true,
-      });
-
-      if (!template) {
-        error("No se pudo crear la plantilla");
-        return;
-      }
-      push(`/workspace/workshop/${template}?isTemplate=true`);
-    } else {
-      const document = await writeDocument({
-        title: newTitle,
-        workspaceId: selectedWorkspace.uid,
-        documentData: [],
-        documentType: "protocol",
-      });
-
-      if (!document) {
-        error("No se pudo crear el acta");
-        return;
-      }
-      push(`/workspace/workshop/${document}`);
-    }
+  const newAction = () => {
+    setIsOpened(true);
+    setTemplate(undefined);
   };
 
-  const templateAction = async (template: Template) => {
-    if (!selectedWorkspace) return;
-
-    const { name, templateData, documentType: templateType } = template;
-
-    const title = `${isTemplate ? "Plantilla" : "Acta"} basada en ${name}`;
-
-    if (isTemplate) {
-      const template = await writeTemplate({
-        name: title,
-        workspaceId: selectedWorkspace.uid,
-        templateData: templateData,
-        documentType: templateType ?? "protocol",
-        enabled: true,
-      });
-
-      if (!template) return;
-      push(`/workspace/workshop/${template}?isTemplate=true`);
-    } else {
-      const document = await writeDocument({
-        title,
-        workspaceId: selectedWorkspace.uid,
-        documentData: templateData,
-        documentType: templateType ?? "protocol",
-      });
-
-      if (!document) return;
-      push(`/workspace/workshop/${document}`);
-    }
+  const templateAction = (template: Template) => {
+    setIsOpened(true);
+    setTemplate(template);
   };
 
   return (
     <>
-      <div className={`DocumentActions bg-surf-alt pt-2 pb-4 ${className}`}>
+      <div
+        className={jn("DocumentActions", "bg-surf-alt pt-2 pb-4", className)}
+      >
         <div
-          className={[
+          className={jn(
             "flex gap-x-8 px-6 overflow-x-auto",
-            isTemplate ? "pt-2" : "pt-14",
-          ].join(" ")}
+            isTemplate ? "pt-2" : "pt-14"
+          )}
         >
           {withNewAction ? (
             <div onClick={() => newAction()}>
               <div
-                className={[
+                className={jn(
                   "border border-transparent hover:border-dimmed bg-white",
-                  "relative w-[15rem] h-[10rem] hover:cursor-pointer rounded-t-xl transition-md",
-                ].join(" ")}
+                  "relative w-[15rem] h-[10rem] hover:cursor-pointer rounded-t-xl transition-md"
+                )}
               >
-                <p className="centered-relative text-4xl font-bold">+</p>
+                <p className="centered-relative text-4xl font-bold select-none">
+                  +
+                </p>
               </div>
               <p className="hover:cursor-text text-sm mt-1 font-mono">
                 {newActionLabel}
@@ -108,7 +53,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
             </div>
           ) : null}
           {templateList?.map((template) => {
-            const { uid, documentType, name, templateData } = template;
+            const { uid, documentProtocol, name, templateData } = template;
             const previewNodes = getPreviewNodesUtility(templateData);
 
             return (
@@ -116,7 +61,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                 documentId={uid}
                 key={uid}
                 previewNodes={previewNodes}
-                documentType={documentType}
+                documentProtocol={documentProtocol}
                 documentName={name}
                 action={() => templateAction(template)}
               />
@@ -124,6 +69,11 @@ export const DocumentActions = (props: DocumentActionsProps) => {
           })}
         </div>
       </div>
+      <NewDocumentModal
+        isOpened={isOpened}
+        isTemplate={isTemplate}
+        fromTemplate={template}
+      />
     </>
   );
 };

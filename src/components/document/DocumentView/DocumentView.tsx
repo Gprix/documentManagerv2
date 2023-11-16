@@ -8,7 +8,7 @@ import { Paper } from "../Paper/Paper";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getDocument } from "@/services/document/document.service";
 import { updateDocument } from "@/services/document/document.service";
-import { Document, DocumentType } from "@/types/document.types";
+import { Document, DocumentProtocol } from "@/types/document.types";
 
 import { DataCaptureModal } from "../DataCaptureModal/DataCaptureModal";
 // import { DocumentToolbox } from "../DocumentToolbox/DocumentToolbox";
@@ -33,11 +33,11 @@ export const DocumentView = (props: DocumentViewProps) => {
     (s) => s.setSelectedDocumentType
   );
   const addRecentDocument = useDocumentStore((s) => s.addRecentDocument);
-  const { title, uid, documentType } = selectedDocument ?? {};
+  const { title, uid, documentProtocol: documentType } = selectedDocument ?? {};
   const [showDataCaptureModal, setShowDataCaptureModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [localType, setLocalType] = useState<DocumentType>();
+  const [localType, setLocalType] = useState<DocumentProtocol>();
 
   const enhancedTitle = useMemo(() => {
     if (!title) return "";
@@ -55,7 +55,7 @@ export const DocumentView = (props: DocumentViewProps) => {
 
       const currentTemplate: WriteTemplatePayload = {
         workspaceId: selectedDocument.workspaceId,
-        documentType: selectedDocument.documentType,
+        documentProtocol: selectedDocument.documentProtocol,
         templateData: selectedDocument.documentData,
         name: selectedDocument.title,
         // TODO: manage enabled state better
@@ -140,7 +140,7 @@ export const DocumentView = (props: DocumentViewProps) => {
           uid: retrievedDocument.uid,
           authorId: retrievedDocument.authorId,
           workspaceId: retrievedDocument.workspaceId,
-          documentType: retrievedDocument.documentType,
+          documentProtocol: retrievedDocument.documentProtocol,
           // TODO: revisar
           //@ts-ignore
           title: retrievedDocument.name,
@@ -196,8 +196,8 @@ export const DocumentView = (props: DocumentViewProps) => {
                     onClick={() =>
                       isEditing
                         ? setLocalType((prev) =>
-                          prev === "protocol" ? "extra" : "protocol"
-                        )
+                            prev === "protocol" ? "extra" : "protocol"
+                          )
                         : undefined
                     }
                   >

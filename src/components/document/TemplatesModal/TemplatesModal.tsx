@@ -79,7 +79,12 @@ export const TemplatesModal = (props: TemplatesModalProps) => {
 
       <ul className="w-full flex-wrap flex gap-8 px-6">
         {templates?.map((template) => {
-          const { uid, documentType, name, templateData } = template;
+          const {
+            uid,
+            documentProtocol: documentType,
+            name,
+            templateData,
+          } = template;
 
           const previewNodes = getPreviewNodesUtility(templateData);
 
@@ -88,7 +93,7 @@ export const TemplatesModal = (props: TemplatesModalProps) => {
               documentId={uid}
               key={uid}
               previewNodes={previewNodes}
-              documentType={documentType}
+              documentProtocol={documentType}
               documentName={name}
               isTemplate
             />

@@ -3,12 +3,12 @@
 import EmptyState from "../EmptyState/EmptyState";
 import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
-import { AppParameters } from "../../../services/appParameters/appParameters.service.types";
 import { db } from "@/config/firebase.config";
+import { AppParameters } from "./OutOfService.types";
 
 const OutOfService = () => {
   const [appParameters, setAppParameters] = useState<AppParameters>();
-  const { outOfService = false } = appParameters ?? {};
+  const { outOfService } = appParameters ?? {};
 
   // TODO: revisar como hacerlo correctamente con hooks y react query
   const getAppParameters = async () => {

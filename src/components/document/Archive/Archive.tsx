@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect } from "react";
-import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
+
 import { ArchiveProps } from "./Archive.types";
-import { getPreviewNodesUtility } from "@/utils/document.utils";
-import { useWorkspaceStore } from "@/stores/workspace.store";
+import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { useFetchWorkspaceDocuments } from "@/services/document/document.service.hooks";
 import { useAuthStore } from "@/stores/auth.store";
 import { useDocumentStore } from "@/stores/document.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
+import { jn } from "@/utils/common.utils";
+import { getPreviewNodesUtility } from "@/utils/document.utils";
 
 export const Archive = (props: ArchiveProps) => {
-  const { className = "" } = props;
+  const { className } = props;
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid: workspaceId = "" } = selectedWorkspace ?? {};
   const uid = useAuthStore((s) => s.uid);
@@ -26,7 +28,12 @@ export const Archive = (props: ArchiveProps) => {
     return (
       <ul className="w-full flex-wrap flex gap-8 px-6">
         {archiveDocuments?.map((document) => {
-          const { uid, documentType, title, documentData } = document;
+          const {
+            uid,
+            documentProtocol: documentType,
+            title,
+            documentData,
+          } = document;
 
           const previewNodes = getPreviewNodesUtility(documentData);
 
@@ -35,7 +42,7 @@ export const Archive = (props: ArchiveProps) => {
               key={uid}
               documentId={uid}
               previewNodes={previewNodes}
-              documentType={documentType}
+              documentProtocol={documentType}
               documentName={title}
             />
           );
@@ -50,7 +57,7 @@ export const Archive = (props: ArchiveProps) => {
   }, [documents, setArchiveDocuments]);
 
   return (
-    <section className={`Archive ${className}`}>
+    <section className={jn("Archive", className)}>
       <h2 className="Documents__subtitle">Directorio principal</h2>
       {renderDocuments()}
     </section>

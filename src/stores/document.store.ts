@@ -1,6 +1,7 @@
-import { Document, DocumentType } from "@/types/document.types";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+
+import { Document, DocumentProtocol } from "@/types/document.types";
 
 interface DocumentState {
   selectedDocument: Document | undefined;
@@ -12,7 +13,7 @@ interface DocumentActions {
   setSelectedDocument: (document: Document | undefined) => void;
   setArchiveDocuments: (documents: Document[]) => void;
   addRecentDocument: (uid: Document["uid"]) => void;
-  setSelectedDocumentType: (documentType: DocumentType) => void;
+  setSelectedDocumentType: (documentType: DocumentProtocol) => void;
   reset: () => void;
 }
 
@@ -35,10 +36,15 @@ export const useDocumentStore = create(
         }
         set({ recentDocuments: [uid, ...recentDocuments].slice(-5) });
       },
-      setSelectedDocumentType: (documentType: DocumentType) => {
+      setSelectedDocumentType: (documentType: DocumentProtocol) => {
         const selectedDocument = get().selectedDocument;
         if (!selectedDocument) return;
-        set({ selectedDocument: { ...selectedDocument, documentType } });
+        set({
+          selectedDocument: {
+            ...selectedDocument,
+            documentProtocol: documentType,
+          },
+        });
       },
       reset: () => {
         set({

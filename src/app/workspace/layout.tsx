@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback, useEffect } from "react";
+
 import NewMemberModal from "@/components/NewMemberModal/NewMemberModal";
 import SideBar from "@/components/global/SideBar/SideBar";
 import usePersist from "@/hooks/usePersist";
@@ -10,7 +12,6 @@ import { Template } from "@/services/template/template.service.types";
 import { useDataBlocksStore } from "@/stores/datablocks.store";
 import { useTemplateStore } from "@/stores/template.store";
 import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useCallback, useEffect } from "react";
 
 const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
   const selectedWorkspace = usePersist(
