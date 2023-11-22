@@ -37,66 +37,86 @@ const Line = (props: LineProps) => {
     );
   };
 
+  console.log({ lineNumberFromProps, l: nodes.length });
+
   const bindNode = useCallback(
     (nodeData: DocumentNodeRawData | undefined, nodeType?: NodeType) => {
       const { type, lineNumber, nodeNumber } = nodeData ?? {};
       const selector = type ?? nodeType;
 
+      console.log({ type, nodeType, lineNumber, nodeNumber });
+
+      const _lineNumber = lineNumber ?? lineNumberFromProps;
+      console.log({ _lineNumber });
+
       switch (selector) {
         case "text":
-          setNodes((prevNodes) => [
-            ...prevNodes,
-            <TextNode
-              key={`${selector}-node-${nodeNumber}-${lineNumber}`}
-              data={nodeData as TextNodeRawData}
-              lineNumber={lineNumber ?? lineNumberFromProps}
-              nodeNumber={nodeNumber ?? prevNodes.length}
-              onNodeUpdate={onNodeUpdate}
-              isEditable={isEditable}
-            />,
-          ]);
+          setNodes((prevNodes) => {
+            const _nodeNumber = nodeNumber ?? prevNodes.length;
+            console.log({ _nodeNumber });
+            return [
+              ...prevNodes,
+              <TextNode
+                key={`${selector}-node-${_nodeNumber}-${_lineNumber}`}
+                data={nodeData as TextNodeRawData}
+                lineNumber={_lineNumber}
+                nodeNumber={_nodeNumber}
+                onNodeUpdate={onNodeUpdate}
+                isEditable={isEditable}
+              />,
+            ];
+          });
           break;
 
         case "textBlock":
-          setNodes((prevNodes) => [
-            ...prevNodes,
-            <TextBlockNode
-              onNodeUpdate={onNodeUpdate}
-              lineNumber={lineNumber ?? lineNumberFromProps}
-              nodeNumber={nodeNumber ?? prevNodes.length}
-              data={nodeData as TextBlockNodeRawData}
-              key={`text-block-node-${nodeNumber}-${lineNumber}`}
-              isEditable={isEditable}
-            />,
-          ]);
+          setNodes((prevNodes) => {
+            const _nodeNumber = nodeNumber ?? prevNodes.length;
+            return [
+              ...prevNodes,
+              <TextBlockNode
+                key={`text-block-node-${_nodeNumber}-${_lineNumber}`}
+                data={nodeData as TextBlockNodeRawData}
+                lineNumber={_lineNumber}
+                nodeNumber={_nodeNumber}
+                onNodeUpdate={onNodeUpdate}
+                isEditable={isEditable}
+              />,
+            ];
+          });
           break;
 
         case "textInput":
-          setNodes((prevNodes) => [
-            ...prevNodes,
-            <TextInputNode
-              onNodeUpdate={onNodeUpdate}
-              nodeNumber={nodeNumber ?? prevNodes.length}
-              lineNumber={lineNumber ?? lineNumberFromProps}
-              data={nodeData as TextInputNodeRawData}
-              key={`text-input-node-${nodeNumber}-${lineNumber}`}
-              isEditable={isEditable}
-            />,
-          ]);
+          setNodes((prevNodes) => {
+            const _nodeNumber = nodeNumber ?? prevNodes.length;
+            return [
+              ...prevNodes,
+              <TextInputNode
+                key={`text-input-node-${_nodeNumber}-${_lineNumber}`}
+                data={nodeData as TextInputNodeRawData}
+                lineNumber={_lineNumber}
+                nodeNumber={_nodeNumber}
+                onNodeUpdate={onNodeUpdate}
+                isEditable={isEditable}
+              />,
+            ];
+          });
           break;
 
         case "numberInput":
-          setNodes((prevNodes) => [
-            ...prevNodes,
-            <NumberInputNode
-              onNodeUpdate={onNodeUpdate}
-              nodeNumber={nodeNumber ?? prevNodes.length}
-              lineNumber={lineNumber ?? lineNumberFromProps}
-              data={nodeData as NumberInputNodeRawData}
-              key={`number-input-node-${nodeNumber}-${lineNumber}`}
-              isEditable={isEditable}
-            />,
-          ]);
+          setNodes((prevNodes) => {
+            const _nodeNumber = nodeNumber ?? prevNodes.length;
+            return [
+              ...prevNodes,
+              <NumberInputNode
+                key={`number-input-node-${_nodeNumber}-${_lineNumber}`}
+                data={nodeData as NumberInputNodeRawData}
+                nodeNumber={_nodeNumber}
+                lineNumber={_lineNumber}
+                onNodeUpdate={onNodeUpdate}
+                isEditable={isEditable}
+              />,
+            ];
+          });
           break;
       }
     },

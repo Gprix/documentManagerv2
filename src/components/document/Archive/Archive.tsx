@@ -19,21 +19,14 @@ export const Archive = (props: ArchiveProps) => {
   const { data: documents } = useFetchWorkspaceDocuments(workspaceId, {
     enabled: !!uid && workspaceId.length > 0,
   });
-  console.log({ documents });
   const setArchiveDocuments = useDocumentStore((s) => s.setArchiveDocuments);
   const archiveDocuments = useDocumentStore((s) => s.archiveDocuments);
-  console.log({ archiveDocuments });
 
   const renderDocuments = () => {
     return (
       <ul className="w-full flex-wrap flex gap-8 px-6">
         {archiveDocuments?.map((document) => {
-          const {
-            uid,
-            documentProtocol: documentType,
-            title,
-            documentData,
-          } = document;
+          const { uid, documentProtocol, title, documentData } = document;
 
           const previewNodes = getPreviewNodesUtility(documentData);
 
@@ -42,7 +35,7 @@ export const Archive = (props: ArchiveProps) => {
               key={uid}
               documentId={uid}
               previewNodes={previewNodes}
-              documentProtocol={documentType}
+              documentProtocol={documentProtocol}
               documentName={title}
             />
           );

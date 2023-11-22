@@ -102,7 +102,7 @@ export const TextNode = (props: TextNodeProps) => {
           }}
           type="text"
           placeholder="Lorem ipsum..."
-          className="block font-light text-txt text-sm no-focus-outline w-full bg-transparent border-b border-surf-semi-contrast mb-1"
+          className="block font-light text-txt text-sm no-focus-outline w-full bg-transparent border-b border-surf-contrast mb-1"
         />
       </BaseNode>
       {showSecondaryMenu ? (

@@ -8,9 +8,9 @@ import { useDataBlocksStore } from "@/stores/datablocks.store";
 
 export const DocumentPreview = (props: DocumentPreviewProps) => {
   const { className = "" } = props;
-  const { documentProtocol: documentType, documentName, documentId } = props;
+  const { documentProtocol, documentName, documentId } = props;
   const { previewNodes, action, isTemplate } = props;
-  const isProtocol = documentType === "protocol";
+  const isProtocol = documentProtocol === "protocol";
   const { push } = useRouter();
   const dataBlocks = usePersist(useDataBlocksStore, (s) => s.dataBlocks);
   const to = `/workspace/workshop/${documentId}${
@@ -32,7 +32,7 @@ export const DocumentPreview = (props: DocumentPreviewProps) => {
         </p>
         <p
           className={`group-hover:w-full group-hover:rounded-none w-8 rounded-l-xl overflow-clip absolute bottom-0 right-0 px-3 pt-2 pb-1 ${
-            isProtocol ? "bg-primary" : "bg-secondary"
+            isProtocol ? "bg-accent" : "bg-secondary"
           } text-white font-semibold text-sm transition-md`}
         >
           {isProtocol ? "Protocolar" : "Extra"}
