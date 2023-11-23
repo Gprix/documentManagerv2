@@ -6,20 +6,12 @@ export interface Document {
   authorId: string;
   workspaceId: string;
   documentData: DocumentNodeRawData[];
-  documentType: DocumentType;
+  documentProtocol: DocumentProtocol;
 }
 
-export interface DocumentExportData
-  extends Omit<Document, "uid" | "authorId" | "workspaceId"> {}
+export type DocumentProtocol = "protocol" | "extra";
 
-export type DocumentLineRawData = DocumentNodeRawData[];
-
-export type DocumentLineRawDataPosition = {
-  rowIndex: number;
-  inlineIndex: number;
-};
-
-export type InputNodeRawData = TextInputNodeRawData | NumberInputNodeRawData;
+export type NodeType = "text" | "textInput" | "numberInput" | "textBlock";
 
 export type DocumentNodeRawData =
   | TextBlockNodeRawData
@@ -28,13 +20,13 @@ export type DocumentNodeRawData =
   | TextNodeRawData
   | NodeRawData;
 
-export type NodeTypes = "text" | "textInput" | "numberInput" | "textBlock";
+export type InputNodeRawData = TextInputNodeRawData | NumberInputNodeRawData;
 
 export interface NodeRawData {
-  rowIndex: number;
-  inlineIndex: number;
+  lineNumber: number;
+  nodeNumber: number;
   isFullLine: boolean;
-  type: NodeTypes;
+  type: NodeType;
 }
 
 export interface TextBlockNodeRawData extends NodeRawData {
@@ -56,4 +48,5 @@ export interface TextNodeRawData extends NodeRawData {
   value: string;
 }
 
-export type DocumentType = "protocol" | "extra";
+export interface DocumentExportData
+  extends Omit<Document, "uid" | "authorId" | "workspaceId"> {}

@@ -1,57 +1,77 @@
 "use client";
 
-import { WorkspaceSetupProps } from "./WorkspaceSetup.types";
-import PatternIMG from "images/auth/pattern.png";
-import Image from "next/image";
-import Button from "@/components/ui/Button/Button";
-import GAccountDropdown from "@/components/global/GAccountDropdown/GAccountDropdown";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Workspace } from "@/services/workspace/workspace.service.types";
-import NewWorkspaceModal from "./NewWorkspaceModal";
-import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useFetchUserWorkspaces } from "@/services/workspace/workspace.service.hooks";
-import { useAuthStore } from "@/stores/auth.store";
+
+import NewWorkspaceModal from "../NewWorkspaceModal/NewWorkspaceModal";
+import Divider from "@/components/global/Divider/Divider";
+import EmptyState from "@/components/global/EmptyState/EmptyState";
+import GAccountDropdown from "@/components/global/GAccountDropdown/GAccountDropdown";
 import WorkspaceListPlaceholder from "@/components/placeholders/WorkspaceListPlaceholder";
+import Badge from "@/components/ui/Badge/Badge";
+import Button from "@/components/ui/Button/Button";
+import { useFetchUserWorkspaces } from "@/services/workspace/workspace.service.hooks";
+import { Workspace } from "@/services/workspace/workspace.service.types";
+import { useAuthStore } from "@/stores/auth.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
-const WorkspaceSetup = (props: WorkspaceSetupProps) => {
+const WorkspaceSetup = () => {
   const { push } = useRouter();
-  const uid = useAuthStore((s) => s.uid);
-  const { data: userWorkspaces = [], status } = useFetchUserWorkspaces({
-    enabled: !!uid,
-  });
   const setSelectedWorkspace = useWorkspaceStore((s) => s.setSelectedWorkspace);
+  const uid = useAuthStore((s) => s.uid);
+  const useFetchWorkspaces = useFetchUserWorkspaces({
+    enabled: uid !== undefined,
+  });
+  const { data: workspaces = [], status, refetch } = useFetchWorkspaces;
   const [showNewWorkspaceModal, setShowNewWorkspaceModal] = useState(false);
-
-  const handleSelectWorkspace = (workspace: Workspace) => {
-    setSelectedWorkspace(workspace);
-    push("/workspace/documents/");
-  };
 
   const renderWorkspaceList = () => {
     if (status === "loading") return <WorkspaceListPlaceholder />;
-    if (status === "error")
+    if (status === "success" && workspaces?.length === 0)
       return (
-        <p className="text-center text-error">
-          Error al cargar los espacios de trabajo
-        </p>
+        <EmptyState
+          title="Aún no tienes espacios de trabajo"
+          description="Crea o únete a un espacio de trabajo para empezar a usar DocuNot."
+        />
       );
+    // TODO: revisar pq siempre cae en este estado (Error)
+    // if (status === "error")
+    //   return (
+    //     <p className="text-center text-error">
+    //       Error al cargar los espacios de trabajo
+    //     </p>
+    //   );
 
     return (
-      <section className="px-12">
-        {userWorkspaces?.length ? (
-          <p className="pathway-extreme font-medium text-xl mt-8 mb-6">
-            Mis espacios de trabajo
-          </p>
+      <section>
+        {status === "success" && workspaces?.length ? (
+          <div className="flex justify-between items-start">
+            <div className="mb-8">
+              <p className="font-medium text-xl text-txt">
+                Mis espacios de trabajo
+              </p>
+              {workspaces.length >= 5 ? (
+                <p className="text-xs text-red-500">
+                  Has alcanzado el límite máximo de espacios de trabajo.
+                </p>
+              ) : null}
+            </div>
+            <Badge
+              value={workspaces.length}
+              maxValue={5}
+              className="mt-1 !border-surf-contrast"
+            />
+          </div>
         ) : null}
-        <ul className="columns-2">
-          {userWorkspaces?.map((workspace) => (
-            <li
-              key={workspace.uid}
-              className="underline font-medium text-primary mb-3 hover:cursor-pointer"
-              onClick={() => handleSelectWorkspace(workspace)}
-            >
-              {workspace.name}
+        <ul className="flex flex-wrap flex-col md:flex-row">
+          {workspaces?.map((workspace) => (
+            <li key={workspace.uid} className="mb-3 md:w-1/2">
+              <p
+                className="underline font-medium text-txt-accent inline-block hover:cursor-pointer"
+                onClick={() => handleSelectWorkspace(workspace)}
+              >
+                {workspace.name}
+              </p>
             </li>
           ))}
         </ul>
@@ -59,27 +79,47 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
     );
   };
 
+  const renderWorkspaceActions = () => {
+    return (
+      <div className="flex gap-x-4 justify-between flex-col md:flex-row-reverse gap-y-4">
+        <Button
+          className="text-sm"
+          onClick={() => setShowNewWorkspaceModal(true)}
+          disabled={workspaces.length >= 5}
+        >
+          Nuevo espacio de trabajo
+        </Button>
+        <Button className="text-sm" appearance="outline" disabled>
+          Unirse a un espacio de trabajo
+        </Button>
+      </div>
+    );
+  };
+
+  const handleSelectWorkspace = (workspace: Workspace) => {
+    setSelectedWorkspace(workspace);
+    push("/workspace/documents/");
+  };
+
   return (
     <>
-      <div className="w-full h-screen flex flex-col justify-center items-center z-10">
-        <GAccountDropdown className="pb-6 mx-auto" />
-        <div className="bg-white rounded-lg shadow-md pb-6 overflow-clip w-[566px]">
-          <Image src={PatternIMG} alt="" className="" />
-          {renderWorkspaceList()}
-          <Button
-            className="mx-auto mt-6"
-            onClick={() => setShowNewWorkspaceModal(true)}
-          >
-            Crear un espacio de trabajo
-          </Button>
-          <Button type="outline" className="mx-auto mt-5">
-            Unirse a un espacio de trabajo
-          </Button>
+      <div className="w-full flex flex-col justify-between items-center py-8">
+        <GAccountDropdown />
+        <div className="w-full flex flex-col flex-grow justify-center items-center">
+          <div className="bg-surf-alt/50 backdrop-blur rounded-lg p-8 overflow-clip w-[90%] md:w-[35rem] border border-surf-semi-contrast z-10">
+            {renderWorkspaceList()}
+            <Divider className="my-6" />
+            {renderWorkspaceActions()}
+          </div>
         </div>
       </div>
-      {showNewWorkspaceModal ? (
-        <NewWorkspaceModal onClose={() => setShowNewWorkspaceModal(false)} />
-      ) : null}
+      <NewWorkspaceModal
+        isOpened={showNewWorkspaceModal}
+        onClose={() => {
+          setShowNewWorkspaceModal(false);
+          refetch();
+        }}
+      />
     </>
   );
 };

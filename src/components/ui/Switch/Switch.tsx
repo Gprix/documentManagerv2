@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { forwardRef, ChangeEvent, useImperativeHandle, useRef } from "react";
 
 import { SwitchProps as Props } from "./Switch.types";
+import { jn } from "@/utils/common.utils";
 
 const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const { className = "" } = props;
@@ -35,9 +36,9 @@ const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
   return (
     <div
       title={title}
-      className={[
-        label ? "flex gap-x-8 py-1 justify-between items-center" : "",
-      ].join(" ")}
+      className={jn(
+        label ? "flex gap-x-8 py-1 justify-between items-center" : ""
+      )}
     >
       {label ? (
         <label
@@ -57,7 +58,7 @@ const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
         <div
           className={[
             "Switch__wrapper",
-            "relative overflow-hidden rounded-full w-full",
+            "relative overflow-hidden rounded-full w-full bg-accent",
             "!border-none hover:!border-none hover:opacity-80",
             disabled ? "opacity-50 hover:opacity-50" : "opacity-100",
           ].join(" ")}
@@ -65,7 +66,7 @@ const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
           <input
             className={[
               "Switch__input",
-              "[&:checked+.Switch__slider]:bg-primary",
+              "[&:checked+.Switch__slider]:bg-transparent opacity-0",
               "[&:checked+.Switch__slider:before]:-translate-y-1/2",
               "[&:checked+.Switch__slider:before]:translate-x-6",
               "[&:checked+.Switch__slider:before]:bg-white",
@@ -100,4 +101,5 @@ const Switch = forwardRef<HTMLInputElement, Props>((props, ref) => {
   );
 });
 
+Switch.displayName = "Switch";
 export default Switch;

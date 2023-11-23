@@ -6,16 +6,16 @@ import Button from "@/components/ui/Button/Button";
 import { ChangeEvent, useState } from "react";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { writeDatablock } from "@/services/datablocks/datablocks.service";
-import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 import { DataBlock } from "@/services/datablocks/datablocks.service.types";
 import { useWorkspaceStore } from "@/stores/workspace.store";
 import { useNotification } from "@/hooks/useNotification";
+import { useDataBlocksStore } from "@/stores/datablocks.store";
 
 const NewBlockModal = (props: NewBlockModalProps) => {
   const { onClose } = props;
   const { error, success } = useNotification();
   const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
-  const { setSelectedDatablocks } = useDatablocks();
+  const setDataBlocks = useDataBlocksStore((s) => s.setDataBlocks);
   const [blockName, setBlockName] = useState<string>();
 
   const handleNewBlock = async () => {
@@ -35,7 +35,7 @@ const NewBlockModal = (props: NewBlockModalProps) => {
     success(`Bloque de datos '${blockName}' creado exitosamente`);
 
     const _datablocks = await getDatablocksInWorkspace(selectedWorkspace.uid);
-    setSelectedDatablocks(_datablocks as DataBlock[]);
+    setDataBlocks(_datablocks as DataBlock[]);
     onClose();
   };
 

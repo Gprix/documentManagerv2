@@ -1,5 +1,5 @@
-import Switch from "@/components/ui/Switch/Switch";
 import { NotificationSettingsProps } from "./NotificationSettings.types";
+import Switch from "@/components/ui/Switch/Switch";
 
 export const NotificationSettings = (props: NotificationSettingsProps) => {
   const { className = "" } = props;
@@ -7,8 +7,8 @@ export const NotificationSettings = (props: NotificationSettingsProps) => {
   return (
     <div
       className={[
-        NotificationSettings,
-        "bg-white rounded-lg p-4",
+        "NotificationSettings",
+        "bg-surf-semi-contrast rounded-lg p-4",
         className,
       ].join(" ")}
     >

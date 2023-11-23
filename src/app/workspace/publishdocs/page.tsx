@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { db } from "@/config/firebase.config";
 import { collection, getDocs } from "firebase/firestore";
-import { DocumentPreview } from "@/components/document/DocumentPreview/DocumentPreview";
-import { getPreviewNodesUtility } from "@/utils/document.utils";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
+
+import { DocumentPreview } from "@/components/document/DocumentPreview/DocumentPreview";
+import { db } from "@/config/firebase.config";
 import enviarCorreo from "@/services/email/email.service";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import { getPreviewNodesUtility } from "@/utils/document.utils";
 
 const PublishDocs = () => {
   const [docusComponents, setDocusComponents] = useState([]);
@@ -24,14 +25,14 @@ const PublishDocs = () => {
     const { uid: workspaceId } = selectedWorkspace;
     getInfoUser();
     getDocusComponents(workspaceId);
-  }, []);
+  }, [selectedWorkspace]);
 
-  //@ts-ignore
+  // @ts-ignore
   const getDocusComponents = async (wuid) => {
     const querySnapshot = await getDocs(collection(db, "documents"));
 
     querySnapshot.forEach((doc) => {
-      let temp = {
+      const temp = {
         uid: doc.data().uid,
         title: doc.data().title,
         type: doc.data().documentType,
@@ -48,7 +49,7 @@ const PublishDocs = () => {
     const querySnapshot = await getDocs(collection(db, "appointments"));
 
     querySnapshot.forEach((doc) => {
-      let temp = {
+      const temp = {
         value: doc.data().clientEmail || "",
         label: `${doc.data().clientName} - ${doc.data().clientEmail || ""}`,
       };
@@ -70,9 +71,9 @@ const PublishDocs = () => {
   //@ts-ignore
   const RenderDoc = (props) => {
     const [selectedOption, setSelectedOption] = useState(null);
-    let tempDoc = props.documento.document;
-    var color = "bg-gray-400";
-    var estado_label = "No Solicitado";
+    const tempDoc = props.documento.document;
+    let color = "bg-gray-400";
+    let estado_label = "No Solicitado";
     if (tempDoc.estado === "pending") {
       color = "bg-yellow-300";
       estado_label = "Pendiente";
@@ -113,7 +114,7 @@ const PublishDocs = () => {
             key={tempDoc.uid}
             documentId={tempDoc.uid}
             previewNodes={previewNodes}
-            documentType={tempDoc.type}
+            documentProtocol={tempDoc.type}
             documentName=""
           />
 

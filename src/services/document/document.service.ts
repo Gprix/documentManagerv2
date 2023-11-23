@@ -1,7 +1,8 @@
-import { auth, db } from "@/config/firebase.config";
 import { doc, where, query } from "firebase/firestore";
 import { setDoc, getDoc, getDocs, collection } from "firebase/firestore";
+
 import { WriteDocumentPayload } from "./document.services.types";
+import { auth, db } from "@/config/firebase.config";
 import { Document } from "@/types/document.types";
 
 export const updateDocument = async (
@@ -67,6 +68,7 @@ export const getDocumentsInWorkspace = async (workspaceId: string) => {
 
     return docsData as Document[];
   } catch (e) {
+    return [];
     console.log(e);
   }
 };

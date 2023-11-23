@@ -7,8 +7,8 @@ import { useState } from "react";
 import { EditableTextProps, EditableTextRef } from "./EditableText.types";
 
 const EditableText: ForwardRefRenderFunction<
-  EditableTextRef,
-  EditableTextProps
+EditableTextRef,
+EditableTextProps
 > = (props: EditableTextProps, ref) => {
   const { className = "", inputClassName = "" } = props;
   const { text, additionalAction } = props;
@@ -28,7 +28,7 @@ const EditableText: ForwardRefRenderFunction<
     inputRef.current.scrollLeft = 0;
 
     additionalAction?.();
-  }, [isEditing]);
+  }, [additionalAction, isEditing]);
 
   return (
     <div className={`EditableText ${className}`}>

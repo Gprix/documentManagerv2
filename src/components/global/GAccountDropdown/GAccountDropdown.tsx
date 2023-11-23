@@ -1,23 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import Button from "@/components/ui/Button/Button";
+import { useRouter } from "next/navigation";
+
 import { GAccountDropdownProps } from "./GAccountDropdown.types";
-import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
-import { getMember } from "@/services/member/member.service";
-import { useEffect, useState } from "react";
-import { Member } from "@/services/member/member.service.types";
-import { useAuthStore } from "@/stores/auth.store";
+import Button from "@/components/ui/Button/Button";
 import useAuth from "@/hooks/useAuth";
 import { useNotification } from "@/hooks/useNotification";
+import { useFetchMember } from "@/services/member/member.service.hooks";
+import { useAuthStore } from "@/stores/auth.store";
+import { useDocumentStore } from "@/stores/document.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
+import { jn } from "@/utils/common.utils";
+import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
 
 const GAccountDropdown = (props: GAccountDropdownProps) => {
-  const { className = "" } = props;
-  const { error } = useNotification();
-  const [name, setName] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
-  const { signInWithGoogle } = useAuth();
+  const { className } = props;
+  const { signInWithGoogle, signOut } = useAuth();
+  const { error, success } = useNotification();
+  const { push, refresh } = useRouter();
   const uid = useAuthStore((s) => s.uid);
+  const resetAuth = useAuthStore((s) => s.reset);
+  const resetDocuments = useDocumentStore((s) => s.reset);
+  const resetWorkspace = useWorkspaceStore((s) => s.reset);
+  const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
+  const { name = "", photoURL = "" } = member ?? {};
+
+  const reset = () => {
+    resetAuth();
+    resetDocuments();
+    resetWorkspace();
+  };
 
   const handleSwitchAccounts = async () => {
     const credentials = await signInWithGoogle();
@@ -26,45 +39,53 @@ const GAccountDropdown = (props: GAccountDropdownProps) => {
       error("No se pudo iniciar sesión con Google");
       return;
     }
+    success("Ha cambiado de cuenta exitosamente");
   };
 
-  useEffect(() => {
-    if (!uid) return;
-
-    const retrieveUserInfo = async () => {
-      const member = await getMember(uid ?? "");
-      const { name, photoURL } = (member as Member) ?? {};
-
-      setName(name);
-      setPhotoURL(photoURL);
-    };
-
-    retrieveUserInfo();
-  }, [uid]);
+  const handleSignOut = async () => {
+    await signOut();
+    reset();
+    push("/");
+    refresh();
+  };
 
   return (
-    <div
-      className={`GAccountDropdown flex items-center justify-center gap-x-6 ${className}`}
-    >
-      <Image
-        src={photoURL}
-        alt={name}
-        width="64"
-        height="64"
-        className="rounded-full"
-      />
-      <div>
-        <p className="text-white mb-2">Bienvenido/a</p>
-        <Button
-          type="outline"
-          textStyle="text-white text-lg font-semibold"
-          rightIcon={<DropdownArrowSVG />}
-          onClick={handleSwitchAccounts}
-        >
-          {name.toUpperCase()}
-        </Button>
+    <>
+      <div
+        className={jn(
+          "GAccountDropdown",
+          "flex items-center justify-center gap-x-6 bg-surf-alt rounded-md px-6 py-4 animate-slide-to-bottom",
+          className
+        )}
+      >
+        <Image
+          src={photoURL}
+          alt={name}
+          width="64"
+          height="64"
+          className="rounded-full"
+        />
+        <div>
+          <p className="text-white text-sm">Bienvenido/a</p>
+          <Button
+            appearance="outline"
+            textStyle="text-txt font-semibold"
+            iconStyle="[&_path]:fill-txt"
+            rightIcon={<DropdownArrowSVG />}
+            onClick={handleSwitchAccounts}
+          >
+            {name.toUpperCase()}
+          </Button>
+        </div>
       </div>
-    </div>
+      <Button
+        onClick={handleSignOut}
+        className="mt-2 text-sm opacity-80"
+        appearance="outline"
+      >
+        Cerrar sesión
+      </Button>
+    </>
   );
 };
 

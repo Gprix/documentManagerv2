@@ -1,5 +1,5 @@
 import { NumberInputNodeRawData } from "@/types/document.types";
-import { NodeSharedProps } from "../BaseNode/BaseNode.types";
+import { BaseNodeProps } from "../BaseNode/BaseNode.types";
 
 /**
  * NumberInputNode component props.
@@ -9,7 +9,7 @@ import { NodeSharedProps } from "../BaseNode/BaseNode.types";
  * @param {NumberInputNodeRawData} data - Node data.
  * @param {(node: NumberInputNodeRawData) => void} onNodeUpdate - Callback function to update node data.
  */
-export interface NumberInputNodeProps extends NodeSharedProps {
+export interface NumberInputNodeProps extends BaseNodeProps {
   /** Custom className. */
   className?: string;
   /** Node data. */

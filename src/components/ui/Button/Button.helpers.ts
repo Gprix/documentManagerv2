@@ -1,15 +1,15 @@
-import { ButtonType } from "./Button.types";
+import { ButtonAppearance } from "./Button.types";
 
-export const getContainerStyle = (type: ButtonType) =>
+export const getContainerStyle = (type: ButtonAppearance) =>
   ({
-    solid: "bg-[#FF4D84] hover:bg-[#FF71A5] rounded-2xl p-4",
+    solid: "bg-accent rounded-2xl p-4",
     outline: "",
     transparent: "",
   }[type]);
 
-export const getTextStyle = (type: ButtonType) =>
+export const getTextStyle = (type: ButtonAppearance) =>
   ({
-    solid: "text-white font-semibold",
-    outline: "text-black underline font-medium",
-    transparent: "text-black",
+    solid: "font-medium",
+    outline: "underline font-medium",
+    transparent: "",
   }[type]);

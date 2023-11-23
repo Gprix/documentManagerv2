@@ -6,8 +6,9 @@ const Placeholder = (props: Props) => {
   const { pulse = true, shine = true, rounded = true } = props;
 
   const variantClassName = jn(
-    variant === "default" ? "bg-gray-300" : "",
-    variant === "alt" ? "bg-gray-500" : ""
+    variant === "default" ? "bg-surf-semi-contrast" : "",
+    // TODO: review this color
+    variant === "alt" ? "bg-highlight/50" : ""
   );
   const animationClassName = jn(
     pulse ? "animate-pulse" : "",

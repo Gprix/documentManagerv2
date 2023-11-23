@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BackdropStyle, BackdropProps, ModalProps } from "./Modal.types";
+import { jn } from "@/utils/common.utils";
 
 export const Backdrop = (props: BackdropProps) => {
   const { backdrop = "dark" } = props;
@@ -25,16 +26,21 @@ export const Backdrop = (props: BackdropProps) => {
 export const Modal = (props: ModalProps) => {
   const { children, className = "" } = props;
   const { backdrop = "dark", type = "boxed" } = props;
-  const { onClose /*onBackdropClick*/ } = props;
+  const { onClose } = props;
   const [_mouseIsOutside, setMouseIsOutside] = useState(false);
-
-  const boxStyle = type == "boxed" ? "bg-white rounded-2xl" : "";
 
   return (
     <>
       <Backdrop backdrop={backdrop} onClick={() => onClose()} />
       <div
-        className={`Modal ${boxStyle} absolute z-50 m-auto inline-block overflow-clip ${className}`}
+        className={jn(
+          "Modal",
+          "absolute z-50 m-auto inline-block overflow-clip",
+          type === "boxed"
+            ? "bg-surf rounded-lg border border-surf-semi-contrast"
+            : "",
+          className
+        )}
         onMouseEnter={() => setMouseIsOutside(false)}
         onMouseLeave={() => setMouseIsOutside(true)}
       >

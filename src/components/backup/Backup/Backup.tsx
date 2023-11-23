@@ -1,22 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+
+import { getLastBackupInfoText } from "./Backup.helpers";
 import { BackupProps } from "./Backup.types";
-import Checkbox from "@/components/ui/Checkbox/Checkbox";
+import { BackupList } from "../BackupList/BackupList";
 import Button from "@/components/ui/Button/Button";
-import { getDocumentsInWorkspace } from "@/services/document/document.service";
-import { compressData, generateSHA } from "@/utils/backup.utils";
+import Checkbox from "@/components/ui/Checkbox/Checkbox";
+import { useNotification } from "@/hooks/useNotification";
 import { getAppointments } from "@/services/appointment/appointment.service";
+import { getLastBackup, writeBackup } from "@/services/backup/backup.service";
+import { WriteBackupPayload } from "@/services/backup/backup.service.types";
+import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
+import { getDocumentsInWorkspace } from "@/services/document/document.service";
 import { getNotifications } from "@/services/notifications/notifications.service";
 import { getTemplatesInWorkspace } from "@/services/template/template.service";
-import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
-import { WriteBackupPayload } from "@/services/backup/backup.service.types";
-import { getLastBackup, writeBackup } from "@/services/backup/backup.service";
-import { BackupList } from "../BackupList/BackupList";
-import { Backup as BackupType } from "@/types/backup.types";
-import { formatDate, nextDay, nextMonth, nextWeek } from "@/utils/date.utils";
 import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useNotification } from "@/hooks/useNotification";
+import { Backup as BackupType } from "@/types/backup.types";
+import { compressData, generateSHA } from "@/utils/backup.utils";
+import { formatDate, nextDay, nextMonth, nextWeek } from "@/utils/date.utils";
 
 export const Backup = (props: BackupProps) => {
   const { className = "" } = props;
@@ -33,35 +35,10 @@ export const Backup = (props: BackupProps) => {
       : undefined
   );
 
-  useEffect(() => {
-    if (!workspaceId) return;
-
-    const retrieveLastBackup = async () => {
-      const _lastBackup = await getLastBackup(workspaceId);
-      setLastBackup(_lastBackup);
-    };
-
-    retrieveLastBackup();
-  }, [workspaceId]);
-
-  useEffect(() => {
-    if (!savedBackupFrequency) return;
-
-    const autoBackup = async () => {
-      if (Date.now() >= parseInt(savedBackupFrequency, 10)) {
-        info("Se está realizando una copia de seguridad automáticamente");
-        await handleBackup();
-        handleSelectFrequency("none");
-      }
-    };
-
-    autoBackup();
-  }, []);
-
   const handleCheckboxChange = (identifier: string, checked: boolean) =>
     setBackupContent((prev) => ({ ...prev, [identifier]: checked }));
 
-  const handleBackup = async () => {
+  const handleBackup = useCallback(async () => {
     if (!workspaceId) return;
 
     const backup: WriteBackupPayload = {
@@ -127,7 +104,7 @@ export const Backup = (props: BackupProps) => {
       return;
     }
     success("Copia de seguridad creada correctamente");
-  };
+  }, [backupContent, error, success, workspaceId]);
 
   const handleSelectFrequency = (frequency: string) => {
     switch (frequency) {
@@ -152,17 +129,37 @@ export const Backup = (props: BackupProps) => {
     }
   };
 
+  useEffect(() => {
+    if (!workspaceId) return;
+
+    const retrieveLastBackup = async () => {
+      const _lastBackup = await getLastBackup(workspaceId);
+      setLastBackup(_lastBackup);
+    };
+
+    retrieveLastBackup();
+  }, [workspaceId]);
+
+  useEffect(() => {
+    if (!savedBackupFrequency) return;
+
+    const autoBackup = async () => {
+      if (Date.now() >= parseInt(savedBackupFrequency, 10)) {
+        info("Se está realizando una copia de seguridad automáticamente");
+        await handleBackup();
+        handleSelectFrequency("none");
+      }
+    };
+
+    autoBackup();
+  }, [handleBackup, info, savedBackupFrequency]);
+
   return (
     <section className={`Backup flex w-full ${className}`}>
       <section className="p-6 w-1/2">
         <h1 className="text-2xl font-bold">Copias de seguridad</h1>
         <p className="text-sm text-slate-400">
-          {lastBackup
-            ? `La última copia se realizó el ${formatDate(
-                lastBackup.createdAt,
-                "dd/MM/yyyy"
-              )} a las ${formatDate(lastBackup.createdAt, "hh:mm:ss")}`
-            : null}
+          {lastBackup ? getLastBackupInfoText(lastBackup.createdAt) : null}
         </p>
 
         <div className="flex mt-6 mb-4 justify-between items-center">
@@ -170,7 +167,7 @@ export const Backup = (props: BackupProps) => {
           <select
             name="backup-frequency"
             id="backup-frequency"
-            className="rounded-lg pl-2 pr-6 py-2 hover:cursor-pointer"
+            className="rounded-lg pl-2 pr-6 py-2 hover:cursor-pointer bg-surf-semi-contrast"
             onChange={(e) => handleSelectFrequency(e.target.value)}
           >
             <option value="none">Ninguna</option>
@@ -180,7 +177,7 @@ export const Backup = (props: BackupProps) => {
           </select>
         </div>
 
-        <div className="bg-white rounded-lg p-4">
+        <div className="bg-surf-semi-contrast rounded-lg p-4">
           <Checkbox
             customOnChange={handleCheckboxChange}
             identifier="backup-documents"

@@ -6,3 +6,18 @@ export type NextFont = {
     fontStyle?: string;
   };
 };
+
+export type DocumentType = "DNI" | "CE";
+
+export type Role = "NOTARIO/A" | "ASISTENTE NOTARIAL";
+
+export interface Member {
+  uid: string;
+  name: string;
+  email: string;
+  // documentType: DocumentType;
+  documentType: string;
+  documentNumber: string;
+  role: Role;
+  photoURL: string;
+}

@@ -1,5 +1,5 @@
 import { TextInputNodeRawData } from "@/types/document.types";
-import { NodeSharedProps } from "../BaseNode/BaseNode.types";
+import { BaseNodeProps } from "../BaseNode/BaseNode.types";
 
 /**
  * TextInputNode component props.
@@ -8,7 +8,7 @@ import { NodeSharedProps } from "../BaseNode/BaseNode.types";
  * @param {TextInputNodeRawData} data - Node data.
  * @param {(node: TextInputNodeRawData) => void} onNodeUpdate - Callback function to update node data.
  */
-export interface TextInputNodeProps extends NodeSharedProps {
+export interface TextInputNodeProps extends BaseNodeProps {
   /** Custom className. */
   className?: string;
   /** Node data. */

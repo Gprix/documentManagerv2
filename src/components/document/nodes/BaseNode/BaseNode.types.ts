@@ -1,5 +1,3 @@
-import { NodeRawData } from "@/types/document.types";
-
 /**
  * BaseNode component props.
  * @interface BaseNodeProps
@@ -13,17 +11,10 @@ export interface BaseNodeProps {
   className?: string;
   /** Custom className for inner content */
   contentClassName?: string;
-  /** Node data. */
-  data?: NodeRawData;
+  /** Node number (ex. inline index). */
+  nodeNumber: number;
+  /** Line number (ex. row index). */
+  lineNumber: number;
   /** Is node editable. */
-  editable?: boolean;
-}
-
-export interface NodeSharedProps {
-  /** Node row index. */
-  rowIndex: number;
-  /** Node inline index. */
-  inlineIndex: number;
-  /** Is node editable. */
-  editable?: boolean;
+  isEditable?: boolean;
 }

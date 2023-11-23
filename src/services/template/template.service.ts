@@ -1,7 +1,8 @@
-import { auth, db } from "@/config/firebase.config";
-import { Template, WriteTemplatePayload } from "./template.service.types";
 import { doc, getDoc, query, where } from "firebase/firestore";
 import { setDoc, getDocs, collection } from "firebase/firestore";
+
+import { Template, WriteTemplatePayload } from "./template.service.types";
+import { auth, db } from "@/config/firebase.config";
 
 export const updateTemplate = async (
   uid: string,

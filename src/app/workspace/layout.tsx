@@ -1,45 +1,37 @@
 "use client";
 
+import { useCallback, useEffect } from "react";
+
+import NewMemberModal from "@/components/NewMemberModal/NewMemberModal";
 import SideBar from "@/components/global/SideBar/SideBar";
-import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
-import { useTemplates } from "@/contexts/templates/templates.context.hooks";
 import usePersist from "@/hooks/usePersist";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { DataBlock } from "@/services/datablocks/datablocks.service.types";
-import { getTemplatesInWorkspace } from "@/services/template/template.service";
-import { Template } from "@/services/template/template.service.types";
+import { useDataBlocksStore } from "@/stores/datablocks.store";
 import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useEffect } from "react";
 
 const WorkspaceLayout = ({ children }: { children: React.ReactNode }) => {
   const selectedWorkspace = usePersist(
     useWorkspaceStore,
     (s) => s.selectedWorkspace
   );
-  const { setSelectedTemplates } = useTemplates();
-  const { setSelectedDatablocks } = useDatablocks();
+  const setDataBlocks = useDataBlocksStore((s) => s.setDataBlocks);
 
-  const getTemplates = async () => {
-    if (!selectedWorkspace) return;
-    const templates = await getTemplatesInWorkspace(selectedWorkspace.uid);
-    setSelectedTemplates(templates as Template[]);
-  };
-
-  const getDatablocks = async () => {
+  const getDatablocks = useCallback(async () => {
     if (!selectedWorkspace) return;
     const datablocks = await getDatablocksInWorkspace(selectedWorkspace.uid);
-    setSelectedDatablocks(datablocks as DataBlock[]);
-  };
+    setDataBlocks(datablocks as DataBlock[]);
+  }, [selectedWorkspace, setDataBlocks]);
 
   useEffect(() => {
-    getTemplates();
     getDatablocks();
-  }, []);
+  }, [getDatablocks]);
 
   return (
     <>
-      {selectedWorkspace ? <SideBar /> : null}
+      <SideBar />
       {children}
+      <NewMemberModal />
     </>
   );
 };

@@ -1,12 +1,13 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BaseNode } from "../BaseNode/BaseNode";
 import { TextInputNodeProps } from "./TextInputNode.types";
-import { useDocument } from "@/contexts/document/document.context.hooks";
+import { useDocumentStore } from "@/stores/document.store";
+import { jn } from "@/utils/common.utils";
 
 export const TextInputNode = (props: TextInputNodeProps) => {
-  const { className = "", editable = true } = props;
-  const { data, rowIndex, inlineIndex, onNodeUpdate } = props;
-  const { selectedDocument } = useDocument();
+  const { className, isEditable } = props;
+  const { data, lineNumber, nodeNumber, onNodeUpdate } = props;
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
   const [value, setValue] = useState("");
   const [linkingKey, setLinkingKey] = useState<string | null>(null);
   const linkedStyle = linkingKey ? "bg-primaryLight" : "";
@@ -17,8 +18,8 @@ export const TextInputNode = (props: TextInputNodeProps) => {
     if (!selectedDocument) return;
 
     onNodeUpdate({
-      rowIndex,
-      inlineIndex,
+      lineNumber,
+      nodeNumber,
       isFullLine: false,
       type: "textInput",
       linkedTo: linkingKey,
@@ -26,11 +27,7 @@ export const TextInputNode = (props: TextInputNodeProps) => {
     });
   };
 
-  useLayoutEffect(() => {
-    if (!selectedDocument) return;
-  }, [selectedDocument]);
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!data) return;
 
     const { linkedTo, value } = data;
@@ -41,13 +38,16 @@ export const TextInputNode = (props: TextInputNodeProps) => {
   return (
     <BaseNode
       className="TextInputNode"
-      contentClassName={[
+      contentClassName={jn(
         "px-3 pt-1",
         "hover:cursor-text",
         "flex flex-col justify-center",
         linkedStyle,
-        className,
-      ].join(" ")}
+        className
+      )}
+      nodeNumber={nodeNumber}
+      lineNumber={lineNumber}
+      isEditable={isEditable}
     >
       <input
         value={value}
