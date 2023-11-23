@@ -4,28 +4,29 @@ import { TextBlockNodeProps } from "./TextBlockNode.types";
 import { BaseNode } from "../BaseNode/BaseNode";
 import { useEffect, useState, useMemo } from "react";
 import { useLayoutEffect } from "react";
-import { useDocument } from "@/contexts/document/document.context.hooks";
-import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 
 import Select, { SingleValue } from "react-select";
-import { getLastFromPathname } from "@/utils/common.utils";
+import { getLastFromPathname, jn } from "@/utils/common.utils";
 import NewBlockModal from "./NewBlockModal";
+import { useDocumentStore } from "@/stores/document.store";
+import usePersist from "@/hooks/usePersist";
+import { useDataBlocksStore } from "@/stores/datablocks.store";
 
 export const TextBlockNode = (props: TextBlockNodeProps) => {
-  const { className = "", editable = true } = props;
-  const { data, rowIndex, inlineIndex, onNodeUpdate } = props;
-  const { selectedDocument } = useDocument();
-  const { selectedDatablocks } = useDatablocks();
+  const { className, isEditable = true } = props;
+  const { data, lineNumber, nodeNumber, onNodeUpdate } = props;
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
+  const dataBlocks = usePersist(useDataBlocksStore, (s) => s.dataBlocks);
   const [blockEntryId, setBlockEntryId] = useState<string | null>(null);
   const [, setTextValue] = useState("");
   const [showNewBlockModal, setShowNewBlockModal] = useState(false);
 
   const blocksAsOptions = useMemo(() => {
-    return selectedDatablocks?.map((datablock) => ({
+    return dataBlocks?.map((datablock) => ({
       value: datablock.uid,
       label: datablock.value,
     }));
-  }, [selectedDatablocks]);
+  }, [dataBlocks]);
 
   const handleUpdate = (
     option: SingleValue<{ label: string; value: string }>
@@ -40,8 +41,8 @@ export const TextBlockNode = (props: TextBlockNodeProps) => {
     setBlockEntryId(value);
 
     onNodeUpdate({
-      rowIndex,
-      inlineIndex,
+      lineNumber: lineNumber,
+      nodeNumber: nodeNumber,
       isFullLine: false,
       type: "textBlock",
       blockEntryId: value,
@@ -62,7 +63,7 @@ export const TextBlockNode = (props: TextBlockNodeProps) => {
   useEffect(() => {
     if (!blockEntryId) return;
 
-    const datablock = selectedDatablocks?.find(
+    const datablock = dataBlocks?.find(
       (datablock) => datablock.uid === blockEntryId
     );
 
@@ -70,17 +71,20 @@ export const TextBlockNode = (props: TextBlockNodeProps) => {
 
     const { value } = datablock;
     setTextValue(value);
-  }, [blockEntryId, selectedDatablocks]);
+  }, [blockEntryId, dataBlocks]);
 
   return (
     <>
       <BaseNode
-        className={["TextBlockNode", "overflow-visible !rounded-lg"].join(" ")}
-        contentClassName={[
+        className={jn("TextBlockNode", "overflow-visible !rounded-lg")}
+        contentClassName={jn(
           "hover:bg-gray-200",
           "pl-3 pr-1 pt-2 pb-1 !rounded-lg",
-          className,
-        ].join(" ")}
+          className
+        )}
+        nodeNumber={nodeNumber}
+        lineNumber={lineNumber}
+        isEditable={isEditable}
       >
         <Select
           value={blocksAsOptions?.find(

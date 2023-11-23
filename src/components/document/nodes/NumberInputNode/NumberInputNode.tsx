@@ -1,12 +1,13 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BaseNode } from "../BaseNode/BaseNode";
 import { NumberInputNodeProps } from "./NumberInputNode.types";
-import { useDocument } from "@/contexts/document/document.context.hooks";
+import { useDocumentStore } from "@/stores/document.store";
+import { jn } from "@/utils/common.utils";
 
 export const NumberInputNode = (props: NumberInputNodeProps) => {
-  const { className = "", editable = true } = props;
-  const { data, rowIndex, inlineIndex, onNodeUpdate } = props;
-  const { selectedDocument } = useDocument();
+  const { className, isEditable } = props;
+  const { data, lineNumber, nodeNumber, onNodeUpdate } = props;
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
   const [value, setValue] = useState(0);
   const [linkingKey, setLinkingKey] = useState<string | null>(null);
 
@@ -15,8 +16,8 @@ export const NumberInputNode = (props: NumberInputNodeProps) => {
     if (!selectedDocument) return;
 
     onNodeUpdate({
-      rowIndex,
-      inlineIndex,
+      lineNumber,
+      nodeNumber,
       isFullLine: false,
       type: "numberInput",
       linkedTo: linkingKey,
@@ -24,11 +25,7 @@ export const NumberInputNode = (props: NumberInputNodeProps) => {
     });
   };
 
-  useLayoutEffect(() => {
-    if (!selectedDocument) return;
-  }, [selectedDocument]);
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!data) return;
 
     const { linkedTo, value } = data;
@@ -39,7 +36,10 @@ export const NumberInputNode = (props: NumberInputNodeProps) => {
   return (
     <BaseNode
       className="NumberInputNode"
-      contentClassName={["px-3 pt-1", "hover:cursor-text", className].join(" ")}
+      contentClassName={jn("px-3 pt-1", "hover:cursor-text", className)}
+      lineNumber={lineNumber}
+      nodeNumber={nodeNumber}
+      isEditable={isEditable}
     >
       <input
         onChange={(e) => {

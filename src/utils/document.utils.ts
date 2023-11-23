@@ -1,9 +1,6 @@
-import {
-  Document,
-  DocumentExportData,
-  DocumentNodeRawData,
-} from "@/types/document.types";
 import { compressData, decompressData } from "./backup.utils";
+import { Document, DocumentExportData } from "@/types/document.types";
+import { DocumentNodeRawData } from "@/types/document.types";
 
 /**
  * Get preview nodes utility
@@ -18,10 +15,10 @@ export const getPreviewNodesUtility = (
 ) =>
   documentData
     .sort((a, b) => {
-      if (a.rowIndex === b.rowIndex) {
-        return a.inlineIndex - b.inlineIndex; // Sort by inlineIndex if rowIndex is the same
+      if (a.lineNumber === b.lineNumber) {
+        return a.nodeNumber - b.nodeNumber; // Sort by nodeNumber if lineNumber is the same
       }
-      return a.rowIndex - b.rowIndex; // Sort by rowIndex
+      return a.lineNumber - b.lineNumber; // Sort by lineNumber
     })
     .slice(0, limit);
 
@@ -31,7 +28,7 @@ export const getPreviewNodesUtility = (
  * @param _document document to export
  */
 export const exportDocument = (_document: Document, compress?: boolean) => {
-  const { title, documentData, documentType } = _document;
+  const { title, documentData, documentProtocol: documentType } = _document;
 
   let documentToExport = JSON.stringify({
     title,

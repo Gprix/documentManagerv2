@@ -1,20 +1,25 @@
-import { db, auth } from "@/config/firebase.config";
 import { doc, where, query, setDoc, getDoc, or } from "firebase/firestore";
 import { getDocs, collection } from "firebase/firestore";
-import { WriteWorkspacePayload } from "./workspace.service.types";
 
+import { Workspace, WriteWorkspacePayload } from "./workspace.service.types";
+import { db, auth } from "@/config/firebase.config";
+import { filterFalsy } from "@/utils/common.utils";
+
+/**
+ * Write workspace to database
+ */
 export const writeWorkspace = async (payload: WriteWorkspacePayload) => {
   try {
     const user = auth.currentUser;
     if (!user) throw new Error("User not authenticated");
 
+    const ownerUid = user.uid;
+    const { members: payloadMembers = [], name } = payload;
+    const members = filterFalsy([ownerUid, ...payloadMembers]);
+
     const uid = crypto.randomUUID();
-    await setDoc(doc(db, "workspaces", uid), {
-      ...payload,
-      uid,
-      ownerUid: user.uid,
-      members: [user.uid, ...(payload.members ?? [])],
-    });
+    const newWorkspace = { uid, ownerUid, members, name };
+    await setDoc(doc(db, "workspaces", uid), newWorkspace);
     return uid;
   } catch (e) {
     console.error(e);
@@ -27,7 +32,7 @@ export const getWorkspace = async (uid: string) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      return docSnap.data();
+      return docSnap.data() as Workspace;
     }
   } catch (e) {
     console.log(e);
@@ -46,7 +51,10 @@ export const getWorkspaces = async () => {
   return workspacesData;
 };
 
-export const getCurrentUserWorkspaces = async () => {
+/**
+ * Get workspaces where current user is owner or member (requires authentication)
+ */
+export const getCurrentUserWorkspaces = async (): Promise<Workspace[]> => {
   try {
     const user = auth.currentUser;
     if (!user) throw new Error("User not authenticated");
@@ -66,8 +74,9 @@ export const getCurrentUserWorkspaces = async () => {
       ...doc.data(),
     }));
 
-    return workspacesData;
+    return workspacesData as Workspace[];
   } catch (e) {
     console.error(e);
+    return [];
   }
 };

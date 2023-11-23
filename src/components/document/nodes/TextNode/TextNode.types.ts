@@ -1,23 +1,18 @@
-import { DocumentNodeRawData, TextNodeRawData } from "@/types/document.types";
-import { NodeSharedProps } from "../BaseNode/BaseNode.types";
+import { NodeRawData } from "@/types/document.types";
+import { BaseNodeProps } from "../BaseNode/BaseNode.types";
 
-/**
- * TextNode component props.
- *
- * @param {string} className - Custom className.
- * @param {TextNodeRawData} data - Node data.
- * @param {number} rowIndex - Node row index.
- * @param {(node: DocumentNodeRawData, position: DocumentLineRawDataPosition) => void} onNodeUpdate - Callback function to update node data.
- * @param {number} inlineIndex - Node inline index.
- * @param {(node: DocumentNodeRawData, position: DocumentLineRawDataPosition) => void} onNodeUpdate - Callback function to update node data.
- */
-export interface TextNodeProps extends NodeSharedProps {
+export interface TextNodeRawData extends NodeRawData {
+  style: TextType;
+  value: string;
+}
+
+export interface TextNodeProps extends BaseNodeProps {
   /** Custom className. */
   className?: string;
   /** Node data. */
   data?: TextNodeRawData;
   /** Callback function to update node data. */
-  onNodeUpdate: (node: DocumentNodeRawData) => void;
+  onNodeUpdate: (node: TextNodeRawData) => void;
 }
 
 export type TextType = "h1" | "h2" | "h3" | "span" | "longText" | "p";

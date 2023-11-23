@@ -26,7 +26,7 @@ export const nodeDataToTextHelper = (
       previewData = nodeData as TextNodeRawData;
       return previewData.value;
 
-    case "textBlock":
+    case "textBlock":{
       previewData = nodeData as TextBlockNodeRawData;
       const blockId = previewData.blockEntryId;
 
@@ -35,6 +35,7 @@ export const nodeDataToTextHelper = (
       );
 
       return textBlock?.value ?? "";
+    }
 
     case "textInput":
       previewData = nodeData as TextInputNodeRawData;

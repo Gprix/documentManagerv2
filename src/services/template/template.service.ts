@@ -1,7 +1,8 @@
-import { auth, db } from "@/config/firebase.config";
-import { WriteTemplatePayload } from "./template.service.types";
 import { doc, getDoc, query, where } from "firebase/firestore";
 import { setDoc, getDocs, collection } from "firebase/firestore";
+
+import { Template, WriteTemplatePayload } from "./template.service.types";
+import { auth, db } from "@/config/firebase.config";
 
 export const updateTemplate = async (
   uid: string,
@@ -54,7 +55,7 @@ export const getTemplatesInWorkspace = async (workspaceId: string) => {
       ...doc.data(),
     }));
 
-    return templatesData;
+    return templatesData as Template[];
   } catch (e) {
     console.log(e);
   }
@@ -64,7 +65,7 @@ export const getTemplate = async (uid: string) => {
   try {
     const docRef = doc(db, "templates", uid);
     const docSnap = await getDoc(docRef);
-    return docSnap.data();
+    return docSnap.data() as Template;
   } catch (e) {
     console.log(e);
   }

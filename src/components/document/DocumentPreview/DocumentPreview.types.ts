@@ -1,11 +1,11 @@
-import { DocumentType, NodeRawData } from "@/types/document.types";
+import { DocumentProtocol, NodeRawData } from "@/types/document.types";
 
 /**
  * DocumentPreview component props.
  *
  * @param {string} className - Custom className.
  * @param {DocumentRawData} previewNodes - Document preview nodes.
- * @param {DocumentType} previewType - Type of document.
+ * @param {DocumentProtocol} previewType - Type of document.
  * @param {string} documentName - Name of document.
  * @param {string} documentId - Document id.
  * @param {string} isTemplate - Is document template.
@@ -17,7 +17,7 @@ export interface DocumentPreviewProps {
   /** Document preview nodes. */
   previewNodes: NodeRawData[];
   /** Type of document. */
-  documentType: DocumentType;
+  documentProtocol: DocumentProtocol;
   /** Name of document. */
   documentName: string;
   /** Document id. */

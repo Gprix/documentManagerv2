@@ -1,17 +1,24 @@
 "use client";
 
-import { Archive } from "@/components/document/Archive/Archive";
-import { RecentDocuments } from "@/components/document/RecentDocuments/RecentDocuments";
-import { DocumentActions } from "@/components/document/DocumentActions/DocumentActions";
 import { useState } from "react";
+
+import { Archive } from "@/components/document/Archive/Archive";
+import { DocumentActions } from "@/components/document/DocumentActions/DocumentActions";
+import { RecentDocuments } from "@/components/document/RecentDocuments/RecentDocuments";
 import { TemplatesModal } from "@/components/document/TemplatesModal/TemplatesModal";
-import { useTemplates } from "@/contexts/templates/templates.context.hooks";
+import { useNotification } from "@/hooks/useNotification";
 import { publishDocument } from "@/services/api/elperuano/elperuano.service";
-import { createErrorNotification } from "@/utils/notifications.utils";
-import { createSuccessNotification } from "@/utils/notifications.utils";
+import { useFetchWorkspaceTemplates } from "@/services/template/template.service.hooks";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const DocumentsPage = () => {
-  const { selectedTemplates } = useTemplates();
+  const { error, success } = useNotification();
+  const { selectedWorkspace } = useWorkspaceStore();
+  const { name: workspaceName = "" } = selectedWorkspace ?? {};
+  const { uid: workspaceId = "" } = selectedWorkspace ?? {};
+  const { data: templates } = useFetchWorkspaceTemplates(workspaceId, {
+    enabled: !!workspaceId,
+  });
   const [modalFlag, setModal] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
@@ -43,10 +50,10 @@ const DocumentsPage = () => {
 
     const pub = await publishDocument({ file });
     if (!pub) {
-      createErrorNotification("Error al publicar el documento.");
+      error("Error al publicar el documento.");
       return;
     }
-    createSuccessNotification("Documento publicado correctamente.");
+    success("Documento publicado correctamente.");
   };
 
   const renderUploadDoc = () => {
@@ -92,25 +99,28 @@ const DocumentsPage = () => {
 
   return (
     <>
-      <section className="Documents flex-grow bg-blue-50 text-black overflow-y-auto pt-6 pb-32">
+      <section className="Documents flex-grow bg-bck text-txt overflow-y-auto pt-6 pb-32">
         <h1 className="Documents__title text-2xl font-bold mb-3 ml-6">
-          Archivo notarial
+          Archivo notarial{" "}
+          <span className="text-surf-contrast font-medium">
+            · {workspaceName}
+          </span>
         </h1>
         {/* <input type="text" className="Documents__search" /> */}
         <div className="relative">
           <DocumentActions
-            templateList={selectedTemplates ?? []}
+            templateList={templates ?? []}
             className="pt-16"
             withNewAction
             newActionLabel="Nueva acta"
           />
           <div className="absolute top-0 right-0">
-            <p className="text-dimmed text-sm text-right pr-4 pt-3">
+            <p className="text-txt opacity-80 text-sm text-right pr-4 pt-3">
               Plantillas recientes
             </p>
             <p
               onClick={() => setShowTemplatesModal(!showTemplatesModal)}
-              className="text-dimmed text-xs text-right pr-4 underline hover:cursor-pointer"
+              className="text-txt opacity-80 text-xs text-right pr-4 underline hover:cursor-pointer"
             >
               Ver plantillas
             </p>
@@ -132,9 +142,10 @@ const DocumentsPage = () => {
           {renderUploadDoc()}
         </div>
       </section>
-      {showTemplatesModal ? (
-        <TemplatesModal onClose={() => setShowTemplatesModal(false)} />
-      ) : null}
+      <TemplatesModal
+        isOpened={showTemplatesModal}
+        onClose={() => setShowTemplatesModal(false)}
+      />
     </>
   );
 };

@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { db } from "@/config/firebase.config";
+import { format, parse, startOfToday, add } from "date-fns";
 import {
   collection,
   addDoc,
@@ -10,14 +9,16 @@ import {
   deleteDoc,
   where,
 } from "firebase/firestore";
-import { format, parse, startOfToday, add } from "date-fns";
-import CalendarWeek from "@/components/calendar/calendarWeek";
-import CalendarMonth from "@/components/calendar/calendarMonth";
-import Link from "next/link";
+import Image from "next/image";
+import React, { useState, useEffect } from "react";
 
-const schedulePage = () => {
+import CalendarMonth from "@/components/calendar/calendarMonth";
+import CalendarWeek from "@/components/calendar/calendarWeek";
+import { db } from "@/config/firebase.config";
+
+const SchedulePage = () => {
   const [modalFlag, setModal] = useState<boolean>(false);
-  const [eventData, setEventData] = useState<Object>({
+  const [eventData, setEventData] = useState<object>({
     clientName: "",
     clientEmail: "",
     date: "",
@@ -54,7 +55,7 @@ const schedulePage = () => {
     querySnapshot.forEach((doc) => {
       //@ts-ignore
       setClientNames((prev) => [...prev, doc.data().clientName]);
-      let dias = new Date(doc.data().date);
+      const dias = new Date(doc.data().date);
       dias.setDate(dias.getDate() + 1);
       //@ts-ignore
       setAppointments((prev) => [...prev, dias.toDateString()]);
@@ -82,18 +83,22 @@ const schedulePage = () => {
     setStartDate(new Date());
   };
 
-  const handleChangeForm = (e: Object) => {
+  const handleChangeForm = (e: object) => {
     // @ts-ignore
     setEventData({ ...eventData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: Object) => {
+  const handleSubmit = async (e: object) => {
     // @ts-ignore
     e.preventDefault();
 
     try {
-      const clientRef = collection(db, "appointments")
-      const q = query(clientRef, where("clientName", "==", eventData.clientName));
+      const clientRef = collection(db, "appointments");
+      const q = query(
+        clientRef,
+        // @ts-ignore
+        where("clientName", "==", eventData.clientName)
+      );
       const querySnapshot = await getDocs(q);
       // const clientRef = doc(db, "appointments", {'clientName' : eventData.clientName});
       await deleteDoc(querySnapshot.docs[0].ref);
@@ -118,7 +123,6 @@ const schedulePage = () => {
         console.error("Error al enviar el objeto JSON a Firestore: ", error);
       }
     }
-    
 
     setEventData({ clientName: "", date: "", time: null, description: "" });
     setModal(false);
@@ -141,7 +145,7 @@ const schedulePage = () => {
     "Diciembre",
   ];
 
-  let firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
+  const firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
   const getPrevWeek = () => {
     const prevWeek = new Date(startDate);
@@ -214,10 +218,12 @@ const schedulePage = () => {
               <div className="text-m">Asignar a</div>
               <div className="flex items-center gap-4 w-full px-2 pt-2">
                 {/* imagen en un circulo y el nombre al lado de este */}
-                <img
+                <Image
                   className="w-8 h-8 rounded-full border-solid border-2 border-[#2A2A2A]"
                   src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg"
                   alt="profile"
+                  width={32}
+                  height={32}
                 />
                 <div>Dr. Sebastian Hidalgo</div>
               </div>
@@ -369,12 +375,14 @@ const schedulePage = () => {
           <div className="flex items-center gap-4">
             <button
               className="cursor-pointer font-bold"
+              // @ts-ignore
               onClick={handlePrevEvent}
             >
               &lt;
             </button>
             <button
               className="cursor-pointer font-bold"
+              // @ts-ignore
               onClick={handleNextEvent}
             >
               &gt;
@@ -423,4 +431,4 @@ const schedulePage = () => {
   );
 };
 
-export default schedulePage;
+export default SchedulePage;

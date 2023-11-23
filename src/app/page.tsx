@@ -1,68 +1,81 @@
 "use client";
 
-import Image from "next/image";
-import WavesSVG from "images/waves.svg";
-import DocsSVG from "images/docs.svg";
-import LogoSVG from "images/logo.svg";
-import GoogleSVG from "images/auth/google.svg";
-import { Poppins } from "next/font/google";
-import Button from "@/components/shared/Button/Button";
 import { useRouter } from "next/navigation";
-import { googleAuthUtility } from "@/utils/auth.utils";
-import { useAuth } from "@/contexts/auth/auth.context.hooks";
+import { useEffect } from "react";
 
-const poppins = Poppins({ weight: "400", subsets: ["latin"] });
+import Divider from "@/components/global/Divider/Divider";
+import Button from "@/components/ui/Button/Button";
+import CONSTANTS from "@/config/constants";
+import useAuth from "@/hooks/useAuth";
+import { useNotification } from "@/hooks/useNotification";
+import { useAuthStore } from "@/stores/auth.store";
+import { jn } from "@/utils/common.utils";
+import GoogleSVG from "images/auth/google.svg";
+import LogoSVG from "images/logo.svg";
+import WavesSVG from "images/waves.svg";
 
 const HomePage = () => {
   const { push } = useRouter();
-  const auth = useAuth();
+  const { signInWithGoogle } = useAuth();
+  const uid = useAuthStore((s) => s.uid);
+  const { error, success } = useNotification();
 
   const handleSignIn = async () => {
-    await googleAuthUtility(auth);
+    const credentials = await signInWithGoogle();
+    const { user } = credentials ?? {};
+    if (!user) {
+      error("No se pudo iniciar sesión con Google");
+      return;
+    }
+    success("Sesión iniciada exitosamente");
     push("/workspace");
   };
 
+  useEffect(() => {
+    if (!uid) return;
+    push("/workspace");
+  }, [push, uid]);
+
+  if (uid) return null;
+
   return (
-    <section className="bg-gradient-to-bl from-[#7F96FF] to-[#000000] flex w-full">
-      <Image
-        src={WavesSVG}
-        alt=""
-        className="absolute left-0 right-0 bottom-0 w-full pointer-events-none"
-      />
-      <div className="relative flex max-w-[1440px] mx-auto">
-        <div className="w-1/2 z-10 flex flex-col justify-center items-center">
-          <Image src={DocsSVG} alt="" className="p-16" />
-        </div>
-        <div className="w-1/2 z-10 p-16 flex flex-col justify-center">
-          <Image src={LogoSVG} alt="" />
-          <ul className={`${poppins.className} text-white pb-8`}>
-            <li className="Home__list-item">
-              Accede a tus actas de forma rápida y segura.
-            </li>
-            <li className="Home__list-item">
+    <section
+      className={jn(
+        "bg-gradient-to-bl from-bck/80 to-surf",
+        "absolute flex w-full left-0 right-0 bottom-0 justify-center items-center",
+        "w-full h-full min-h-screen min-w-screen"
+      )}
+    >
+      <div className="z-10 p-16 flex flex-col justify-center">
+        <div className="bg-surf-alt/30 backdrop-blur rounded-lg border-surf-semi-contrast border p-12">
+          <p className="text-txt opacity-50 text-sm">
+            v{CONSTANTS.PROJECT.VERSION}
+          </p>
+          <LogoSVG />
+          <Divider className="w-[10%] !h-1.5 mt-1 mb-8 !bg-accent" />
+          <div className="text-txt pb-8 flex-col flex gap-y-4 md:gap-y-2">
+            <p>Accede a tus actas de forma rápida y segura.</p>
+            <p>
               Olvídate de los archivadores y agiliza tus trámites notariales.
-            </li>
-            <li className="Home__list-item">
+            </p>
+            <p>
               Simplifica tu trabajo con DocuNot®, el gestor documental de
               procesos notariales.
-            </li>
-          </ul>
-          <div className="flex flex-row-reverse">
-            {/* // TODO: Cambiar push a /signin */}
-            <div className="flex flex-col justify-center gap-y-3">
-              <Button
-                leftIcon={GoogleSVG}
-                iconStyle="mr-2"
-                onClick={() => handleSignIn()}
-              >
-                Continuar con Google
-              </Button>
-              {/* <Button type="outline" textStyle="text-white">
-                Continuar con correo electrónico
-              </Button> */}
-            </div>
+            </p>
           </div>
+          <Button
+            className="mt-6 w-full"
+            leftIcon={<GoogleSVG />}
+            iconStyle="mr-2"
+            onClick={handleSignIn}
+          >
+            Continuar con Google
+          </Button>
         </div>
+      </div>
+
+      <div className="absolute left-0 right-0 bottom-0 w-full pointer-events-none">
+        <WavesSVG />
       </div>
     </section>
   );

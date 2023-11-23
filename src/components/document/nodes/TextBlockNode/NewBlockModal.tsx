@@ -1,21 +1,21 @@
 "use client";
 
-import { Modal } from "@/components/shared/Modal/Modal";
+import { Modal } from "@/components/ui/Modal/Modal";
 import { NewBlockModalProps } from "./TextBlockNode.types";
-import Button from "@/components/shared/Button/Button";
+import Button from "@/components/ui/Button/Button";
 import { ChangeEvent, useState } from "react";
 import { getDatablocksInWorkspace } from "@/services/datablocks/datablocks.service";
 import { writeDatablock } from "@/services/datablocks/datablocks.service";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
-import { createErrorNotification } from "@/utils/notifications.utils";
-import { createSuccessNotification } from "@/utils/notifications.utils";
-import { useDatablocks } from "@/contexts/datablocks/datablocks.context.hooks";
 import { DataBlock } from "@/services/datablocks/datablocks.service.types";
+import { useWorkspaceStore } from "@/stores/workspace.store";
+import { useNotification } from "@/hooks/useNotification";
+import { useDataBlocksStore } from "@/stores/datablocks.store";
 
 const NewBlockModal = (props: NewBlockModalProps) => {
   const { onClose } = props;
-  const { selectedWorkspace } = useWorkspace();
-  const { setSelectedDatablocks } = useDatablocks();
+  const { error, success } = useNotification();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
+  const setDataBlocks = useDataBlocksStore((s) => s.setDataBlocks);
   const [blockName, setBlockName] = useState<string>();
 
   const handleNewBlock = async () => {
@@ -28,16 +28,14 @@ const NewBlockModal = (props: NewBlockModalProps) => {
     });
 
     if (!block) {
-      createErrorNotification("No se pudo crear el bloque de datos");
+      error("No se pudo crear el bloque de datos");
       return;
     }
 
-    createSuccessNotification(
-      `Bloque de datos '${blockName}' creado exitosamente`
-    );
+    success(`Bloque de datos '${blockName}' creado exitosamente`);
 
     const _datablocks = await getDatablocksInWorkspace(selectedWorkspace.uid);
-    setSelectedDatablocks(_datablocks as DataBlock[]);
+    setDataBlocks(_datablocks as DataBlock[]);
     onClose();
   };
 

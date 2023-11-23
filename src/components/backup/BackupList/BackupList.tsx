@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import BackupCard from "../BackupCard/BackupCard";
+
 import { BackupListProps } from "./BackupList.types";
-import { useWorkspace } from "@/contexts/workspace/workspace.context.hooks";
+import BackupCard from "../BackupCard/BackupCard";
 import { getBackupsInWorkspace } from "@/services/backup/backup.service";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 import { Backup } from "@/types/backup.types";
+import { jn } from "@/utils/common.utils";
 
 export const BackupList = (props: BackupListProps) => {
-  const { className = "" } = props;
-  const { selectedWorkspace } = useWorkspace();
+  const { className } = props;
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
   const { uid: workspaceId } = selectedWorkspace ?? {};
   const [backups, setBackups] = useState<Backup[]>([]);
 
@@ -25,7 +27,11 @@ export const BackupList = (props: BackupListProps) => {
 
   return (
     <section
-      className={`BackupList bg-blue-50 w-1/2 flex flex-col gap-y-2 m-8 rounded-lg ${className}`}
+      className={jn(
+        "BackupList",
+        "bg-surf-semi-contrast w-1/2 flex flex-col gap-y-2 m-8 rounded-lg",
+        className
+      )}
     >
       {backups?.map((backup) => {
         const { name, uid, createdAt } = backup;

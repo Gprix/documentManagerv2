@@ -11,7 +11,8 @@ import {
   getDay,
 } from "date-fns";
 
-const CalendarMonth = ({currMonth, today }) => {
+// @ts-ignore
+const CalendarMonth = ({ currMonth, today }) => {
   const days = [
     "Domingo",
     "Lunes",
@@ -22,7 +23,7 @@ const CalendarMonth = ({currMonth, today }) => {
     "Sabado",
   ];
 
-  let firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
+  const firstDayOfMonth = parse(currMonth, "MMM-yyyy", new Date());
 
   const colStartClasses = [
     "",
@@ -33,7 +34,6 @@ const CalendarMonth = ({currMonth, today }) => {
     "col-start-6",
     "col-start-7",
   ];
-
 
   const daysInMonth = eachDayOfInterval({
     start: firstDayOfMonth,
