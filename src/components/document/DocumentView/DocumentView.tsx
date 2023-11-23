@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DocumentViewProps } from "./DocumentView.types";
@@ -15,24 +16,37 @@ import { Modal } from "@/components/ui/Modal/Modal";
 import { useNotification } from "@/hooks/useNotification";
 import { updateDocument } from "@/services/document/document.service";
 import { getDocument } from "@/services/document/document.service";
+import { useFetchWorkspaceDocuments } from "@/services/document/document.service.hooks";
 import { updateTemplate } from "@/services/template/template.service";
 import { getTemplate } from "@/services/template/template.service";
 import { WriteTemplatePayload } from "@/services/template/template.service.types";
 import { useDocumentStore } from "@/stores/document.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 import { Document, DocumentProtocol } from "@/types/document.types";
 import { jn } from "@/utils/common.utils";
 import { exportDocument, importDocument } from "@/utils/document.utils";
 import RightArrowWhiteSVG from "images/icons/right-arrow-white.svg";
 
 export const DocumentView = (props: DocumentViewProps) => {
-  const { className = "" } = props;
-  const { documentId, isTemplate } = props;
-  const { success, error } = useNotification();
-  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
+  const { className, documentId, isTemplate } = props;
+  const { id: documentIdParams } = useParams();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
+  const { uid: workspaceId = "" } = selectedWorkspace ?? {};
+  const { data: documents } = useFetchWorkspaceDocuments(workspaceId, {
+    enabled: !!workspaceId,
+  });
   const setSelectedDocument = useDocumentStore((s) => s.setSelectedDocument);
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
   const setSelectedDocumentType = useDocumentStore(
     (s) => s.setSelectedDocumentType
   );
+  const _selectedDocument = documents?.find(
+    (doc) => doc.uid === documentIdParams
+  );
+  setSelectedDocument(_selectedDocument);
+
+  const { success, error } = useNotification();
+
   const addRecentDocument = useDocumentStore((s) => s.addRecentDocument);
   const { title, uid, documentProtocol: documentType } = selectedDocument ?? {};
   const [showDataCaptureModal, setShowDataCaptureModal] = useState(false);
@@ -207,8 +221,8 @@ export const DocumentView = (props: DocumentViewProps) => {
                     text={enhancedTitle}
                     className="text-xl mb-2"
                     inputClassName={jn(
-                      "underline underline-offset-[6px]",
-                      "force-full-width !max-w-[71vw] z-10 no-focus-outline"
+                      "force-full-width !max-w-[71vw] z-10 no-focus-outline",
+                      "text-txt placeholder-surf-contrast w-full text-sm font-light border-b border-surf-contrast bg-transparent"
                     )}
                     additionalAction={() => setIsEditing(true)}
                   />
@@ -246,7 +260,7 @@ export const DocumentView = (props: DocumentViewProps) => {
 
         {/* {isEditing ? <DocumentToolbox /> : null} */}
         {isEditing ? (
-          <div className="flex gap-x-4 bg-primaryLight">
+          <div className="flex gap-x-4 bg-surf-contrast px-8 text-sm text-txt py-1">
             <Button
               appearance="transparent"
               onClick={() => setShowImportModal(true)}

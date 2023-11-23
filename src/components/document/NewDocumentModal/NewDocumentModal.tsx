@@ -195,7 +195,7 @@ const NewDocumentModal = (props: NewDocumentModalProps) => {
         disabled={!documentTitle || !documentTitle.length}
         onClick={submitHandler}
       >
-        Crear nueva acta
+        Crear nueva {isTemplate ? "plantilla" : "acta"}
       </Button>
     </NewModal>
   );

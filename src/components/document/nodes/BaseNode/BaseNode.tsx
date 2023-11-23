@@ -9,7 +9,7 @@ export const BaseNode = (props: BaseNodeProps) => {
     <div
       className={jn(
         "BaseNode",
-        isEditable ? "!pointer-events-none" : "",
+        !isEditable ? "!pointer-events-none" : "",
         "hover:cursor-pointer group-hover:bg-surf-semi-contrast",
         "rounded-lg bg-transparent inline flex-grow overflow-clip",
         "transition-colors duration-150",

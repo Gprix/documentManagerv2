@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 import { LineProps } from "./Line.types";
 import { NumberInputNode } from "../nodes/NumberInputNode/NumberInputNode";
 import { TextBlockNode } from "../nodes/TextBlockNode/TextBlockNode";
 import { TextInputNode } from "../nodes/TextInputNode/TextInputNode";
 import { TextNode } from "../nodes/TextNode/TextNode";
+import { SecondaryMenu } from "@/components/ui/SecondaryMenu/SecondaryMenu";
 import { NodeType, DocumentNodeRawData } from "@/types/document.types";
 import { NumberInputNodeRawData } from "@/types/document.types";
 import { TextBlockNodeRawData } from "@/types/document.types";
@@ -17,23 +18,77 @@ const Line = (props: LineProps) => {
   const { isEditable = true } = props;
   const [nodes, setNodes] = useState<React.ReactNode[]>([]);
 
-  const renderAddNodeButton = () => {
-    // TODO: show menu to select node type
-    const selectedNodeType: NodeType = "text";
+  const secondaryMenuOptions: { name: string; actionType: NodeType }[] = [
+    {
+      name: "Nodo de texto",
+      actionType: "text",
+    },
+    {
+      name: "Insertar bloque de texto",
+      actionType: "textBlock",
+    },
+    {
+      name: "Entrada de texto",
+      actionType: "textInput",
+    },
+    {
+      name: "Entrada de número",
+      actionType: "numberInput",
+    },
+  ];
+
+  const AddNode = () => {
+    const [showSecondaryMenu, setShowSecondaryMenu] = useState(false);
+    const [origin, setOrigin] = useState({ x: 0, y: 0 });
+    const isCursorPastMiddle = useMemo(() => {
+      return origin.x > window.innerWidth / 2;
+    }, [origin]);
+
+    const addNodeHandler = (e: MouseEvent<HTMLButtonElement>) => {
+      setOrigin({ x: e.pageX, y: e.pageY });
+      setShowSecondaryMenu(true);
+    };
 
     return (
-      <button
-        className={jn(
-          "bg-surf rounded-lg px-4 min-h-[32px]",
-          "transition-all duration-150",
-          "hover:cursor-pointer hover:bg-surf-semi-contrast",
-          "opacity-100 group-hover:opacity-100",
-          "disabled:opacity-30"
-        )}
-        onClick={() => bindNode(undefined, selectedNodeType)}
-      >
-        <span className="select-none text-txt">+</span>
-      </button>
+      <>
+        <button
+          className={jn(
+            "bg-surf rounded-lg px-4 min-h-[32px]",
+            "transition-all duration-150",
+            "hover:cursor-pointer hover:bg-surf-semi-contrast",
+            "opacity-100 group-hover:opacity-100",
+            "disabled:opacity-30"
+          )}
+          onClick={addNodeHandler}
+        >
+          <span className="select-none text-txt">+</span>
+        </button>
+        {showSecondaryMenu ? (
+          <SecondaryMenu
+            top={origin.y}
+            // TODO: find a way to calculate the width of the menu
+            left={!isCursorPastMiddle ? origin.x - 140 : origin.x - 345}
+            onDismiss={() => setShowSecondaryMenu(false)}
+          >
+            <ul role="listbox">
+              {secondaryMenuOptions.map((option) => {
+                const { name, actionType } = option;
+
+                return (
+                  <li key={name}>
+                    <button
+                      className="context-menu__item"
+                      onClick={() => bindNode(undefined, actionType)}
+                    >
+                      {name}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </SecondaryMenu>
+        ) : null}
+      </>
     );
   };
 
@@ -143,7 +198,7 @@ const Line = (props: LineProps) => {
       )}
     >
       {nodes}
-      {renderAddNodeButton()}
+      <AddNode />
     </div>
   );
 };

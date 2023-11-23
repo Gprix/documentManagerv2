@@ -5,13 +5,11 @@ import { Document, DocumentProtocol } from "@/types/document.types";
 
 interface DocumentState {
   selectedDocument: Document | undefined;
-  archiveDocuments: Document[];
   recentDocuments: Document["uid"][];
 }
 
 interface DocumentActions {
   setSelectedDocument: (document: Document | undefined) => void;
-  setArchiveDocuments: (documents: Document[]) => void;
   addRecentDocument: (uid: Document["uid"]) => void;
   setSelectedDocumentType: (documentType: DocumentProtocol) => void;
   reset: () => void;
@@ -25,9 +23,6 @@ export const useDocumentStore = create(
       archiveDocuments: [],
       setSelectedDocument: (document: Document | undefined) => {
         set({ selectedDocument: document });
-      },
-      setArchiveDocuments: (documents: Document[]) => {
-        set({ archiveDocuments: documents });
       },
       addRecentDocument: (uid) => {
         const recentDocuments = get().recentDocuments;
@@ -50,7 +45,6 @@ export const useDocumentStore = create(
         set({
           selectedDocument: undefined,
           recentDocuments: [],
-          archiveDocuments: [],
         });
       },
     }),
@@ -59,7 +53,6 @@ export const useDocumentStore = create(
       storage: createJSONStorage(() => localStorage),
       // @ts-ignore
       partialize: (s) => ({
-        selectedDocument: s.selectedDocument,
         recentDocuments: s.recentDocuments,
       }),
     }

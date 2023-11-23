@@ -1,19 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { useAuthStore } from "@/stores/auth.store";
-import { jn } from "@/utils/common.utils";
-import { useFetchMember } from "@/services/member/member.service.hooks";
-import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboard";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import CalendarSVG from "images/icons/calendar.svg";
-import DiscSVG from "images/icons/disc.svg";
+import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboard";
+import { useFetchMember } from "@/services/member/member.service.hooks";
+import { useAuthStore } from "@/stores/auth.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
+import { jn } from "@/utils/common.utils";
 import ArchiveSVG from "images/icons/archive.svg";
 import BellSVG from "images/icons/bell.svg";
+import CalendarSVG from "images/icons/calendar.svg";
 import WorkspaceSVG from "images/icons/columns.svg";
-import { usePathname } from "next/navigation";
-import { useWorkspaceStore } from "@/stores/workspace.store";
+import DiscSVG from "images/icons/disc.svg";
 
 const Sidebar = () => {
   const uid = useAuthStore((s) => s.uid);
@@ -29,11 +29,11 @@ const Sidebar = () => {
     return (
       <div className="text-center w-full">
         <div
-          className={[
+          className={jn(
             "flex flex-col items-center rounded-lg mt-4 py-3 mx-2 transition-md",
             "hover:bg-highlight hover:cursor-pointer hover:shadow",
-            "active:bg-surf active:shadow-none",
-          ].join(" ")}
+            "active:bg-surf active:shadow-none"
+          )}
         >
           <Image
             src={photoURL}
@@ -72,22 +72,35 @@ const Sidebar = () => {
           "hover:cursor-pointer"
         )}
       >
-        <Link href="/workspace/schedule" className={sidebarElementClassName}>
+        <Link
+          title="Calendario"
+          href="/workspace/schedule"
+          className={sidebarElementClassName}
+        >
           <CalendarSVG
             className={jn(iconClassName, "[&_rect]:stroke-txt")}
             alt="schedule"
           />
         </Link>
-        <Link href="/workspace/documents" className={sidebarElementClassName}>
+        <Link
+          title="Archivo notarial"
+          href="/workspace/documents"
+          className={sidebarElementClassName}
+        >
           <ArchiveSVG className={iconClassName} alt="documents" />
         </Link>
         <Link
+          title="Notificaciones"
           href="/workspace/notifications"
           className={sidebarElementClassName}
         >
           <BellSVG className={iconClassName} alt="notifications" />
         </Link>
-        <Link href="/workspace/backup" className={sidebarElementClassName}>
+        <Link
+          title="Copias de seguridad"
+          href="/workspace/backup"
+          className={sidebarElementClassName}
+        >
           <DiscSVG className="[&_path]:fill-txt" alt="backup" />
         </Link>
       </div>

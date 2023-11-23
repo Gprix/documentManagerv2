@@ -1,19 +1,24 @@
 "use client";
 
-import { Modal } from "@/components/ui/Modal/Modal";
-import { TemplatesModalProps } from "./TemplatesModal.types";
-import Button from "@/components/ui/Button/Button";
-import { DocumentActions } from "../DocumentActions/DocumentActions";
 import { useState } from "react";
+
+import { TemplatesModalProps } from "./TemplatesModal.types";
+import { DocumentActions } from "../DocumentActions/DocumentActions";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import { SearchBar } from "@/components/global/SearchBar/SearchBar";
+import Button from "@/components/ui/Button/Button";
+import { Modal } from "@/components/ui/Modal/Modal";
+import { useFetchWorkspaceTemplates } from "@/services/template/template.service.hooks";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 import { getPreviewNodesUtility } from "@/utils/document.utils";
-import usePersist from "@/hooks/usePersist";
-import { useTemplateStore } from "@/stores/template.store";
 
 export const TemplatesModal = (props: TemplatesModalProps) => {
   const { className = "", onClose } = props;
-  const templates = usePersist(useTemplateStore, (s) => s.templates);
+  const { selectedWorkspace } = useWorkspaceStore();
+  const { uid: workspaceId = "" } = selectedWorkspace ?? {};
+  const { data: templates } = useFetchWorkspaceTemplates(workspaceId, {
+    enabled: !!workspaceId,
+  });
   const [filters, setFilters] = useState({
     protocol: true,
     extra: true,
