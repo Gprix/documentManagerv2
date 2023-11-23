@@ -142,9 +142,10 @@ const DocumentsPage = () => {
           {renderUploadDoc()}
         </div>
       </section>
-      {showTemplatesModal ? (
-        <TemplatesModal onClose={() => setShowTemplatesModal(false)} />
-      ) : null}
+      <TemplatesModal
+        isOpened={showTemplatesModal}
+        onClose={() => setShowTemplatesModal(false)}
+      />
     </>
   );
 };

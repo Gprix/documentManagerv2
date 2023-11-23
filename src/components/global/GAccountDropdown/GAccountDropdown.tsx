@@ -1,17 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import { GAccountDropdownProps } from "./GAccountDropdown.types";
 import Button from "@/components/ui/Button/Button";
 import useAuth from "@/hooks/useAuth";
 import { useNotification } from "@/hooks/useNotification";
 import { useFetchMember } from "@/services/member/member.service.hooks";
 import { useAuthStore } from "@/stores/auth.store";
-import { jn } from "@/utils/common.utils";
-import { GAccountDropdownProps } from "./GAccountDropdown.types";
-import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
-import { useRouter } from "next/navigation";
 import { useDocumentStore } from "@/stores/document.store";
 import { useWorkspaceStore } from "@/stores/workspace.store";
+import { jn } from "@/utils/common.utils";
+import DropdownArrowSVG from "images/icons/dropdown-arrow.svg";
 
 const GAccountDropdown = (props: GAccountDropdownProps) => {
   const { className } = props;

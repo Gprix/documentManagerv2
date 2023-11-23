@@ -53,7 +53,7 @@ const Line = (props: LineProps) => {
       <>
         <button
           className={jn(
-            "bg-surf rounded-lg px-4 min-h-[32px]",
+            "bg-surf-semi-contrast/60 rounded-lg px-4 min-h-[32px]",
             "transition-all duration-150",
             "hover:cursor-pointer hover:bg-surf-semi-contrast",
             "opacity-100 group-hover:opacity-100",

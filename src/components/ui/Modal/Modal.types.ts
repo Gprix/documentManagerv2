@@ -20,4 +20,5 @@ export interface NewModalProps {
   onClose?: () => void;
   isOpened?: boolean;
   showCloseButton?: boolean;
+  closeButtonClassName?: string;
 }

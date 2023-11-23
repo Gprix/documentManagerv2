@@ -25,7 +25,7 @@ export const Paper = (props: PaperProps) => {
       <button
         onClick={() => bindLine(undefined)}
         className={jn(
-          "bg-surf rounded-lg px-4 min-h-[32px]",
+          "bg-surf-semi-contrast/60 rounded-lg px-4 min-h-[32px]",
           "hover:bg-surf-semi-contrast hover:cursor-pointer",
           "transition-color duration-150"
         )}

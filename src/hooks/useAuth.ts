@@ -1,18 +1,24 @@
-import { useCallback, useMemo } from "react";
 import { GoogleAuthProvider, User } from "firebase/auth";
 import { signInWithPopup, signOut } from "firebase/auth";
+import { useCallback, useMemo, useState } from "react";
+
 import { auth } from "@/config/firebase.config";
 import { useAuthStore } from "@/stores/auth.store";
 
 const useAuth = () => {
   const setUid = useAuthStore((s) => s.setUid);
+  const [user, setUser] = useState<User>();
 
-  const subscriber = useCallback(async (user: User | null) => {
-    if (!user) return;
-    // actions to do with current auth firebase user
-    const { uid } = user;
-    setUid(uid);
-  }, [setUid]);
+  const subscriber = useCallback(
+    async (user: User | null) => {
+      if (!user) return;
+      // actions to do with current auth firebase user
+      const { uid } = user;
+      setUser(user);
+      setUid(uid);
+    },
+    [setUid]
+  );
 
   return useMemo(
     () => ({
@@ -31,8 +37,9 @@ const useAuth = () => {
         }
       },
       listenAuthState: () => auth.onAuthStateChanged(subscriber),
+      user,
     }),
-    [subscriber]
+    [subscriber, user]
   );
 };
 
