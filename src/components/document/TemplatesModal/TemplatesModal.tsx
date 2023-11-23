@@ -6,7 +6,6 @@ import { TemplatesModalProps } from "./TemplatesModal.types";
 import { DocumentActions } from "../DocumentActions/DocumentActions";
 import { DocumentPreview } from "../DocumentPreview/DocumentPreview";
 import Button from "@/components/ui/Button/Button";
-import { Modal } from "@/components/ui/Modal/Modal";
 import NewModal from "@/components/ui/Modal/NewModal";
 import TextInput from "@/components/ui/TextInput";
 import { useFetchWorkspaceTemplates } from "@/services/template/template.service.hooks";
