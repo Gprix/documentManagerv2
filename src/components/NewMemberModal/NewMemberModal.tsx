@@ -8,6 +8,7 @@ import { NewMemberSchema, schema } from "./NewMemberModal.helpers";
 import Button from "../ui/Button/Button";
 import NewModal from "../ui/Modal/NewModal";
 import TextInput from "../ui/TextInput";
+import useAuth from "@/hooks/useAuth";
 import { useFetchMember } from "@/services/member/member.service.hooks";
 import { useWriteMember } from "@/services/member/member.service.hooks";
 import { useAuthStore } from "@/stores/auth.store";
@@ -17,6 +18,7 @@ const NewMemberModal = () => {
     mode: "onBlur",
     resolver: zodResolver(schema),
   });
+  const { user } = useAuth();
   const uid = useAuthStore((s) => s.uid);
   const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
   const { mutateAsync: createMember } = useWriteMember();
@@ -25,7 +27,9 @@ const NewMemberModal = () => {
   const client = useQueryClient();
 
   const submitHandler = async (values: NewMemberSchema) => {
-    await createMember({ uid, ...values });
+    if (!user) return;
+    const photoURL = user?.photoURL ?? "";
+    await createMember({ uid, photoURL, ...values });
     client.invalidateQueries(["member", uid]);
   };
 

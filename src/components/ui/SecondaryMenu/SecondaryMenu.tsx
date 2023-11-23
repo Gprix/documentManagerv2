@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { SecondaryMenuProps } from "./SecondaryMenu.types";
 import { Backdrop } from "../Modal/Modal";
 
@@ -29,7 +30,7 @@ export const SecondaryMenu = (props: SecondaryMenuProps) => {
           ...positionLeft,
           ...positionRight,
         }}
-        className={`SecondaryMenu bg-gray-50 rounded-lg z-[60] absolute shadow-md overflow-clip ${className}`}
+        className={`SecondaryMenu bg-surf-alt rounded-lg z-[60] absolute shadow-md overflow-clip ${className}`}
         onMouseEnter={() => setMouseIsOutside(false)}
         onMouseLeave={() => setMouseIsOutside(true)}
         onClick={() => clickHandler()}

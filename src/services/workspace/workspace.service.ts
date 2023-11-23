@@ -13,15 +13,13 @@ export const writeWorkspace = async (payload: WriteWorkspacePayload) => {
     const user = auth.currentUser;
     if (!user) throw new Error("User not authenticated");
 
-    const { members: payloadMembers = [] } = payload;
-    const members = filterFalsy([user.uid, ...payloadMembers]);
+    const ownerUid = user.uid;
+    const { members: payloadMembers = [], name } = payload;
+    const members = filterFalsy([ownerUid, ...payloadMembers]);
 
     const uid = crypto.randomUUID();
-    await setDoc(doc(db, "workspaces", uid), {
-      uid,
-      ownerUid: user.uid,
-      members,
-    });
+    const newWorkspace = { uid, ownerUid, members, name };
+    await setDoc(doc(db, "workspaces", uid), newWorkspace);
     return uid;
   } catch (e) {
     console.error(e);

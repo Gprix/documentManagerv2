@@ -39,7 +39,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
             <div onClick={() => newAction()}>
               <div
                 className={jn(
-                  "border border-transparent hover:border-dimmed bg-white",
+                  "border border-transparent hover:border-accent bg-surf-contrast",
                   "relative w-[15rem] h-[10rem] hover:cursor-pointer rounded-t-xl transition-md"
                 )}
               >
@@ -47,7 +47,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                   +
                 </p>
               </div>
-              <p className="hover:cursor-text text-sm mt-1 font-mono">
+              <p className="hover:cursor-text text-sm mt-1 font-mono underline">
                 {newActionLabel}
               </p>
             </div>

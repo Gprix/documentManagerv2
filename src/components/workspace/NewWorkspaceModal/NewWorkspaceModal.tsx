@@ -15,8 +15,14 @@ const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
   const { error, success } = useNotification();
   const { mutateAsync: createWorkspace, status } = useWriteWorkspace();
   const isLoading = status === "loading";
-  const [workspaceName, setWorkspaceName] = useState<string>("");
-  const [workspaceMembers, setWorkspaceMembers] = useState<string>("");
+  const [workspaceName, setWorkspaceName] = useState("");
+  const [workspaceMembers, setWorkspaceMembers] = useState("");
+
+  const handleOnClose = () => {
+    setWorkspaceName("");
+    setWorkspaceMembers("");
+    onClose();
+  };
 
   const handleCreateWorkspace = async () => {
     if (!workspaceName || !workspaceName.length) return;
@@ -32,13 +38,13 @@ const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
     }
 
     success("Espacio de trabajo creado exitosamente");
-    onClose();
+    handleOnClose();
   };
 
   return (
     <NewModal
       isOpened={isOpened}
-      onClose={onClose}
+      onClose={handleOnClose}
       title="Nuevo espacio de trabajo"
     >
       <input
@@ -74,7 +80,7 @@ const NewWorkspaceModal = (props: NewWorkspaceModalProps) => {
         Detectados: {countUIDs(workspaceMembers)} uid(s)
       </p>
       <Button
-        onClick={() => handleCreateWorkspace()}
+        onClick={handleCreateWorkspace}
         disabled={!workspaceName?.length || isLoading}
         className="w-full mt-8"
         isLoading={isLoading}

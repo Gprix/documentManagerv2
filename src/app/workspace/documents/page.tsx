@@ -7,16 +7,18 @@ import { DocumentActions } from "@/components/document/DocumentActions/DocumentA
 import { RecentDocuments } from "@/components/document/RecentDocuments/RecentDocuments";
 import { TemplatesModal } from "@/components/document/TemplatesModal/TemplatesModal";
 import { useNotification } from "@/hooks/useNotification";
-import usePersist from "@/hooks/usePersist";
 import { publishDocument } from "@/services/api/elperuano/elperuano.service";
-import { useTemplateStore } from "@/stores/template.store";
+import { useFetchWorkspaceTemplates } from "@/services/template/template.service.hooks";
 import { useWorkspaceStore } from "@/stores/workspace.store";
 
 const DocumentsPage = () => {
   const { error, success } = useNotification();
   const { selectedWorkspace } = useWorkspaceStore();
   const { name: workspaceName = "" } = selectedWorkspace ?? {};
-  const templates = usePersist(useTemplateStore, (s) => s.templates);
+  const { uid: workspaceId = "" } = selectedWorkspace ?? {};
+  const { data: templates } = useFetchWorkspaceTemplates(workspaceId, {
+    enabled: !!workspaceId,
+  });
   const [modalFlag, setModal] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
@@ -140,9 +142,10 @@ const DocumentsPage = () => {
           {renderUploadDoc()}
         </div>
       </section>
-      {showTemplatesModal ? (
-        <TemplatesModal onClose={() => setShowTemplatesModal(false)} />
-      ) : null}
+      <TemplatesModal
+        isOpened={showTemplatesModal}
+        onClose={() => setShowTemplatesModal(false)}
+      />
     </>
   );
 };

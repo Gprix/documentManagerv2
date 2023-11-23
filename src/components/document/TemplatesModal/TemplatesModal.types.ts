@@ -9,4 +9,5 @@ export interface TemplatesModalProps {
   className?: string;
   /** Function to close the modal. */
   onClose: () => void;
+  isOpened: boolean;
 }

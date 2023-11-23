@@ -7,6 +7,7 @@ const NewModal = (props: NewModalProps) => {
   const { className, children } = props;
   const { title, onClose, isOpened = false } = props;
   const { showCloseButton = true } = props;
+  const { closeButtonClassName } = props;
   const internalRef = useRef<HTMLDialogElement>(null);
 
   const onCloseHandler = () => {
@@ -63,11 +64,13 @@ const NewModal = (props: NewModalProps) => {
             >
               {title}
             </p>
-            {showCloseButton ? (
-              <p className="hover:cursor-pointer" onClick={onCloseHandler}>
-                &times;
-              </p>
-            ) : null}
+            <div className={jn("", closeButtonClassName)}>
+              {showCloseButton ? (
+                <p className="hover:cursor-pointer" onClick={onCloseHandler}>
+                  &times;
+                </p>
+              ) : null}
+            </div>
           </div>
         </header>
         <main className={jn("Modal__body", "flex-1")}>

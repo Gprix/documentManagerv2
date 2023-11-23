@@ -36,7 +36,7 @@
   }
 
   .context-menu__item {
-    @apply w-full block px-3 py-2 first:pt-2 last:pb-2 only:py-2 text-left hover:cursor-pointer hover:bg-gray-200 transition-colors duration-150;
+    @apply w-full block px-3 py-2 first:pt-2 last:pb-2 only:py-2 text-left hover:cursor-pointer hover:bg-surf-contrast transition-colors duration-150;
   }
 
   .transition-md {
@@ -45,5 +45,19 @@
 
   body {
     @apply bg-bck text-txt font-regular;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-1 h-2;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surf-contrast;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-surf;
   }
 }

@@ -1,36 +1,29 @@
 "use client";
 
-import { WorkspaceSetupProps } from "./WorkspaceSetup.types";
-import Button from "@/components/ui/Button/Button";
-import GAccountDropdown from "@/components/global/GAccountDropdown/GAccountDropdown";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Workspace } from "@/services/workspace/workspace.service.types";
-import NewWorkspaceModal from "../NewWorkspaceModal/NewWorkspaceModal";
-import { useWorkspaceStore } from "@/stores/workspace.store";
-import { useFetchUserWorkspaces } from "@/services/workspace/workspace.service.hooks";
-import { useAuthStore } from "@/stores/auth.store";
-import WorkspaceListPlaceholder from "@/components/placeholders/WorkspaceListPlaceholder";
-import Divider from "@/components/global/Divider/Divider";
-import Badge from "@/components/ui/Badge/Badge";
-import EmptyState from "@/components/global/EmptyState/EmptyState";
+import { useState } from "react";
 
-const WorkspaceSetup = (props: WorkspaceSetupProps) => {
+import NewWorkspaceModal from "../NewWorkspaceModal/NewWorkspaceModal";
+import Divider from "@/components/global/Divider/Divider";
+import EmptyState from "@/components/global/EmptyState/EmptyState";
+import GAccountDropdown from "@/components/global/GAccountDropdown/GAccountDropdown";
+import WorkspaceListPlaceholder from "@/components/placeholders/WorkspaceListPlaceholder";
+import Badge from "@/components/ui/Badge/Badge";
+import Button from "@/components/ui/Button/Button";
+import { useFetchUserWorkspaces } from "@/services/workspace/workspace.service.hooks";
+import { Workspace } from "@/services/workspace/workspace.service.types";
+import { useAuthStore } from "@/stores/auth.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
+
+const WorkspaceSetup = () => {
   const { push } = useRouter();
-  const workspaces = useWorkspaceStore((s) => s.workspaces);
   const setSelectedWorkspace = useWorkspaceStore((s) => s.setSelectedWorkspace);
-  const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces);
   const uid = useAuthStore((s) => s.uid);
-  const {
-    data: _workspaces,
-    status,
-    refetch,
-  } = useFetchUserWorkspaces({
+  const useFetchWorkspaces = useFetchUserWorkspaces({
     enabled: uid !== undefined,
   });
+  const { data: workspaces = [], status, refetch } = useFetchWorkspaces;
   const [showNewWorkspaceModal, setShowNewWorkspaceModal] = useState(false);
-
-  console.log({ showNewWorkspaceModal });
 
   const renderWorkspaceList = () => {
     if (status === "loading") return <WorkspaceListPlaceholder />;
@@ -71,7 +64,7 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
           </div>
         ) : null}
         <ul className="flex flex-wrap flex-col md:flex-row">
-          {workspaces.map((workspace) => (
+          {workspaces?.map((workspace) => (
             <li key={workspace.uid} className="mb-3 md:w-1/2">
               <p
                 className="underline font-medium text-txt-accent inline-block hover:cursor-pointer"
@@ -108,19 +101,12 @@ const WorkspaceSetup = (props: WorkspaceSetupProps) => {
     push("/workspace/documents/");
   };
 
-  useEffect(() => {
-    if (!uid) return;
-    if (_workspaces?.length) {
-      setWorkspaces(_workspaces);
-    }
-  }, [_workspaces, setWorkspaces, uid]);
-
   return (
     <>
       <div className="w-full flex flex-col justify-between items-center py-8">
         <GAccountDropdown />
         <div className="w-full flex flex-col flex-grow justify-center items-center">
-          <div className="bg-surf rounded-lg p-8 overflow-clip w-[90%] md:w-[35rem] border border-surf-semi-contrast">
+          <div className="bg-surf-alt/50 backdrop-blur rounded-lg p-8 overflow-clip w-[90%] md:w-[35rem] border border-surf-semi-contrast z-10">
             {renderWorkspaceList()}
             <Divider className="my-6" />
             {renderWorkspaceActions()}

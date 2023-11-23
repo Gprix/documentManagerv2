@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DocumentViewProps } from "./DocumentView.types";
@@ -15,23 +16,37 @@ import { Modal } from "@/components/ui/Modal/Modal";
 import { useNotification } from "@/hooks/useNotification";
 import { updateDocument } from "@/services/document/document.service";
 import { getDocument } from "@/services/document/document.service";
+import { useFetchWorkspaceDocuments } from "@/services/document/document.service.hooks";
 import { updateTemplate } from "@/services/template/template.service";
 import { getTemplate } from "@/services/template/template.service";
 import { WriteTemplatePayload } from "@/services/template/template.service.types";
 import { useDocumentStore } from "@/stores/document.store";
+import { useWorkspaceStore } from "@/stores/workspace.store";
 import { Document, DocumentProtocol } from "@/types/document.types";
+import { jn } from "@/utils/common.utils";
 import { exportDocument, importDocument } from "@/utils/document.utils";
 import RightArrowWhiteSVG from "images/icons/right-arrow-white.svg";
 
 export const DocumentView = (props: DocumentViewProps) => {
-  const { className = "" } = props;
-  const { documentId, isTemplate } = props;
-  const { success, error } = useNotification();
-  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
+  const { className, documentId, isTemplate } = props;
+  const { id: documentIdParams } = useParams();
+  const selectedWorkspace = useWorkspaceStore((s) => s.selectedWorkspace);
+  const { uid: workspaceId = "" } = selectedWorkspace ?? {};
+  const { data: documents } = useFetchWorkspaceDocuments(workspaceId, {
+    enabled: !!workspaceId,
+  });
   const setSelectedDocument = useDocumentStore((s) => s.setSelectedDocument);
+  const selectedDocument = useDocumentStore((s) => s.selectedDocument);
   const setSelectedDocumentType = useDocumentStore(
     (s) => s.setSelectedDocumentType
   );
+  const _selectedDocument = documents?.find(
+    (doc) => doc.uid === documentIdParams
+  );
+  setSelectedDocument(_selectedDocument);
+
+  const { success, error } = useNotification();
+
   const addRecentDocument = useDocumentStore((s) => s.addRecentDocument);
   const { title, uid, documentProtocol: documentType } = selectedDocument ?? {};
   const [showDataCaptureModal, setShowDataCaptureModal] = useState(false);
@@ -41,13 +56,12 @@ export const DocumentView = (props: DocumentViewProps) => {
 
   const enhancedTitle = useMemo(() => {
     if (!title) return "";
-
     return title.trim();
   }, [title]);
 
   const titleRef = useRef<EditableTextRef>(null);
 
-  const handleButtonClick = async () => {
+  const handleToggleMode = async () => {
     if (!selectedDocument) return;
 
     if (isEditing && isTemplate) {
@@ -99,13 +113,41 @@ export const DocumentView = (props: DocumentViewProps) => {
 
       setSelectedDocument(documentPayload);
       success("Documento importado correctamente!");
-      await handleButtonClick();
+      await handleToggleMode();
     } catch (e) {
       console.error(e);
     }
   };
 
-  const handlePublishClick = async () => {};
+  const handlePublish = async () => {};
+
+  const handleChangeProtocol = async () => {
+    if (!isEditing) return;
+    setLocalType((p) => (p === "protocol" ? "extra" : "protocol"));
+  };
+
+  const renderDocumentType = () => {
+    if (!localType) return null;
+    return (
+      <p
+        className={jn("text-sm", isEditing ? "hover:cursor-pointer" : "")}
+        onClick={handleChangeProtocol}
+      >
+        <span className="text-txt opacity-80 pr-2">
+          {isTemplate ? "Plantilla" : "Acta"}
+        </span>
+        🞄
+        <span
+          className={jn(
+            localType === "protocol" ? "bg-accent" : "bg-secondary",
+            "ml-2 px-2 rounded-full text-txt"
+          )}
+        >
+          {localType === "protocol" ? "Protocolar" : "Extra protocolar"}
+        </span>
+      </p>
+    );
+  };
 
   useEffect(() => {
     if (!documentType) return;
@@ -178,47 +220,16 @@ export const DocumentView = (props: DocumentViewProps) => {
                     ref={titleRef}
                     text={enhancedTitle}
                     className="text-xl mb-2"
-                    inputClassName={[
-                      "underline underline-offset-[6px]",
+                    inputClassName={jn(
                       "force-full-width !max-w-[71vw] z-10 no-focus-outline",
-                    ].join(" ")}
+                      "text-txt placeholder-surf-contrast w-full text-sm font-light border-b border-surf-contrast bg-transparent"
+                    )}
                     additionalAction={() => setIsEditing(true)}
                   />
                 ) : (
                   <p className="text-xl">{title}</p>
                 )}
-                {localType ? (
-                  <p
-                    className={[
-                      "text-sm",
-                      isEditing ? "hover:cursor-pointer" : "",
-                    ].join(" ")}
-                    onClick={() =>
-                      isEditing
-                        ? setLocalType((prev) => {
-                            return prev === "protocol" ? "extra" : "protocol";
-                          })
-                        : undefined
-                    }
-                  >
-                    <span className="text-dimmed">
-                      {isTemplate ? "Plantilla" : "Acta"}
-                    </span>
-                    {" 🞄 "}
-                    <span
-                      className={[
-                        localType === "protocol"
-                          ? "bg-primary"
-                          : "bg-secondary",
-                        "px-2 rounded-full text-white",
-                      ].join(" ")}
-                    >
-                      {localType === "protocol"
-                        ? "Protocolar"
-                        : "Extra protocolar"}
-                    </span>
-                  </p>
-                ) : null}
+                {renderDocumentType()}
               </div>
             </div>
             <div className="flex items-center  mr-4 ">
@@ -231,14 +242,14 @@ export const DocumentView = (props: DocumentViewProps) => {
             </div>
             <div className="flex items-center  mr-4 ">
               <button
-                onClick={handlePublishClick}
+                onClick={handlePublish}
                 className="text-[#FF4D84] underline"
               >
                 Publicar
               </button>
             </div>
             <Button
-              onClick={handleButtonClick}
+              onClick={handleToggleMode}
               className="DocumentView__button"
               rightIcon={<RightArrowWhiteSVG />}
             >
@@ -249,7 +260,7 @@ export const DocumentView = (props: DocumentViewProps) => {
 
         {/* {isEditing ? <DocumentToolbox /> : null} */}
         {isEditing ? (
-          <div className="flex gap-x-4 bg-primaryLight">
+          <div className="flex gap-x-4 bg-surf-contrast px-8 text-sm text-txt py-1">
             <Button
               appearance="transparent"
               onClick={() => setShowImportModal(true)}
@@ -270,19 +281,19 @@ export const DocumentView = (props: DocumentViewProps) => {
 
         <div
           className={`overflow-y-auto h-screen max-h-screen ${
-            isEditing ? "bg-secondaryLight" : ""
+            isEditing ? "bg-bck" : ""
           }`}
         >
           <Paper
             isEditing={isEditing}
             document={{ ...selectedDocument } as Document}
-            className={[
-              "text-black mb-64 transition-md",
-              "mx-auto max-w-[1024px] bg-transparent",
+            className={jn(
+              "text-txt mb-64 transition-md",
+              "mx-auto max-w-[1024px]",
               isEditing
-                ? "bg-white rounded-xl mt-8 mb-64 shadow-md"
-                : "bg-[#f9f9f9] rounded-none",
-            ].join(" ")}
+                ? "bg-surf-semi-contrast/30 rounded-xl mt-8 mb-64 shadow-md"
+                : "bg-transparent rounded-none"
+            )}
           />
         </div>
 
