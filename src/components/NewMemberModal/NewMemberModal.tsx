@@ -22,12 +22,11 @@ const NewMemberModal = () => {
   const uid = useAuthStore((s) => s.uid);
   const { data: member } = useFetchMember(uid ?? "", { enabled: !!uid });
   const { mutateAsync: createMember } = useWriteMember();
-  const isOpened = member === null;
+  const isOpened = member === null || member === undefined;
   const isSubmitting = formState.isSubmitting;
   const client = useQueryClient();
 
   const submitHandler = async (values: NewMemberSchema) => {
-    if (!user) return;
     const photoURL = user?.photoURL ?? "";
     await createMember({ uid, photoURL, ...values });
     client.invalidateQueries(["member", uid]);
