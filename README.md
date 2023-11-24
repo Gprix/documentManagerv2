@@ -6,6 +6,7 @@ DocuNot is a web application designed to facilitate the management of notarial p
 - Gonzalo Andree Garcia Mugaburu [andreetks](https://github.com/andreetks)
 - Sebastian Eduardo Hidalgo Diaz [seb-hdz](https://github.com/seb-hdz)
 
+
 ## Getting Started
 
 First, run the development server:
@@ -21,3 +22,5 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
+
+ENJOY!
